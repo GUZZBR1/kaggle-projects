@@ -1,0 +1,13 @@
+[
+  {
+    "id": "cok_v10",
+    "family": "public_adaptive_livestock_routes",
+    "repository": "https://github.com/COK-ZhangZiliang/Kaggriculture",
+    "commit": "7ef67eac458cd9ecd13786063e2e581fbe7403ec",
+    "path": "opponents/public/cok_v10/main.py",
+    "sha256": "56831f3c43c9727d90016b7a7a8d4eb51d1a4c08c1120d58f061d9176e8bc109",
+    "license": "Apache-2.0; see retained THIRD_PARTY_NOTICES.md",
+    "usage": "benchmark opponent only",
+    "retrieved_at": "2026-09-07"
+  }
+]

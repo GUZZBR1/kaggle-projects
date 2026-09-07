@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+.pytest_cache/
+*.pyc
+.firecrawl/
+kaggriculture/experiments/results/
+kaggriculture/experiments/searches/
+kaggriculture/replays/
+kaggriculture/submission/dist/
+*.egg-info/
+.env

@@ -1,0 +1,182 @@
+from .economy import ANIMALS, CROPS, crop_scores, price
+from .params import DEFAULTS
+from .routing import distance, move_towards, nearest_shed, shed_tiles
+from .state import State
+
+
+def policy(observation, configuration=None, parameters=None):
+    p = {**DEFAULTS, **(parameters or {})}
+    s = State(observation, configuration or {})
+    tiles = s.tiles()
+    prices = observation['market']['prices']
+    inventories = s.private['inventories']
+    shed = dict(s.private['shed'])
+    seeds = dict(s.private['seeds'])
+    scores = crop_scores(s, p)
+    best_crop = max(scores, key=scores.get) if scores else None
+    animals = [(x, y, t) for x, y, t in tiles if isinstance(t, dict) and 'animal' in t]
+    structures = [(x, y, t) for x, y, t in tiles if isinstance(t, dict)
+                  and t.get('kind') in ('COOP', 'PASTURE')]
+    animal_type = p['animal_type']
+    animal_cost, structure, _, _, _ = ANIMALS[animal_type]
+    want_animals = p['animal_target'] if s.days_left > 10 else len(animals)
+    jobs = []
+    plantable = []
+    for x, y, t in tiles:
+        pos = (x, y)
+        if t is None:
+            plantable.append(pos)
+            continue
+        if t.get('kind') == 'WEED':
+            if best_crop and s.hour < p['plant_until_hour']:
+                jobs.append((pos, ['DIG'], 14., None))
+        elif t.get('kind') == 'PLANT':
+            crop = t['crop']
+            _, first, peak, _, _ = CROPS[crop]
+            age = s.day - t['planted_day']
+            value = prices[crop] * t.get('yield_units', 0)
+            ongoing = crop in ('TOMATO', 'STRAWBERRY')
+            # Leave enough time for explicit final-day delivery and sale.
+            endgame = s.turns_left <= s.turns_per_day
+            ripe = age >= first and t.get('yield_units', 0) > 0
+            harvest = ripe and (ongoing or age >= peak or endgame)
+            needs_water = not t['watered_today'] and (
+                p['water_daily'] or t['consecutive_unwatered'] >= 1
+                or (not ongoing and age >= (peak + 1) // 2))
+            if harvest and not ongoing and not endgame and needs_water:
+                jobs.append((pos, ['WATER'], 120 + value * .1, None))
+            elif harvest:
+                jobs.append((pos, ['HARVEST'], 90 + value * .3, None))
+            elif needs_water and s.turns_left > s.turns_per_day - s.hour:
+                urgent = t['consecutive_unwatered'] >= 1
+                jobs.append((pos, ['WATER'], 65 + 75 * urgent + s.hour * 3, None))
+        elif 'animal' in t:
+            if not t['fed_today'] and s.days_left > 1:
+                jobs.append((pos, ['FEED'], 160 + 50 * t['consecutive_unfed'], 'WHEAT'))
+            if t.get('yield_units', 0):
+                product = ANIMALS[t['animal']][2]
+                jobs.append((pos, ['HARVEST'], 75 + prices[product] * t['yield_units'] * .3, None))
+            if t.get('fertilizer_available'):
+                jobs.append((pos, ['COLLECT_FERTILIZER'], 30 + prices['FERTILIZER'] * .3, None))
+            if t['fed_today'] and not t['cared_today'] and s.days_left > 2:
+                jobs.append((pos, ['CARE'], 45., None))
+        elif t.get('kind') == structure and len(animals) < want_animals:
+            jobs.append((pos, ['PLACE', animal_type], 130., animal_type))
+
+    # Structure target allocation and crop tasks prefer land near the shed.
+    plantable.sort(key=lambda pos: (distance(pos, nearest_shed(pos, s.size)), pos))
+    to_build = max(0, want_animals - len(structures))
+    for pos in plantable:
+        if to_build and s.hour < 15:
+            jobs.append((pos, ['BUILD_' + structure], 65., None))
+            to_build -= 1
+        elif best_crop and scores[best_crop] > 0 and s.hour < p['plant_until_hour']:
+            jobs.append((pos, ['PLANT', best_crop], 20 + min(40, scores[best_crop]), None))
+
+    used = set()
+    unit_actions = []
+    planned_crops = {}
+    for index, position in enumerate(s.positions):
+        inv = inventories[index]
+        target_shed = nearest_shed(position, s.size)
+        home_distance = distance(position, target_shed)
+        total_inv = sum(inv.values())
+        # Explicitly deliver before the season stops; final night's auto-drop is too late.
+        must_drop = total_inv and (s.turns_left <= home_distance + 4 or total_inv >= 15)
+        if must_drop:
+            unit_actions.append(['DROP'] if home_distance == 0 else move_towards(position, target_shed))
+            continue
+        ranked = []
+        for j, (target, action, value, required) in enumerate(jobs):
+            if j in used:
+                continue
+            travel = distance(position, target)
+            if action[0] == 'PLANT':
+                if seeds.get(action[1], 0) <= 0:
+                    continue
+                if s.hour + travel + 2 >= s.turns_per_day:
+                    continue
+            if action[0] in ('HARVEST', 'COLLECT_FERTILIZER'):
+                delivery = distance(target, nearest_shed(target, s.size))
+                if travel + delivery + 2 >= s.turns_left:
+                    continue
+            if travel >= s.turns_per_day - s.hour:
+                continue
+            if required and not inv.get(required, 0):
+                if not shed.get(required, 0):
+                    continue
+                travel = home_distance + distance(target_shed, target) + 1
+            ranked.append((value / (1 + travel * .65), -j, j))
+        if not ranked:
+            unit_actions.append(['DROP'] if total_inv and home_distance == 0 else ['PASS'])
+            continue
+        _, _, chosen = max(ranked)
+        target, action, _, required = jobs[chosen]
+        used.add(chosen)
+        if required and not inv.get(required, 0):
+            if home_distance:
+                result = move_towards(position, target_shed)
+            else:
+                amount = min(shed[required], 4 if required == 'WHEAT' else 1)
+                result = ['PICKUP', required, amount]
+                shed[required] -= amount
+        elif distance(position, target):
+            result = move_towards(position, target)
+        else:
+            result = list(action)
+            if action[0] == 'PLANT':
+                # Reserve the shared seed pool before the official atomic check.
+                seeds[action[1]] -= 1
+                planned_crops[action[1]] = planned_crops.get(action[1], 0) + 1
+        unit_actions.append(result)
+
+    orders = []
+    cash = s.me['money']
+    reserve_wheat = len(animals) * 2 if s.days_left > 1 else 0
+    # Sell first: cash raised is available to subsequent orders, not unit actions.
+    for item, amount in s.private['shed'].items():
+        if item not in prices:
+            continue
+        amount -= reserve_wheat if item == 'WHEAT' else 0
+        amount = max(0, amount)
+        if amount:
+            count = amount if s.days_left < 2 else max(1, int(amount * p['sell_fraction']))
+            orders.append(['SELL', item, count])
+            # Deliberately do not spend anticipated sale proceeds in this callback.
+    limit = s.config.get('maxMarketOrdersPerTurn', 10)
+    def buy(order, cost):
+        nonlocal cash
+        if len(orders) < limit and cost <= max(0, cash - p['cash_reserve']):
+            orders.append(order)
+            cash -= cost
+            return True
+        return False
+
+    busy = len(jobs)
+    desired_hands = min(p['max_hands'], max(0, (busy + 2) // 3))
+    if s.hour < 4 and s.turns_left > 12:
+        a, b = 1, 1
+        for n in range(desired_hands):
+            cost = a * s.config.get('farmHandCostMult', 1)
+            if n >= s.me['hires_today']:
+                buy(['HIRE'], cost)
+            a, b = b, a + b
+    if best_crop:
+        needed = max(0, min(12, len(plantable)) - seeds.get(best_crop, 0))
+        if needed:
+            buy(['BUY_SEED', best_crop, needed], needed * CROPS[best_crop][0])
+    supply_animals = sum(i.get(animal_type, 0) for i in inventories) + s.private['shed'].get(animal_type, 0)
+    if len(animals) + supply_animals < want_animals:
+        buy(['BUY_ANIMAL', animal_type, 1], animal_cost)
+    wheat_total = s.private['shed'].get('WHEAT', 0) + sum(i.get('WHEAT', 0) for i in inventories)
+    if wheat_total < reserve_wheat:
+        count = reserve_wheat - wheat_total
+        inv = observation['market']['inventory']['WHEAT']
+        cost = sum(price('WHEAT', inv - k - 1, s.config.get('marketParams')) for k in range(count))
+        buy(['BUY_PRODUCT', 'WHEAT', count], cost)
+    quadrants = len(s.me['unlocked_quadrants'])
+    occupied = sum(t is not None for _, _, t in tiles)
+    if (quadrants < p['max_quadrants'] and s.day >= p['expand_day'] and s.days_left > 10
+            and occupied >= len(tiles) * .75):
+        buy(['BUY_LAND'], (1000, 2000, 4000)[quadrants - 1])
+    return {'farmer': unit_actions[0], 'hands': unit_actions[1:], 'market': orders[:limit]}

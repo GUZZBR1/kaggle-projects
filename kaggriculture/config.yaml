@@ -1,0 +1,18 @@
+environment:
+  package: kaggle-environments
+  version: 1.32.7
+  interpreter_sha256: bc8a54879ef02c7ea64b8b333d6a976f0ea65c4949149d01f463f23bccee653e
+  episodeSteps: 720
+evaluation:
+  workers: 4
+  opponents: [starter, crop, animal, diversified]
+  confidence: 0.95
+  bootstrap_samples: 5000
+  min_seed_blocks: 100
+  regression_tolerance: 0.05
+  p99_budget_ms: 100
+seeds:
+  dev: '1000:1100'
+  validation: '100000:100200'
+  # Holdout is allocated once per release; ranges are half-open.
+  holdout_start: 9000000
