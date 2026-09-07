@@ -1,0 +1,38 @@
+name: Detect Kaggle environment drift
+
+on:
+  schedule:
+    - cron: "17 6 * * *"
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - ".github/workflows/environment-drift.yml"
+      - "kaggriculture/arena/engine.py"
+      - "kaggriculture/scripts/check_environment.py"
+      - "kaggriculture/tests/test_environment_drift.py"
+
+permissions:
+  contents: read
+
+jobs:
+  environment-drift:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    defaults:
+      run:
+        working-directory: kaggriculture
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Install latest Kaggle environment
+        run: python -m pip install --disable-pip-version-check --no-deps --upgrade kaggle-environments
+
+      - name: Check environment fingerprint
+        run: python scripts/check_environment.py

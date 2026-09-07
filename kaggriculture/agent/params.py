@@ -12,4 +12,7 @@ DEFAULTS = {
     'water_daily': True,
     'plant_until_hour': 18,
     'sell_fraction': 1.0,
+    'risk_window_days': 5,
+    'risk_min_buffer': 1000,
+    'risk_buffer_fraction': 0.1,
 }

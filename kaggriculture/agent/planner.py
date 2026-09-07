@@ -7,6 +7,8 @@ from .state import State
 def policy(observation, configuration=None, parameters=None):
     p = {**DEFAULTS, **(parameters or {})}
     s = State(observation, configuration or {})
+    risk = s.risk_posture(p['risk_window_days'], p['risk_min_buffer'],
+                          p['risk_buffer_fraction'])
     tiles = s.tiles()
     prices = observation['market']['prices']
     inventories = s.private['inventories']
@@ -144,9 +146,10 @@ def policy(observation, configuration=None, parameters=None):
             orders.append(['SELL', item, count])
             # Deliberately do not spend anticipated sale proceeds in this callback.
     limit = s.config.get('maxMarketOrdersPerTurn', 10)
+    effective_reserve = 0 if risk == 'behind' else p['cash_reserve']
     def buy(order, cost):
         nonlocal cash
-        if len(orders) < limit and cost <= max(0, cash - p['cash_reserve']):
+        if len(orders) < limit and cost <= max(0, cash - effective_reserve):
             orders.append(order)
             cash -= cost
             return True
@@ -161,7 +164,7 @@ def policy(observation, configuration=None, parameters=None):
             if n >= s.me['hires_today']:
                 buy(['HIRE'], cost)
             a, b = b, a + b
-    if best_crop:
+    if best_crop and risk != 'ahead':
         needed = max(0, min(12, len(plantable)) - seeds.get(best_crop, 0))
         if needed:
             buy(['BUY_SEED', best_crop, needed], needed * CROPS[best_crop][0])
