@@ -58,7 +58,10 @@ def test_ahead_preserves_existing_crop_and_sales_without_new_seed_buys():
     action = policy(obs, config)
 
     assert action['farmer'] == ['WATER']
-    assert ['SELL', 'CARROT', 3] in action['market']
+    assert any(
+        order[0] == 'SELL' and order[1] == 'CARROT' and order[2] > 0
+        for order in action['market']
+    )
     assert not any(order[0] == 'BUY_SEED' for order in action['market'])
 
 

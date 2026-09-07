@@ -11,7 +11,11 @@ DEFAULTS = {
     'animal_type': 'GOOSE',
     'water_daily': True,
     'plant_until_hour': 18,
-    'sell_fraction': 1.0,
+    'sell_fraction': 1.0,  # Legacy dump policy, for controlled ablations.
+    'adaptive_sales': True,
+    'sale_floor_fraction': 0.85,
+    'sale_recovery_fraction': 0.98,
+    'shed_buffer': 20,
     'risk_window_days': 5,
     'risk_min_buffer': 1000,
     'risk_buffer_fraction': 0.1,
