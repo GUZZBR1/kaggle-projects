@@ -109,7 +109,14 @@ def policy(observation, configuration=None, parameters=None):
                 if not shed.get(required, 0):
                     continue
                 travel = home_distance + distance(target_shed, target) + 1
-            ranked.append((value / (1 + travel * .65), -j, j))
+            score = value / (1 + travel * .65)
+            if not travel:
+                # Commitment: a job the unit is already standing on pays this
+                # turn, while any job at distance d pays nothing for d turns.
+                # The travel discount alone under-prices that, so a unit can
+                # walk away from work it could finish now. 1.0 disables.
+                score *= p['continuity_completion']
+            ranked.append((score, -j, j))
         if not ranked:
             unit_actions.append(['DROP'] if total_inv and home_distance == 0 else ['PASS'])
             continue

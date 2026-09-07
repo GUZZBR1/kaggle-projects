@@ -19,4 +19,5 @@ DEFAULTS = {
     'risk_window_days': 5,
     'risk_min_buffer': 1000,
     'risk_buffer_fraction': 0.1,
+    'continuity_completion': 1.0,  # >1 favours finishing the job underfoot.
 }
