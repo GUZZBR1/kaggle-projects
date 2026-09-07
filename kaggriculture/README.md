@@ -68,17 +68,39 @@ conta descarte em entregas manuais e noturnas, que antes ficava invisível.
 
 ## Disciplina de avaliação
 
-`config.yaml` documenta as faixas; o CLI não aplica automaticamente esse arquivo:
+`seed_registry.json` é a autoridade sobre seeds e `arena/seeds.py` o aplica: a
+liga recusa qualquer seed fora do registro, com a classificação errada ou dentro
+do holdout. `config.yaml` e este README apenas resumem o registro.
 
-1. Desenvolvimento: `1000:1100`, com ajustes permitidos.
-2. Validação: `100000:100200`, após congelar um candidato e seus parâmetros.
-3. Holdout: começa em `9000000`, reservado para a decisão final de lançamento.
+1. `diagnostic`: `0:1000` e `314159`, para testes e preflight. Nunca é evidência
+   competitiva.
+2. `dev`: `1000:1100`, com ajustes permitidos.
+3. `seen`: `100000:100100`, já consumidos pela issue #3 e pelo experimento de
+   FERTILIZE. Não são validação inédita: não ajuste parâmetros neles e depois os
+   reutilize como teste independente.
+4. `validation`: `100100:100200`, reservados para um candidato já congelado.
+5. `holdout`: começa em `9000000`, reservado para a decisão final de lançamento.
 
-As faixas são semiabertas. O relatório da issue #3 registra o uso de
-`100000:100100`; esses 100 seeds já foram vistos e não constituem uma futura
-validação inédita. Não ajuste parâmetros com base neles e os reutilize como teste
-independente. Use pelo menos 100 blocos na validação, examine cada adversário
-separadamente e mantenha o holdout intocado até a decisão final.
+As faixas são semiabertas. Rodar `--split validation` queima os seeds pedidos
+*antes* da primeira callback e os reclassifica como `seen`, sob trava exclusiva.
+Uma execução interrompida ou fracassada não os devolve: essa é a diferença entre
+validação inédita e evidência já vista. O `summary.json` registra a revisão e o
+sha256 do registro usados.
+
+```bash
+.venv/bin/python -m arena.league --candidate versions/v002/main.py \
+  --opponents starter,animal --seeds 100100:100200 --split validation \
+  --output experiments/results/validation-v002
+```
+
+Use pelo menos 100 blocos na validação, examine cada adversário separadamente e
+mantenha o holdout intocado até a decisão final.
+
+Cada partida também emite telemetria diária (`daily.csv`, `summary.json`): caixa,
+primeira receita, piso de caixa, contratações, plantios, colheitas, preço
+realizado e o destino de cada ordem de mercado. Os agregados diários são
+conferidos contra os totais auditados da partida; uma divergência aparece como
+`RECONCILIATION FAILED` no `report.md`.
 
 Não promova apenas por margem média ou vitória contra variantes próprias. Compare
 taxa de vitória pareada, falhas, sobras, descarte e orçamento de execução. O intervalo

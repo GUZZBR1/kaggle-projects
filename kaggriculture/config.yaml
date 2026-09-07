@@ -12,7 +12,12 @@ evaluation:
   regression_tolerance: 0.05
   p99_budget_ms: 100
 seeds:
+  # seed_registry.json is the enforced authority (arena/seeds.py); the ranges
+  # below only summarise it for readers. Ranges are half-open.
+  registry: seed_registry.json
   dev: '1000:1100'
-  validation: '100000:100200'
-  # Holdout is allocated once per release; ranges are half-open.
+  seen: '100000:100100'
+  validation: '100100:100200'
+  diagnostic: ['0:1000', '314159']
+  # Holdout is allocated once per release and never runs outside that decision.
   holdout_start: 9000000
