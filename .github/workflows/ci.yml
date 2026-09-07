@@ -1,0 +1,88 @@
+name: CI
+
+# A broken submission does not just waste one of the five daily slots: only the
+# latest two submissions are tracked, and a bad agent keeps playing ladder
+# episodes until the competition ends, eroding the rating the whole time.
+# Everything below is the cheap check that stops that from happening.
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    working-directory: kaggriculture
+
+jobs:
+  verify:
+    name: tests + submission preflight
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: kaggriculture/requirements.lock
+
+      - name: Install pinned dependencies
+        # Mirrors scripts/setup.sh. kaggle-environments is installed with
+        # --no-deps on purpose: it pulls a large tree of unrelated game
+        # dependencies that requirements.lock deliberately omits.
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.lock
+          python -m pip install --no-deps kaggle-environments==1.32.7
+
+      - name: Verify environment fingerprint
+        # arena/engine.py raises if the interpreter version or SHA-256 drifts
+        # from the validated lock. Fail here, loudly, rather than let every
+        # downstream number describe a game that no longer exists.
+        run: python -c 'from arena.engine import fingerprint; print(fingerprint())'
+
+      - name: Run tests
+        # Covers the two invariants the whole lab rests on:
+        #   test_fast_matches_official_every_turn - the `fast` backend, where
+        #     all tuning happens, is turn-for-turn identical to the official one.
+        #   test_price_model_matches_official - agent/economy.py is a
+        #     reimplementation of the price curve and must track upstream.
+        run: python -m pytest -q
+
+      - name: Build submission artifact
+        # build.py refuses to overwrite a differing artifact at the same path -
+        # a deliberate guard against silently replacing evidence. A cached or
+        # reused workspace would trip it, so always start from a clean dist/.
+        run: |
+          rm -rf submission/dist
+          python -m submission.build --output submission/dist/main.py
+
+      - name: Preflight
+        # Replicates Kaggle's Validation Episode exactly: the packaged agent
+        # plays a full 720-step season against a copy of itself through the
+        # real file loader.
+        run: python -m submission.preflight submission/dist/main.py --output submission/dist/preflight.json
+
+      - name: Upload submission artifact
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: submission-${{ github.sha }}
+          # Paths are relative to the repository root, not to `defaults.working-directory`.
+          path: |
+            kaggriculture/submission/dist/main.py
+            kaggriculture/submission/dist/main.manifest.json
+            kaggriculture/submission/dist/preflight.json
+          retention-days: 30
+          if-no-files-found: error
