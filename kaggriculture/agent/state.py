@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+import math
 
 
 @dataclass
@@ -50,6 +51,30 @@ class State:
     @property
     def size(self):
         return len(self.me['tiles'])
+
+    def risk_posture(self, window_days=5, min_buffer=1000,
+                     buffer_fraction=.1):
+        """Classify the public cash gap near season end, failing safely."""
+        if self.days_left > window_days:
+            return 'neutral'
+        try:
+            own = self.me['money']
+            other = self.opponent['money']
+            if isinstance(own, bool) or isinstance(other, bool):
+                return 'neutral'
+            own = float(own)
+            other = float(other)
+            if not math.isfinite(own) or not math.isfinite(other):
+                return 'neutral'
+            buffer = max(float(min_buffer), float(buffer_fraction) * max(own, other))
+        except (KeyError, TypeError, ValueError, OverflowError):
+            return 'neutral'
+        margin = own - other
+        if margin > buffer:
+            return 'ahead'
+        if margin < -buffer:
+            return 'behind'
+        return 'neutral'
 
     def tiles(self, opponent=False):
         farm = self.opponent if opponent else self.me
