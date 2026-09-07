@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "holdout_start": 9000000,
+  "entries": [
+    {"id": "diagnostic-low", "start": 0, "end": 1000, "classification": "diagnostic", "provenance": ["tests/: engine/unit/parity seeds; arena.match former default 123", "Reserved solely for compatibility and regression checks, never competitive evidence"]},
+    {"id": "dev", "start": 1000, "end": 1100, "classification": "dev", "provenance": ["config.yaml at 87b40bf", "docs/EXPERIMENT_C_CONTINUITY.md", "docs/EXPERIMENTS_A_B.md", "experiments/results/m0-v000/summary.json"]},
+    {"id": "issue3-consumed", "start": 100000, "end": 100100, "classification": "seen", "provenance": ["docs/issue3-provenance.json", "docs/ISSUE3_RESULTS.md"]},
+    {"id": "validation-reserved", "start": 100100, "end": 100200, "classification": "validation", "provenance": ["Issue #21 reservation", "2026-09-07 audit of reachable git reports, version artifacts and local experiment reports found no use in this interval"]},
+    {"id": "fertilize-consumed", "start": 200000, "end": 200100, "classification": "seen", "provenance": ["docs/EXPERIMENTS_A_B.md: 1400 paired validation games per configuration", "versions/v002/preflight.json and release documentation"]},
+    {"id": "official-preflight", "start": 314159, "end": 314160, "classification": "diagnostic", "provenance": ["submission/preflight.py", "versions/v001/preflight.json", "versions/v002/preflight.json"]},
+    {"id": "final-holdout", "start": 9000000, "end": null, "classification": "holdout", "provenance": ["config.yaml at 87b40bf; protected for separately authorized final evaluation"]}
+  ],
+  "history": [
+    {"revision": 1, "date": "2026-09-07", "reason": "Initial inventory; 200000:200100 is already consumed, not a fresh validation reservation. Unregistered seeds fail closed."}
+  ]
+}

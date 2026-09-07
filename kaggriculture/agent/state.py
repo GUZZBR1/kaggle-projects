@@ -33,7 +33,15 @@ class State:
 
     @property
     def step(self):
-        return self.obs.get('step', self.day * self.turns_per_day + self.hour)
+        day, hour, turns = self.day, self.hour, self.turns_per_day
+        if (type(day) is not int or type(hour) is not int or type(turns) is not int
+                or day < 0 or turns <= 0 or not 0 <= hour < turns):
+            raise ValueError('Malformed day/hour clock')
+        derived = day * turns + hour
+        supplied = self.obs.get('step')
+        if supplied is not None and (type(supplied) is not int or supplied != derived):
+            raise ValueError('step disagrees with canonical day/hour clock')
+        return derived
 
     @property
     def turns_left(self):

@@ -1,5 +1,7 @@
 import hashlib
 import inspect
+import sys
+import types
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -42,9 +44,21 @@ def load_agent(name, seed=0):
     if not path.is_file():
         raise ValueError(f'Unknown agent {name!r}')
     # Fresh namespace per seat/game prevents accidental state leakage.
-    namespace = {'__name__': '__kaggriculture_submission__', '__file__': str(path)}
-    exec(compile(path.read_text(), str(path), 'exec'), namespace)
-    return namespace['agent']
+    # Public bundles register names such as v23/v43 in sys.modules. Keep those
+    # modules private to this load, including when two seats load the same file.
+    before = dict(sys.modules)
+    name = '__kaggriculture_submission__'
+    module = types.ModuleType(name)
+    module.__file__ = str(path)
+    sys.modules[name] = module
+    try:
+        exec(compile(path.read_text(encoding='utf-8'), str(path), 'exec'), module.__dict__)
+        function = module.__dict__['agent']
+    finally:
+        for key in set(sys.modules) - before.keys():
+            del sys.modules[key]
+        sys.modules.update(before)
+    return function
 
 
 def invoke(function, observation, configuration):

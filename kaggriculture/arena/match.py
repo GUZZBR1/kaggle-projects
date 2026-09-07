@@ -10,6 +10,7 @@ from types import SimpleNamespace
 
 from .agents import agent_hash, invoke, load_agent
 from .engine import fingerprint, make_environment, official
+from .telemetry import EconomicTelemetry
 
 
 @contextmanager
@@ -81,14 +82,17 @@ def observations(state):
     result = []
     for i in range(2):
         obs = dict(state[i].observation)
-        for key in ('step', 'day', 'hour', 'farms', 'market', 'town'):
+        # Mirror upstream: step is NOT shared with seat 1. Agents must use the
+        # public day/hour clock. Injecting step here hides submission failures.
+        for key in ('day', 'hour', 'farms', 'market', 'town'):
             obs[key] = shared[key]
         # Isolate callbacks from each other and the interpreter. No opponent private data.
         result.append(json.loads(json.dumps(obs)))
     return result
 
 
-def run_match(candidate, opponent, seed, seat=0, backend='fast', configuration=None, replay=None):
+def run_match(candidate, opponent, seed, seat=0, backend='fast', configuration=None, replay=None,
+              telemetry_enabled=True):
     start = time.perf_counter()
     module = official()
     reference = make_environment(seed, configuration)
@@ -104,10 +108,17 @@ def run_match(candidate, opponent, seed, seat=0, backend='fast', configuration=N
     module._apply_unit_action = audit.apply
     module._commit_unit = audit.commit
     module._drop_inventories_to_shed = audit.drop
+    telemetry = EconomicTelemetry(module) if telemetry_enabled else None
+    if telemetry:
+        telemetry.turns_per_day = cfg['turnsPerDay']
+        telemetry.shed_capacity = cfg['shedCapacity']
+        telemetry.install()
     try:
         steps = 0
         while not env.done:
             obs = observations(env.state)
+            if telemetry:
+                telemetry.begin_turn(obs)
             actions = []
             for i, function in enumerate(functions):
                 t = time.perf_counter()
@@ -126,6 +137,7 @@ def run_match(candidate, opponent, seed, seat=0, backend='fast', configuration=N
             if any(failures):
                 break
             audit.player = -1
+            before_audit = [c.copy() for c in audit.counts] if telemetry else None
             if backend == 'official':
                 reference.step(actions)
             else:
@@ -135,12 +147,16 @@ def run_match(candidate, opponent, seed, seat=0, backend='fast', configuration=N
                 steps_next = steps + 1
                 env.state[0].observation.step = steps_next
                 env.done = all(s.status == 'DONE' for s in env.state)
+            if telemetry:
+                telemetry.finish_turn(env.state, before_audit, audit)
             steps += 1
             if replay:
                 transcript.append({'step': steps, 'actions': actions,
                                    'observations': observations(env.state)})
         money = [float(f['money']) for f in env.state[0].observation.farms]
     finally:
+        if telemetry:
+            telemetry.restore()
         module._apply_unit_action = audit.original
         module._commit_unit = audit.original_commit
         module._drop_inventories_to_shed = audit.original_drop
@@ -160,13 +176,16 @@ def run_match(candidate, opponent, seed, seat=0, backend='fast', configuration=N
         'failures': failures[seat], 'opponent_failures': failures[other],
         'audit': dict(audit.counts[seat]), 'opponent_audit': dict(audit.counts[other]),
         'sales': audit.sales[seat], 'opponent_sales': audit.sales[other],
+        'telemetry_version': 1 if telemetry else None,
+        'daily': telemetry.output(seat) if telemetry else None,
+        'opponent_daily': telemetry.output(other) if telemetry else None,
         'runtime_ms': timings[seat], 'unsold_items': leftover[seat],
         'wall_seconds': time.perf_counter() - start,
     }
     if replay:
         path = Path(replay)
         path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(json.dumps({'format': 'kaggriculture-lab-v1', 'result': result, 'turns': transcript}))
+        path.write_text(json.dumps({'format': 'kaggriculture-lab-v2', 'result': result, 'turns': transcript}))
     return result
 
 
