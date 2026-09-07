@@ -26,7 +26,11 @@ def deadline(seconds):
 
 
 def snapshot(farm, private, index):
-    pos = farm['farmer'] if index == 0 else farm['hands'][index - 1]
+    # The engine ignores actions addressed to a unit that does not exist; so must the audit.
+    positions = [farm['farmer'], *farm['hands']]
+    if index >= len(positions) or index >= len(private['inventories']):
+        return None
+    pos = positions[index]
     tile = farm['tiles'][pos[1]][pos[0]]
     return json.dumps([pos, tile, private['inventories'][index], private['seeds'], private['shed']], sort_keys=True)
 
