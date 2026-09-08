@@ -108,6 +108,8 @@ def admit_run(seeds, split, provenance, path=REGISTRY):
     A second leg of the same declared batch is readmitted against the recorded
     batch id; anything else that meets burned seeds is refused.
     """
+    if os.environ.get('ARENA_ROLE') == 'ray-worker':
+        raise PermissionError('Ray workers cannot admit runs or consume the seed registry')
     seeds = list(seeds)
     if not provenance:
         raise ValueError('Run admission requires provenance')

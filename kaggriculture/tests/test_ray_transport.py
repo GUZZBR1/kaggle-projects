@@ -1,9 +1,10 @@
+import os
 from types import SimpleNamespace
 
 import pytest
 
 from arena.batch import make_batch
-from arena.ray_transport import RayBatchMapper
+from arena.ray_transport import RayBatchMapper, _remote_batch
 
 
 class RayError(Exception):
@@ -102,3 +103,28 @@ def test_mapper_retries_a_system_failure_but_not_application_failure(monkeypatch
     with pytest.raises(ValueError, match='bad batch'):
         list(mapper([batch], 1))
     assert mapper._task.calls == 1
+
+
+def test_remote_jobs_cannot_leave_replay_results_on_worker_filesystems(monkeypatch):
+    batch = make_batch([{'candidate': 'pass', 'opponent': 'pass', 'seed': 1,
+                         'seat': 0, 'backend': 'fast', 'replay': '/shared/result.json'}])
+    monkeypatch.delenv('ARENA_ROLE', raising=False)
+    with pytest.raises(ValueError, match='cannot write replay'):
+        _remote_batch(batch, 1, -1)
+    assert 'ARENA_ROLE' not in os.environ
+
+
+def test_remote_batch_marks_match_children_without_leaking_role(monkeypatch):
+    batch = make_batch([{'candidate': 'pass', 'opponent': 'pass', 'seed': 1,
+                         'seat': 0, 'backend': 'fast'}])
+    observed = []
+
+    def run_batch(spec, workers, timeout):
+        observed.append((os.environ.get('ARENA_ROLE'), spec, workers, timeout))
+        return {'complete': True}
+
+    monkeypatch.delenv('ARENA_ROLE', raising=False)
+    monkeypatch.setattr('arena.ray_transport.run_batch', run_batch)
+    assert _remote_batch(batch, 2, 3) == {'complete': True}
+    assert observed == [('ray-worker', batch, 2, 3)]
+    assert 'ARENA_ROLE' not in os.environ

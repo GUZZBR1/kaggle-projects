@@ -21,6 +21,7 @@ from concurrent.futures.process import BrokenProcessPool
 from contextlib import contextmanager
 import hashlib
 import json
+import os
 from pathlib import Path
 import socket
 import sqlite3
@@ -134,6 +135,8 @@ class JobStore:
     """
 
     def __init__(self, path, provenance=None):
+        if os.environ.get('ARENA_ROLE') == 'ray-worker':
+            raise PermissionError('Ray workers cannot open the authoritative job store')
         self.path = path if path == MEMORY else Path(path)
         if self.path != MEMORY:
             self.path.parent.mkdir(parents=True, exist_ok=True)

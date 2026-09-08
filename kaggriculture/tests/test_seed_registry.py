@@ -145,6 +145,16 @@ def test_non_validation_splits_are_checked_but_not_consumed(tmp_path):
     assert validate_seeds([1], 'dev', path)['split'] == 'dev'
 
 
+def test_a_ray_worker_cannot_admit_or_consume_seeds(tmp_path, monkeypatch):
+    path = registry(tmp_path, entry('reserved', 0, 10, 'validation'))
+    before = path.read_bytes()
+    monkeypatch.setenv('ARENA_ROLE', 'ray-worker')
+    with pytest.raises(PermissionError, match='cannot admit'):
+        admit_run([2], 'validation', {'batch_members': ['hashA'], 'seeds': [2]}, path)
+    assert path.read_bytes() == before
+    assert not (path.parent / (path.name + '.lock')).exists()
+
+
 def test_metadata_pins_the_registry_version_for_the_report():
     metadata = validate_seeds([1000], 'dev')
     assert metadata['registry_schema'] == 1

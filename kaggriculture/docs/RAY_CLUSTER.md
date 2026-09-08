@@ -2,7 +2,10 @@
 
 Ray apenas transporta lotes. Dentro de cada task, `arena.parallel.matches` ainda cria um
 filho descartável por partida e o pai desse filho impõe o deadline. O head é o único
-processo que admite seeds e escreve SQLite.
+processo que admite seeds e escreve SQLite. O runtime exclui `seed_registry.json`, marca a
+task e seus filhos como `ray-worker` e recusa no código tanto `admit_run` quanto abrir um
+`JobStore` nesse papel. Jobs remotos com `replay` também são recusados: o resultado completo
+volta no `BatchResult` e somente o head decide qualquer persistência final.
 
 ## Preparação dos dois PCs
 

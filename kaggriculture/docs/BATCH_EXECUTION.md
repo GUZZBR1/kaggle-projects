@@ -86,8 +86,11 @@ python scripts/benchmark_pool.py --games 32 --workers 1,2,4,8,14 \
 
 `arena.ray_transport` implementa `map_batches` com `num_cpus`, desliga retries implícitos
 de exceções da aplicação, verifica todos os nós por afinidade e refaz somente lote perdido
-por falha de infraestrutura. `arena.league` expõe `--ray-address`, `--cpus-per-worker` e
-batch adaptativo. Ray está no extra `distributed` e não entra no artefato submetido.
+por falha de infraestrutura. Workers não recebem o registro de seeds, não podem chamar
+`admit_run`, não podem abrir o SQLite autoritativo e recusam jobs com destino de replay;
+somente o `BatchResult` completo cruza a fronteira de transporte. `arena.league` expõe
+`--ray-address`, `--cpus-per-worker` e batch adaptativo. Ray está no extra `distributed` e
+não entra no artefato submetido.
 
 Um cluster local de um nó já executou o caminho completo, com dois jobs distintos no store,
 hashes e resultados idênticos, e pacote de runtime de 6,7 MiB. Isso prova integração, não

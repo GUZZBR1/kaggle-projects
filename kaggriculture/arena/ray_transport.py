@@ -7,6 +7,8 @@ remain ordinary match rows.
 """
 from __future__ import annotations
 
+import os
+from contextlib import contextmanager
 from pathlib import Path
 import platform
 import socket
@@ -18,18 +20,37 @@ from .jobs import git_provenance
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_EXCLUDES = ['/.git/', '/.venv/', '/.tmp/', '/docs/', '/tests/', '/replays/',
+                    '/seed_registry.json',
                     '/experiments/results/', '/experiments/searches/', '**/__pycache__/']
+
+
+@contextmanager
+def _worker_role():
+    """Mark work as remote while it and its match children are running."""
+    previous = os.environ.get('ARENA_ROLE')
+    os.environ['ARENA_ROLE'] = 'ray-worker'
+    try:
+        yield
+    finally:
+        if previous is None:
+            os.environ.pop('ARENA_ROLE', None)
+        else:
+            os.environ['ARENA_ROLE'] = previous
 
 
 def _environment(artifacts):
     """Evidence collected inside one specifically scheduled cluster node."""
-    return {'hostname': socket.gethostname(), 'python': platform.python_version(),
-            'environment': fingerprint(), 'git': git_provenance(),
-            'artifacts': {path: agent_hash(path) for path in artifacts}}
+    with _worker_role():
+        return {'hostname': socket.gethostname(), 'python': platform.python_version(),
+                'environment': fingerprint(), 'git': git_provenance(),
+                'artifacts': {path: agent_hash(path) for path in artifacts}}
 
 
 def _remote_batch(batch, workers, timeout):
-    return run_batch(batch, workers=workers, timeout=timeout)
+    with _worker_role():
+        if any(spec.get('replay') or spec.get('replay_steps') for spec in batch['specs']):
+            raise ValueError('Remote jobs cannot write replay results to worker filesystems')
+        return run_batch(batch, workers=workers, timeout=timeout)
 
 
 class RayBatchMapper:

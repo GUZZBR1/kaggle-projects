@@ -211,6 +211,13 @@ def test_an_empty_plan_and_a_zero_attempt_budget_raise(tmp_path):
             execute(specs(), jobs, 'dev', lambda p, w: iter(()), attempts=0)
 
 
+def test_a_ray_worker_cannot_open_the_authoritative_store(tmp_path, monkeypatch):
+    monkeypatch.setenv('ARENA_ROLE', 'ray-worker')
+    with pytest.raises(PermissionError, match='authoritative job store'):
+        JobStore(tmp_path / 'worker-must-not-write.sqlite3')
+    assert not (tmp_path / 'worker-must-not-write.sqlite3').exists()
+
+
 def test_an_incomplete_runner_is_retried_as_infrastructure(tmp_path):
     calls = {'count': 0}
 
