@@ -1,0 +1,268 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-09-08",
+  "opponents": [
+    "clock::opponents/public/thomas_t95/main.py",
+    "clock::opponents/public/yamakawanin_king_v4e/main.py"
+  ],
+  "seeds": {
+    "yarn": [
+      1000,
+      1001,
+      1004,
+      1006,
+      1007,
+      1011,
+      1022,
+      1024,
+      1027,
+      1028,
+      1034,
+      1049
+    ],
+    "plain": [
+      1002,
+      1003,
+      1005,
+      1008,
+      1009,
+      1010,
+      1012,
+      1013,
+      1014,
+      1015,
+      1016,
+      1017
+    ]
+  },
+  "legs": {
+    "yarn-v004": {
+      "aggregate": {
+        "games": 48,
+        "win_rate": 0.7916666666666666,
+        "our_money": 90401.83333333333,
+        "rival_money": 84281.25,
+        "unsold_items": 0
+      },
+      "candidate_hash": "fd478f8cc3ecfcc212c44f5e51fc2fa3c0fe223a009a6a01651f31666bcef9e3",
+      "opponent_hashes": {
+        "clock::opponents/public/thomas_t95/main.py": "76254cf98142ec312ec677a73b678294f5ff574295640c74b319683fa6b00c4b",
+        "clock::opponents/public/yamakawanin_king_v4e/main.py": "b4277466cc7146cb642ba1c2edbdebefebd43d229f153aae10c778303e83532b"
+      },
+      "seeds": [
+        1000,
+        1001,
+        1004,
+        1006,
+        1007,
+        1011,
+        1022,
+        1024,
+        1027,
+        1028,
+        1034,
+        1049
+      ],
+      "environment": {
+        "registry_schema": 1,
+        "registry_revision": 2,
+        "registry_sha256": "911be9bb20b421dc66ac6bf77a1a25d993e0de327c98f3a42876e2c744b2c8b9",
+        "split": "dev",
+        "competitive": true
+      },
+      "matches_sha256": "1fabb1cecf63259f702a765d2ed97c557e595a12d3f5b10b329f52e91adc4510"
+    },
+    "yarn-v004-no-yarn": {
+      "aggregate": {
+        "games": 48,
+        "win_rate": 0.125,
+        "our_money": 85346.97916666667,
+        "rival_money": 100036.79166666667,
+        "unsold_items": 0
+      },
+      "candidate_hash": "544eb4f7632b12e8f5b63a242bd19d2203f4656562b881966f6780d750e82578",
+      "opponent_hashes": {
+        "clock::opponents/public/thomas_t95/main.py": "76254cf98142ec312ec677a73b678294f5ff574295640c74b319683fa6b00c4b",
+        "clock::opponents/public/yamakawanin_king_v4e/main.py": "b4277466cc7146cb642ba1c2edbdebefebd43d229f153aae10c778303e83532b"
+      },
+      "seeds": [
+        1000,
+        1001,
+        1004,
+        1006,
+        1007,
+        1011,
+        1022,
+        1024,
+        1027,
+        1028,
+        1034,
+        1049
+      ],
+      "environment": {
+        "registry_schema": 1,
+        "registry_revision": 2,
+        "registry_sha256": "911be9bb20b421dc66ac6bf77a1a25d993e0de327c98f3a42876e2c744b2c8b9",
+        "split": "dev",
+        "competitive": true
+      },
+      "matches_sha256": "2accd2513374a0f35e8409678a6d6e1c9d9f95cdb2c905218a4d787789077218"
+    },
+    "yarn-v004-no-egg": {
+      "aggregate": {
+        "games": 48,
+        "win_rate": 0.125,
+        "our_money": 86699.91666666667,
+        "rival_money": 95193.85416666667,
+        "unsold_items": 0.5833333333333334
+      },
+      "candidate_hash": "611a1014fb35a4f56876cf9a12000f73d3cdcbcfa3ff0d316962804e877a210f",
+      "opponent_hashes": {
+        "clock::opponents/public/thomas_t95/main.py": "76254cf98142ec312ec677a73b678294f5ff574295640c74b319683fa6b00c4b",
+        "clock::opponents/public/yamakawanin_king_v4e/main.py": "b4277466cc7146cb642ba1c2edbdebefebd43d229f153aae10c778303e83532b"
+      },
+      "seeds": [
+        1000,
+        1001,
+        1004,
+        1006,
+        1007,
+        1011,
+        1022,
+        1024,
+        1027,
+        1028,
+        1034,
+        1049
+      ],
+      "environment": {
+        "registry_schema": 1,
+        "registry_revision": 2,
+        "registry_sha256": "911be9bb20b421dc66ac6bf77a1a25d993e0de327c98f3a42876e2c744b2c8b9",
+        "split": "dev",
+        "competitive": true
+      },
+      "matches_sha256": "db2441342dda26884dabaae30143192f428162caf050cde42ceae34af337c7ec"
+    },
+    "plain-v004": {
+      "aggregate": {
+        "games": 48,
+        "win_rate": 0.9166666666666666,
+        "our_money": 92671.02083333333,
+        "rival_money": 85305.52083333333,
+        "unsold_items": 0
+      },
+      "candidate_hash": "fd478f8cc3ecfcc212c44f5e51fc2fa3c0fe223a009a6a01651f31666bcef9e3",
+      "opponent_hashes": {
+        "clock::opponents/public/thomas_t95/main.py": "76254cf98142ec312ec677a73b678294f5ff574295640c74b319683fa6b00c4b",
+        "clock::opponents/public/yamakawanin_king_v4e/main.py": "b4277466cc7146cb642ba1c2edbdebefebd43d229f153aae10c778303e83532b"
+      },
+      "seeds": [
+        1002,
+        1003,
+        1005,
+        1008,
+        1009,
+        1010,
+        1012,
+        1013,
+        1014,
+        1015,
+        1016,
+        1017
+      ],
+      "environment": {
+        "registry_schema": 1,
+        "registry_revision": 2,
+        "registry_sha256": "911be9bb20b421dc66ac6bf77a1a25d993e0de327c98f3a42876e2c744b2c8b9",
+        "split": "dev",
+        "competitive": true
+      },
+      "matches_sha256": "a7a4a314f7b317c866e20854015b732a6ef97b537f3e3fe2eb32eea689495617"
+    },
+    "plain-v004-no-egg": {
+      "aggregate": {
+        "games": 48,
+        "win_rate": 0.041666666666666664,
+        "our_money": 91121.83333333333,
+        "rival_money": 101185.41666666667,
+        "unsold_items": 0.3333333333333333
+      },
+      "candidate_hash": "611a1014fb35a4f56876cf9a12000f73d3cdcbcfa3ff0d316962804e877a210f",
+      "opponent_hashes": {
+        "clock::opponents/public/thomas_t95/main.py": "76254cf98142ec312ec677a73b678294f5ff574295640c74b319683fa6b00c4b",
+        "clock::opponents/public/yamakawanin_king_v4e/main.py": "b4277466cc7146cb642ba1c2edbdebefebd43d229f153aae10c778303e83532b"
+      },
+      "seeds": [
+        1002,
+        1003,
+        1005,
+        1008,
+        1009,
+        1010,
+        1012,
+        1013,
+        1014,
+        1015,
+        1016,
+        1017
+      ],
+      "environment": {
+        "registry_schema": 1,
+        "registry_revision": 2,
+        "registry_sha256": "911be9bb20b421dc66ac6bf77a1a25d993e0de327c98f3a42876e2c744b2c8b9",
+        "split": "dev",
+        "competitive": true
+      },
+      "matches_sha256": "b998be454ae22b1b1d4db2496816aa0d6a2fc4c38ed291ebe87417cf9f50c18f"
+    }
+  },
+  "variants": {
+    "v004": {
+      "stages": [
+        [
+          144,
+          "shop_count",
+          "YARN_STORE",
+          0.5,
+          1,
+          0
+        ],
+        [
+          648,
+          "market_inventory",
+          "EGG",
+          9888,
+          3,
+          2
+        ]
+      ]
+    },
+    "no-yarn": {
+      "stages": [
+        [
+          648,
+          "market_inventory",
+          "EGG",
+          9888,
+          3,
+          2
+        ]
+      ],
+      "built_by": "experiments/chassis_portfolio.py"
+    },
+    "no-egg": {
+      "stages": [
+        [
+          144,
+          "shop_count",
+          "YARN_STORE",
+          0.5,
+          1,
+          0
+        ]
+      ],
+      "built_by": "experiments/chassis_portfolio.py"
+    }
+  }
+}

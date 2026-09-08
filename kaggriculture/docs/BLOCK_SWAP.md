@@ -85,6 +85,10 @@ titular nunca foi batido, mas a diversidade era metade do que parecia.
 O painel da issue #35 dá a saída: `yamakawanin_king_v4e` discordou dessas famílias no painel
 novo e é a segunda família forte genuinamente distinta.
 
+> **Complemento (mesmo dia).** A leitura de que "com yarn a biblioteca é fraca" vale para
+> a fita **nua**. Com o segundo estágio ligado, o `v004` faz 0,792 nesse regime, e a
+> ablação pareada dos dois estágios está em [ROUTING_ABLATION.md](ROUTING_ABLATION.md).
+
 ## O que a #39 decide agora
 
 1. **O passo 1 está respondido, e é não.** Blocos e sufixos da mesma procedência não são
