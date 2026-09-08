@@ -16,6 +16,9 @@ bash scripts/setup.sh
 Para o harness distribuído opcional, use `bash scripts/setup.sh --distributed`. A
 dependência Ray não faz parte do artefato de submissão. A configuração privada, os gates
 entre máquinas e o benchmark estão em [RAY_CLUSTER.md](docs/RAY_CLUSTER.md).
+Depois da configuração única, `python3 scripts/ray_cluster.py ensure` mantém o papel deste
+PC e o serviço Ray ativos automaticamente; agentes de IA recebem essa regra pelo
+`AGENTS.md` da raiz.
 
 O ambiente é `kaggle-environments==1.32.7`, com SHA-256 do interpretador validado
 em `arena/engine.py`. As dependências mínimas ficam em `requirements.lock`.

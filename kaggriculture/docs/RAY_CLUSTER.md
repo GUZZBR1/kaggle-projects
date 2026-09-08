@@ -7,7 +7,53 @@ task e seus filhos como `ray-worker` e recusa no código tanto `admit_run` quant
 `JobStore` nesse papel. Jobs remotos com `replay` também são recusados: o resultado completo
 volta no `BatchResult` e somente o head decide qualquer persistência final.
 
-## Preparação dos dois PCs
+## Conexão automática dos dois PCs
+
+Não existe link de dashboard para compartilhar. Cada máquina guarda seu papel em
+`~/.config/kaggriculture/ray-cluster.json`, e um serviço `systemd --user` inicia e reconecta
+o Ray. A configuração é feita uma única vez.
+
+Primeiro confira a rede dentro do WSL:
+
+```bash
+python3 scripts/ray_cluster.py doctor
+```
+
+`automatic_address_usable: true` significa que existe um IP de LAN/mirrored ou Tailscale
+**dentro do WSL**. O controlador recusa o NAT `172.16/12`, que normalmente não é roteável
+pelo segundo PC. Tailscale instalado apenas no Windows não fornece um IP que o processo
+Ray do WSL consiga anunciar; instale/conecte também dentro dos dois WSLs, ou use WSL
+mirrored na mesma LAN.
+
+No PC A, uma vez:
+
+```bash
+python3 scripts/ray_cluster.py configure-head
+```
+
+Ele instala a dependência distribuída se necessário, cria o serviço, inicia o head sem
+dashboard e imprime o comando exato do PC B. No PC B, cole esse comando uma vez:
+
+```bash
+python3 scripts/ray_cluster.py configure-worker --head IP_OU_MAGIC_DNS_DO_PC_A:6379
+```
+
+Depois disso não há botão: `Restart=always` reconecta o worker quando o head ou a rede
+voltam. Ao abrir o repositório, agentes de IA executam o comando idempotente abaixo conforme
+o `AGENTS.md` da raiz:
+
+```bash
+python3 scripts/ray_cluster.py ensure
+```
+
+Diagnóstico e desligamento explícito:
+
+```bash
+python3 scripts/ray_cluster.py status
+python3 scripts/ray_cluster.py stop
+```
+
+## Preparação manual equivalente
 
 Os dois nós precisam de Python 3.12, do mesmo checkout e do mesmo ambiente:
 
