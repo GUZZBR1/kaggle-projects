@@ -28,7 +28,13 @@ VARIANTS = {
 # comes from one process per game. What load time *can* do is notice, which is
 # the difference between evidence and a silently corrupted game.
 INTERPRETER = 'kaggle_environments.envs.kaggriculture.kaggriculture'
-WATCHED = ('builtins', 'json', 'random', 'time', 'math', 'copy', INTERPRETER)
+# `signal` is watched for what it says about a bundle, not because watching it protects
+# anything: the per-turn timer is armed through this module, and a bundle that rebinds
+# `signal.setitimer` or `signal.signal` is reaching for the guard. Handler *state* is not a
+# module attribute, so a bundle that merely calls `signal.signal(SIGALRM, SIG_IGN)` passes
+# this check untouched -- that case is caught by the elapsed-time check in `arena.match`
+# and, in the limit, by the process kill in `arena.parallel`.
+WATCHED = ('builtins', 'json', 'random', 'time', 'math', 'copy', 'signal', INTERPRETER)
 
 
 def _watched_modules():

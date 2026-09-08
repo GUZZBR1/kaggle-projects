@@ -22,12 +22,34 @@ fork. Measured on the same 24 games, byte-identical final money in every configu
 
 `forkserver` is POSIX-only, so the start method falls back to `spawn` where it is missing
 and the results are the same either way.
+
+The second guarantee is the deadline, and it lives here rather than in the child on
+purpose. `arena.match.deadline` arms `signal.setitimer` **inside the interpreter that runs
+the bundle**, so the bundle can switch it off with two lines, and a bundle that never
+returns hangs the worker for good without the guard ever firing. Anything that runs in the
+same interpreter as adversarial code can be reached by it. The barrier that cannot be
+reached is the parent: one process per game, a wall-clock deadline held here, and a kill of
+the child's whole process group when it expires. The in-child timer stays as an
+optimisation for the honest slow agent; the safety argument does not rest on it.
+
+A killed game is a failure result, never a retry. Repeating it would let the harness select
+agents that work if you try a few times, which is what the preflight exists to refuse.
 """
-from concurrent.futures import ProcessPoolExecutor
 import multiprocessing
 import os
+import queue as queuelib
+import signal
+import time
 
+from .agents import agent_hash
+from .engine import fingerprint
 from .match import run_match
+
+# A full 719-turn game costs seconds, not minutes, in every configuration measured here, so
+# this is about two orders of magnitude of headroom: it exists to end a hang, not to police
+# a slow agent. `ARENA_MATCH_TIMEOUT` overrides it, and `timeout=None` disables it entirely
+# for a caller that has its own supervision.
+MATCH_TIMEOUT = float(os.environ.get('ARENA_MATCH_TIMEOUT', 300.))
 
 # Imported once in the forkserver parent, before any game exists. Keep this list to modules
 # that are pure to import: anything with import-time side effects would have those effects
@@ -38,6 +60,63 @@ PRELOAD = ('arena.match', 'arena.engine', 'arena.agents', 'arena.telemetry',
 
 def _run(kwargs):
     return run_match(**kwargs)
+
+
+def _play(index, job, results):
+    """Run one game in this child and hand the row back, tagged with its position.
+
+    The first thing the child does is leave its parent's process group. A bundle can spawn
+    subprocesses, and killing only the child we know about would leave those running; with
+    the child as its own group leader, one `killpg` reaches the whole tree.
+    """
+    try:
+        os.setsid()
+    except (AttributeError, OSError):  # Windows, or already a group leader.
+        pass
+    try:
+        results.put((index, run_match(**job), None))
+    except BaseException as exc:  # noqa: BLE001 - reported to the parent, never swallowed
+        results.put((index, None, f'{type(exc).__name__}: {exc}'))
+
+
+def _terminate(process):
+    """Kill the child and everything it started, then reap it."""
+    if process.pid is None:
+        return
+    try:
+        os.killpg(os.getpgid(process.pid), signal.SIGKILL)
+    except (AttributeError, ProcessLookupError, PermissionError, OSError):
+        process.kill()
+    process.join(5)
+    if process.is_alive():  # pragma: no cover - the group kill has never failed in practice
+        process.kill()
+        process.join()
+
+
+def timeout_row(job, seconds):
+    """A killed game, shaped like any other row so no consumer has to special-case it.
+
+    Both sides carry the failure. We cannot attribute a hang to one agent from outside the
+    process, and the alternative -- guessing -- would either credit us a win we did not play
+    or concede one we did not lose. Both sides failing scores 0.5 by the same rule
+    `run_match` uses, and every comparison in `eval/` already refuses evidence containing
+    callback failures, so a timed-out game invalidates its comparison instead of quietly
+    counting as a draw.
+    """
+    failure = [{'step': None, 'kind': 'MatchTimeout',
+                'message': f'Killed after {seconds:g}s; the game did not finish'}]
+    return {
+        'candidate': job['candidate'], 'opponent': job['opponent'],
+        'candidate_hash': agent_hash(job['candidate']),
+        'opponent_hash': agent_hash(job['opponent']),
+        'seed': job.get('seed'), 'seat': job.get('seat', 0), 'score': .5,
+        'money': 0., 'opponent_money': 0., 'margin': 0., 'steps': 0,
+        'backend': job.get('backend', 'fast'), 'configuration': None,
+        'environment': fingerprint(), 'failures': failure, 'opponent_failures': list(failure),
+        'audit': {}, 'opponent_audit': {}, 'sales': {}, 'opponent_sales': {},
+        'telemetry_version': None, 'daily': None, 'opponent_daily': None,
+        'runtime_ms': [], 'unsold_items': 0, 'wall_seconds': seconds, 'timed_out': True,
+    }
 
 
 def start_method(requested=None):
@@ -56,14 +135,65 @@ def start_method(requested=None):
     return 'forkserver' if 'forkserver' in available else 'spawn'
 
 
-def matches(jobs, workers=4, method=None):
+def matches(jobs, workers=4, method=None, timeout=-1):
+    """Play every job in its own process, at most `workers` at a time, in job order.
+
+    One process per game is the isolation, and it is also what makes the deadline
+    enforceable: there is nothing to unwind, only a process to kill. Rows come back in the
+    order the jobs were given regardless of the order they finish, because callers pair
+    them with their jobs positionally.
+    """
     if workers < 1:
         raise ValueError('workers must be positive')
+    jobs = list(jobs)
+    limit = MATCH_TIMEOUT if timeout == -1 else timeout
+    if limit is not None and limit <= 0:
+        raise ValueError('timeout must be positive, or None to disable the barrier')
     chosen = start_method(method)
     context = multiprocessing.get_context(chosen)
     if chosen == 'forkserver':
         context.set_forkserver_preload(list(PRELOAD))
-    # max_tasks_per_child=1 is the isolation: a worker plays one game and exits.
-    with ProcessPoolExecutor(max_workers=workers, mp_context=context,
-                             max_tasks_per_child=1) as pool:
-        yield from pool.map(_run, jobs, chunksize=1)
+    results = context.Queue()
+    running, finished, started_at, vanished = {}, {}, {}, {}
+    pending, emitted = iter(range(len(jobs))), 0
+    try:
+        while emitted < len(jobs):
+            while len(running) < workers:
+                index = next(pending, None)
+                if index is None:
+                    break
+                process = context.Process(target=_play, args=(index, jobs[index], results),
+                                          daemon=False)
+                process.start()
+                running[index], started_at[index] = process, time.monotonic()
+            try:
+                index, row, error = results.get(timeout=.1)
+                process = running.pop(index, None)
+                if process is not None:
+                    process.join(5)
+                if index not in finished:  # A row that lost the race with its own kill.
+                    if error is not None:
+                        raise RuntimeError(f'Match failed in its own process: {error}')
+                    finished[index] = row
+            except queuelib.Empty:
+                pass
+            for index, process in list(running.items()):
+                if limit is not None and time.monotonic() - started_at[index] > limit:
+                    _terminate(process)
+                    running.pop(index)
+                    finished[index] = timeout_row(jobs[index], limit)
+                elif not process.is_alive():
+                    # Exiting and being read are not simultaneous: a child that has already
+                    # put its row on the queue is dead before the parent drains it. Only a
+                    # child still unreported well after it died has actually crashed.
+                    first_seen = vanished.setdefault(index, time.monotonic())
+                    if time.monotonic() - first_seen > 5:
+                        running.pop(index)
+                        raise RuntimeError(f'Match worker died without a result: {jobs[index]}')
+            while emitted in finished:
+                yield finished.pop(emitted)
+                emitted += 1
+    finally:
+        for process in running.values():
+            _terminate(process)
+        results.close()

@@ -15,6 +15,15 @@ from .telemetry import EconomicTelemetry
 
 @contextmanager
 def deadline(seconds):
+    """Pre-empt a slow callback, when the callback lets us.
+
+    This guard is armed with `signal.setitimer` in the interpreter that runs the bundle,
+    so a bundle can disarm it with two lines and nothing here will fire. That is why it is
+    only half of the barrier: `arena.parallel` holds a wall-clock deadline in the parent
+    and kills the process group, and the caller below re-checks the elapsed time after the
+    callback returns. Keep this timer anyway -- it costs nothing and it ends an honest slow
+    agent's turn at the right moment instead of at the end of the game.
+    """
     if not hasattr(signal, 'SIGALRM') or not hasattr(signal, 'setitimer'):
         # Windows has no SIGALRM/setitimer. We cannot safely pre-empt Python
         # code in-process there, but we can still reject callbacks that return
@@ -153,6 +162,14 @@ def run_match(candidate, opponent, seed, seat=0, backend='fast', configuration=N
                 try:
                     with deadline(cfg['actTimeout']):
                         action = invoke(function, obs[i], copy.deepcopy(cfg))
+                    # The timer above can be disarmed by the code it is timing, and a
+                    # bundle that does so overran the deadline with nothing recorded at
+                    # all. Measuring after the fact cannot pre-empt anything, but it does
+                    # make the overrun a failure like any other, and it reads a clock
+                    # rather than a handler, so disarming the timer no longer hides it.
+                    if time.perf_counter() - t > cfg['actTimeout']:
+                        raise TimeoutError('Callback returned past the deadline; the '
+                                           'in-process timer did not fire')
                     if not isinstance(action, dict):
                         raise ValueError('Action must be an object')
                     # Validate JSON serialization even on the fast path.

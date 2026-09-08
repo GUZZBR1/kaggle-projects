@@ -14,10 +14,16 @@ import pytest
 from arena.agents import load_agent, module_fingerprint, tampering
 from arena.parallel import matches
 
+# The log path is baked into the source rather than read from the environment. A worker
+# forked from the forkserver inherits the environment the *server* started with, so an env
+# var set after some other test warmed the pool never reaches the child, and which test
+# warmed it first is alphabetical accident.
 SENTINEL = '''
 import os
 import sys
 import types
+
+LOG = __SENTINEL_LOG__
 
 helper = sys.modules.get('kagg_sentinel_helper')
 leaked = helper is not None
@@ -29,7 +35,7 @@ seen = helper.loads
 helper.loads += 1
 GLOBAL_LOADS = globals().get('GLOBAL_LOADS', 0) + 1
 
-with open(os.environ['KAGG_SENTINEL_LOG'], 'a') as stream:
+with open(LOG, 'a') as stream:
     stream.write('%d %d %d %d\\n' % (os.getpid(), int(leaked), seen, GLOBAL_LOADS))
 
 
@@ -39,12 +45,11 @@ def agent(observation, configuration=None):
 
 
 @pytest.fixture
-def sentinel(tmp_path, monkeypatch):
+def sentinel(tmp_path):
     path = tmp_path / 'sentinel.py'
-    path.write_text(SENTINEL)
     log = tmp_path / 'loads.log'
     log.write_text('')
-    monkeypatch.setenv('KAGG_SENTINEL_LOG', str(log))
+    path.write_text(SENTINEL.replace('__SENTINEL_LOG__', repr(str(log))))
 
     def records():
         return [tuple(int(field) for field in line.split())
