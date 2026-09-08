@@ -49,7 +49,9 @@ resultado relevante serializado exatamente e roda em cada nó um agente que desl
 
 O comando recusa cluster de um único hostname, hash de agente diferente, fingerprint do
 motor diferente, qualquer diferença exata no resultado e deadline remoto que não mate o
-filho. Ao final, ele mata um worker Ray de verdade na primeira tentativa e exige que o
+filho. `money` e `opponent_money` são comparados também pelos oito bytes IEEE-754 binary64,
+incluindo o sinal de zero; o artefato grava por NodeID os digests desses bytes e do resultado
+relevante completo. Ao final, ele mata um worker Ray de verdade na primeira tentativa e exige que o
 mapper reenvie aquele lote uma única vez. A morte e a recuperação são fixadas por afinidade
 e repetidas em cada NodeID vivo; retries implícitos do Ray continuam desligados.
 

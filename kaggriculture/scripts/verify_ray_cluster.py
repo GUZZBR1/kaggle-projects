@@ -5,9 +5,11 @@ transport implementation, but it is not evidence for issue #43's release gates.
 """
 import argparse
 import atexit
+import hashlib
 import json
 import os
 from pathlib import Path
+import struct
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -78,18 +80,49 @@ def exact_result(row):
     return json.dumps(relevant, sort_keys=True, separators=(',', ':'), allow_nan=False)
 
 
+def money_bits(row):
+    """Canonical IEEE-754 binary64 bytes; signed zero and every finite bit must match."""
+    try:
+        return b''.join(struct.pack('!d', row[field])
+                        for field in ('money', 'opponent_money'))
+    except (KeyError, TypeError, ValueError, OverflowError) as exc:
+        raise SystemExit(f'Invalid money value in job {row.get("job_id")}: {exc}') from exc
+
+
+def digest(chunks):
+    value = hashlib.sha256()
+    for chunk in chunks:
+        if isinstance(chunk, str):
+            chunk = chunk.encode('utf-8')
+        value.update(len(chunk).to_bytes(8, 'big'))
+        value.update(chunk)
+    return value.hexdigest()
+
+
 def assert_identical(results):
     baseline_node, baseline = results[0]
     baseline_rows = [exact_result(row) for row in baseline['rows']]
-    for node, result in results[1:]:
+    baseline_money = [money_bits(row) for row in baseline['rows']]
+    evidence = []
+    for node, result in results:
         rows = [exact_result(row) for row in result['rows']]
+        money = [money_bits(row) for row in result['rows']]
+        evidence.append({'node_id': node['NodeID'], 'hostname': result['hostname'],
+                         'jobs': len(rows), 'relevant_result_sha256': digest(rows),
+                         'money_binary64_sha256': digest(money)})
         if len(rows) != len(baseline_rows):
             raise SystemExit(f'Node {node["NodeID"]} returned a different row count')
+        for index, (expected, actual) in enumerate(zip(baseline_money, money)):
+            if actual != expected:
+                job_id = baseline['rows'][index]['job_id']
+                raise SystemExit(f'Binary64 money mismatch at job {job_id}: '
+                                 f'{baseline_node["NodeID"]} != {node["NodeID"]}')
         for index, (expected, actual) in enumerate(zip(baseline_rows, rows)):
             if actual != expected:
                 job_id = baseline['rows'][index]['job_id']
                 raise SystemExit(f'Bit-exact result mismatch at job {job_id}: '
                                  f'{baseline_node["NodeID"]} != {node["NodeID"]}')
+    return evidence
 
 
 def main():
@@ -119,7 +152,7 @@ def main():
     if len(hostnames) < 2:
         raise SystemExit('Cross-node proof requires at least two distinct hostnames')
     results = mapper.run_on_every_node(batch)
-    assert_identical(results)
+    determinism_nodes = assert_identical(results)
 
     hang = plan('arena/probes/hang_agent.py', ['pass'], [args.seed - 1],
                 split='diagnostic')[0]
@@ -137,10 +170,12 @@ def main():
     recovery_nodes = verify_worker_recovery(mapper, make_batch([work[0]]),
                                             args.cpus_per_worker)
 
-    report = {'schema_version': 2, 'nodes': environments, 'hostnames': sorted(hostnames),
+    report = {'schema_version': 3, 'nodes': environments, 'hostnames': sorted(hostnames),
               'jobs_per_node': len(work), 'candidate': args.candidate,
               'opponent': args.opponent, 'seed_start': args.seed,
               'seed_pairs': args.pairs, 'bit_exact': True,
+              'money_binary64_exact': True,
+              'determinism_nodes': determinism_nodes,
               'deadline_seconds': args.deadline,
               'deadline_limit_seconds': deadline_limit,
               'deadline_passed_on_every_node': True,
