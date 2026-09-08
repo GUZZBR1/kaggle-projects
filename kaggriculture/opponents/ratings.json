@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "note": "Dated ladder ratings for the pinned opponents. An entry that is missing, or older than the age limit in eval/ladder.py, falls out of the strong cohort rather than into it: an unmeasured opponent must not quietly decide the primary metric. Issue #32 owns filling this in and documenting the refresh procedure; only directly observed values belong here.",
+  "ratings": {
+    "yhay_router_0908": {
+      "rating": 2713.9,
+      "observed_at": "2026-09-08",
+      "source": "notebook description and public leaderboard position (44th of 8177) at capture time"
+    },
+    "thomas_t95": {
+      "rating": 2359.8,
+      "observed_at": "2026-09-08",
+      "source": "this team's own submission 56089447 of the same artifact, verbatim"
+    }
+  },
+  "unrated": {
+    "thomas_t93": "no direct observation",
+    "kaitofukami_v48": "no direct observation",
+    "cok_v10": "no direct observation",
+    "boatlee_v21": "no direct observation",
+    "boatlee_v16": "no direct observation",
+    "seyamalam_v21": "no direct observation",
+    "lonespear_v11": "no direct observation",
+    "aberatozer_v23": "no direct observation; the notebook reports a target of >=2800 that it says is unverified"
+  }
+}
