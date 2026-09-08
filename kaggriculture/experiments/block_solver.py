@@ -26,6 +26,7 @@ from eval.pairing import paired_rows
 from experiments.tape_agent import build
 from experiments.tape_harvest import tape_digest
 from experiments.production_mutations import production_mutations
+from experiments.opportunity_mutations import opportunities, opportunity_mutations
 
 TURNS = 719
 BLOCK = 72
@@ -192,10 +193,35 @@ def _collect(jobs, workers, artifact_hash, snapshots, start, end,
     return rows, arrivals, frontiers
 
 
+def probe(actions, directory, opponent, seed, seat, start, end, provenance):
+    """One game whose only purpose is to observe the incumbent's own trajectory in the block.
+
+    The state-aware generator needs the tile under each unit at each turn, and there is no
+    forward model here that could predict it: the engine is the model. So the block is
+    replayed with a snapshot per turn and the observations are read back for our own seat.
+    """
+    directory = Path(directory)
+    directory.mkdir(parents=True, exist_ok=False)
+    artifact = build(actions, directory / 'main.py', provenance=provenance)
+    replay_path = directory / 'probe.json'
+    job = dict(candidate=str(artifact), opponent=opponent, seed=seed, seat=seat,
+               telemetry_enabled=False, replay_steps=list(range(start, end)),
+               replay=str(replay_path))
+    try:
+        row, = matches([job], 1)
+        if row['failures'] or row['opponent_failures']:
+            raise ValueError('Failed callbacks invalidate the trajectory probe')
+        replay = json.loads(replay_path.read_text())
+        return {turn['step']: turn['observations'][seat] for turn in replay['turns']}
+    finally:
+        if replay_path.is_file():
+            replay_path.unlink()
+
+
 def search(source, output, *, tape_index=0, start=648, days=3, proposals=4, rounds=2,
            opponents, seeds, check_seeds, workers=4, search_seed=771, mutation_space='market'):
     started = time.perf_counter()
-    if mutation_space not in ('market', 'production'):
+    if mutation_space not in ('market', 'production', 'opportunity'):
         raise ValueError('Unknown mutation space')
     end = block_end(start, days)
     seeds, check_seeds, opponents = list(seeds), list(check_seeds), list(opponents)
@@ -238,7 +264,9 @@ def search(source, output, *, tape_index=0, start=648, days=3, proposals=4, roun
                 registry=registry, objective=['worst_opponent_win_score', 'overall_win_score'],
                 generator_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
                 production_mutations_sha256=hashlib.sha256(
-                    Path(__file__).with_name('production_mutations.py').read_bytes()).hexdigest())
+                    Path(__file__).with_name('production_mutations.py').read_bytes()).hexdigest(),
+                opportunity_mutations_sha256=hashlib.sha256(
+                    Path(__file__).with_name('opportunity_mutations.py').read_bytes()).hexdigest())
     (output / 'plan.json').write_text(json.dumps(plan, indent=2) + '\n')
     rng = random.Random(search_seed)
     history, visited = [], {tape_digest(initial)}
@@ -249,8 +277,20 @@ def search(source, output, *, tape_index=0, start=648, days=3, proposals=4, roun
         incumbent, measured = copy.deepcopy(initial), original
         accepted = []
         for generation in range(rounds):
-            generator = mutations if mutation_space == 'market' else production_mutations
-            candidates = generator(incumbent, start, end, proposals, rng, excluded=visited)
+            generator = {'market': mutations, 'production': production_mutations,
+                         'opportunity': opportunity_mutations}[mutation_space]
+            extra = {}
+            if mutation_space == 'opportunity':
+                # Two contexts, and only what both admit is proposed. The incumbent changes
+                # between rounds, so its trajectory is observed again each round.
+                extra['observation_sets'] = [
+                    probe(incumbent, output / f'probe-{generation}-{index}', opponents[0],
+                          seed, seat, start, end, credit)
+                    for index, (seed, seat) in enumerate(((seeds[0], 0), (seeds[1], 1)))]
+                found = opportunities(incumbent, extra['observation_sets'], start, end)
+                print(f'round={generation} shared opportunities={len(found)}', flush=True)
+            candidates = generator(incumbent, start, end, proposals, rng, excluded=visited,
+                                   **extra)
             best_actions, best_result, best_mutation = incumbent, measured, None
             for index, proposal in enumerate(candidates):
                 if proposal['sha256'] in visited:
@@ -308,7 +348,8 @@ def search(source, output, *, tape_index=0, start=648, days=3, proposals=4, roun
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--mutation-space', choices=('market', 'production'), default='market')
+    parser.add_argument('--mutation-space', choices=('market', 'production', 'opportunity'),
+                        default='market')
     parser.add_argument('--source', required=True, help='JSON list of tapes or a tapes envelope')
     parser.add_argument('--tape-index', type=int, default=0)
     parser.add_argument('--start', type=int, default=648)

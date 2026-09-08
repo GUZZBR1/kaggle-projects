@@ -136,3 +136,15 @@ não roubam vagas da rodada seguinte. Planos novos registram hashes do código d
 solver e dos geradores, além do hash da fita de origem.
 
 Os resultados da etapa 2 ficam em [PRODUCTION_SEARCH.md](PRODUCTION_SEARCH.md).
+
+## Etapa 3: trabalho ciente do estado
+
+`--mutation-space opportunity` lê a trajetória observada do titular dentro do bloco — um
+`probe`, uma partida com snapshot por turno, repetida em dois contextos — e propõe apenas
+trabalho cuja pré-condição do motor já vale no tile sob aquela unidade naquele turno.
+As ações sem efeito por perna caem de 1 696–1 800 para 128–384, e 69–99 slots ociosos
+viram 7–28 oportunidades compartilhadas.
+
+Nenhuma das 41 propostas melhorou o placar, e uma única `FEED` legal custou 0,25 de vitória
+e 4 483 moedas. O que isso decide para a #39 está em
+[OPPORTUNITY_SEARCH.md](OPPORTUNITY_SEARCH.md).

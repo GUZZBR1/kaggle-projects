@@ -1,0 +1,1453 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-09-08",
+  "experiments": {
+    "opportunity-072-01": {
+      "plan": {
+        "kind": "opportunity_block_local_search",
+        "mutation_space": "opportunity",
+        "split": "dev",
+        "start": 72,
+        "end": 144,
+        "days": 3,
+        "proposals": 8,
+        "rounds": 2,
+        "seeds": [
+          1038,
+          1039,
+          1040,
+          1041
+        ],
+        "check_seeds": [
+          1042,
+          1043,
+          1044,
+          1045
+        ],
+        "opponents": [
+          "clock::opponents/public/thomas_t95/main.py",
+          "clock::opponents/public/aberatozer_d5e3/main.py"
+        ],
+        "opponent_hashes": {
+          "clock::opponents/public/thomas_t95/main.py": "76254cf98142ec312ec677a73b678294f5ff574295640c74b319683fa6b00c4b",
+          "clock::opponents/public/aberatozer_d5e3/main.py": "e0a3f8d4ce19b39e32a3db73329d1fc4c89a8e1c9f10dd041608a3f00e60129c"
+        },
+        "search_seed": 771,
+        "registry": {
+          "search": {
+            "registry_schema": 1,
+            "registry_revision": 2,
+            "registry_sha256": "911be9bb20b421dc66ac6bf77a1a25d993e0de327c98f3a42876e2c744b2c8b9",
+            "split": "dev",
+            "competitive": true
+          },
+          "check": {
+            "registry_schema": 1,
+            "registry_revision": 2,
+            "registry_sha256": "911be9bb20b421dc66ac6bf77a1a25d993e0de327c98f3a42876e2c744b2c8b9",
+            "split": "dev",
+            "competitive": true
+          }
+        },
+        "environment": {
+          "version": "1.32.7",
+          "interpreter_sha256": "bc8a54879ef02c7ea64b8b333d6a976f0ea65c4949149d01f463f23bccee653e",
+          "specification_sha256": "a82c89c1a2315b93f39775d8e025471a01b738647c9772658368ee6b1b6f4867"
+        },
+        "generator_sha256": "5a987886f75daad0bbf988b7aaa1d1014d620930a79d9480f778c159f1002d6e",
+        "opportunity_mutations_sha256": "f4f46e42a0c6d515de105168eb3836c466cc1b1e39671a4e523a43da511c4a96",
+        "source": {
+          "source": "/mnt/d/Projects/kaggle-projects/kaggriculture/opponents/public/yhay_router_0908/actions.json",
+          "source_sha256": "171c8550addac9fdb49acb44af36f64b4eb54e34c561eb6f3d4a83e2dcc803a6",
+          "tape_index": 0,
+          "initial_tape_sha256": "2c413946a556e6fb93d939d31db64ec39fddba53b45ac3873ad687451889beb5",
+          "source_url": "https://www.kaggle.com/code/yhay81/shop-router-0908",
+          "license": "Apache-2.0 (author states handwritten code is Apache-2.0; Kaggle notebook default)"
+        }
+      },
+      "history": [
+        {
+          "round": 0,
+          "mutation": {
+            "kind": "admissible_work",
+            "work": "WATER",
+            "targets": 1,
+            "turns": [
+              128
+            ]
+          },
+          "tape_sha256": "721fefe307d4a7b10d427d75b9cc2c73911dadb787656b9f7f45deda6e68073c",
+          "artifact_hash": "df201c52bff81ff0ca424d964808a7f01af28e76df06c2d118c2560eb336729a",
+          "fitness": [
+            0.75,
+            0.75
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "delta_margin_diagnostic": 0.0
+          },
+          "ineffective_unit_actions": 212
+        },
+        {
+          "round": 0,
+          "mutation": {
+            "kind": "admissible_work",
+            "work": "HARVEST",
+            "targets": 1,
+            "turns": [
+              138
+            ]
+          },
+          "tape_sha256": "c2429e3daa876e9e9c719fe8e5539fb261e8f98de44b07b2881f88ccc96e82ef",
+          "artifact_hash": "0ba52f9c22535548f8c49bd0014565a2d7e31196a954caf9af8584a4de8235fc",
+          "fitness": [
+            0.75,
+            0.75
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "delta_margin_diagnostic": 0.0
+          },
+          "ineffective_unit_actions": 212
+        },
+        {
+          "round": 0,
+          "mutation": {
+            "kind": "admissible_work",
+            "work": "CARE",
+            "targets": 2,
+            "turns": [
+              90,
+              122
+            ]
+          },
+          "tape_sha256": "48759e385af1cc8c4228bdcf89fdd1bbe5d93ac4c6771c6511dee0606ff916ac",
+          "artifact_hash": "6ae0ece1f663fdd161c3c7111fa522f12ca9cb85abc6db8842fe171613ced4d6",
+          "fitness": [
+            0.75,
+            0.75
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "delta_margin_diagnostic": 0.0
+          },
+          "ineffective_unit_actions": 228
+        },
+        {
+          "round": 0,
+          "mutation": {
+            "kind": "admissible_work",
+            "work": "FEED",
+            "targets": 1,
+            "turns": [
+              94
+            ]
+          },
+          "tape_sha256": "862f4f64eab940f41f5d0499b2a9f88c70941ad1da4777a43f3238c16ff0774d",
+          "artifact_hash": "d9e0044bd27e48b4e563fa0ee76e45331649e8a5b0d0b443d9a33382fd50fd05",
+          "fitness": [
+            0.5,
+            0.5
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": -0.25,
+            "ci95": [
+              -0.75,
+              0.0
+            ],
+            "delta_margin_diagnostic": -4483.0625
+          },
+          "ineffective_unit_actions": 1380
+        },
+        {
+          "round": 0,
+          "mutation": {
+            "kind": "admissible_work",
+            "work": "COLLECT_FERTILIZER",
+            "targets": 1,
+            "turns": [
+              122
+            ]
+          },
+          "tape_sha256": "bec96188f7d48b816dfe873396d0aaed4b02ba077a7f9e64a2d054f4d1b9acca",
+          "artifact_hash": "3d78a1119754d01962891d64a1aa149fe30e42faeb2bac6051b3a2ee03f1f45e",
+          "fitness": [
+            0.75,
+            0.75
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "delta_margin_diagnostic": 0.0
+          },
+          "ineffective_unit_actions": 212
+        },
+        {
+          "round": 0,
+          "mutation": {
+            "kind": "admissible_work",
+            "work": "FERTILIZE",
+            "targets": 1,
+            "turns": [
+              138
+            ]
+          },
+          "tape_sha256": "ffbc0ed97a626c7e1f5f9ac341cd78e8efcb6e780dc6f3b01c3d3f49da4818bb",
+          "artifact_hash": "084be10f752963663bede5a3840e38a26c9dccacbb5f3a13b2be8aa5eb298040",
+          "fitness": [
+            0.75,
+            0.75
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "delta_margin_diagnostic": -86.5
+          },
+          "ineffective_unit_actions": 196
+        },
+        {
+          "round": 0,
+          "mutation": {
+            "kind": "admissible_work",
+            "work": "ALL",
+            "targets": 7,
+            "turns": [
+              90,
+              94,
+              122,
+              128,
+              138
+            ]
+          },
+          "tape_sha256": "e384f0a59fd7ef86c2ce8c7580723f41492a3c856542307b0f8192ccce593a9a",
+          "artifact_hash": "71935f895979a8ecfc47be136f6d60a8c6023167a95545ecbb9a6f92105943e5",
+          "fitness": [
+            0.5,
+            0.5
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": -0.25,
+            "ci95": [
+              -0.75,
+              0.0
+            ],
+            "delta_margin_diagnostic": -4483.0625
+          },
+          "ineffective_unit_actions": 1444
+        },
+        {
+          "round": 0,
+          "mutation": {
+            "kind": "admissible_slot",
+            "work": "CARE",
+            "targets": 1,
+            "turns": [
+              122
+            ]
+          },
+          "tape_sha256": "77234fab072b57d656be1816e92825ce241092330e28ee29acf9e69c766c7e1b",
+          "artifact_hash": "4a1dbb5c872034e1aa05b699d4aff150303cd145b58a807ffdc97615bca5266c",
+          "fitness": [
+            0.75,
+            0.75
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "delta_margin_diagnostic": 0.0
+          },
+          "ineffective_unit_actions": 212
+        },
+        {
+          "round": 1,
+          "mutation": {
+            "kind": "admissible_slot",
+            "work": "CARE",
+            "targets": 1,
+            "turns": [
+              90
+            ]
+          },
+          "tape_sha256": "622ea9e773f90a04f85b5bd1ce72824638f8bd295249f18a81052a2f06cba2bc",
+          "artifact_hash": "9cfa8f94e65cfeaf3288f7ee3c1cc5dbc5b16e74bd86bd45ec0babb7a682b635",
+          "fitness": [
+            0.75,
+            0.75
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "delta_margin_diagnostic": 0.0
+          },
+          "ineffective_unit_actions": 212
+        }
+      ],
+      "accepted": [],
+      "initial_fitness": [
+        0.75,
+        0.75
+      ],
+      "selected_fitness": [
+        0.75,
+        0.75
+      ],
+      "evaluated_mutations": 9,
+      "check": {
+        "games": 16,
+        "delta_win": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "delta_margin_diagnostic": 0.0
+      },
+      "wall_seconds": 103.66651298000033,
+      "release_status": "not_validated",
+      "evidence_sha256": {
+        "main.manifest.json": "d4b03a632e4231480200bce3d207e2c3d0b5b5722161b152e09b365d79ac3956",
+        "plan.json": "9f1d2477d20a7dbed99f98d0dedbab42786d5be0e94c8bdade04d79793a82af5",
+        "report.json": "a112149cdfbe45a758a533c366cb7405b5c0766d49deec3ad5a722a70fb4afd4",
+        "selection.json": "95827cbe0cfd71f42064dd52d6bd5f9da186642f7150b1ad3f16c1beabfef3d7",
+        "tapes.json": "2f990b028f14194474ad4a47b94817617ddc0a5ddd34e3ad9398bdc0a66d06e8"
+      }
+    },
+    "opportunity-144-01": {
+      "plan": {
+        "kind": "opportunity_block_local_search",
+        "mutation_space": "opportunity",
+        "split": "dev",
+        "start": 144,
+        "end": 288,
+        "days": 6,
+        "proposals": 8,
+        "rounds": 2,
+        "seeds": [
+          1030,
+          1031,
+          1032,
+          1033
+        ],
+        "check_seeds": [
+          1034,
+          1035,
+          1036,
+          1037
+        ],
+        "opponents": [
+          "clock::opponents/public/thomas_t95/main.py",
+          "clock::opponents/public/aberatozer_d5e3/main.py"
+        ],
+        "opponent_hashes": {
+          "clock::opponents/public/thomas_t95/main.py": "76254cf98142ec312ec677a73b678294f5ff574295640c74b319683fa6b00c4b",
+          "clock::opponents/public/aberatozer_d5e3/main.py": "e0a3f8d4ce19b39e32a3db73329d1fc4c89a8e1c9f10dd041608a3f00e60129c"
+        },
+        "search_seed": 771,
+        "registry": {
+          "search": {
+            "registry_schema": 1,
+            "registry_revision": 2,
+            "registry_sha256": "911be9bb20b421dc66ac6bf77a1a25d993e0de327c98f3a42876e2c744b2c8b9",
+            "split": "dev",
+            "competitive": true
+          },
+          "check": {
+            "registry_schema": 1,
+            "registry_revision": 2,
+            "registry_sha256": "911be9bb20b421dc66ac6bf77a1a25d993e0de327c98f3a42876e2c744b2c8b9",
+            "split": "dev",
+            "competitive": true
+          }
+        },
+        "environment": {
+          "version": "1.32.7",
+          "interpreter_sha256": "bc8a54879ef02c7ea64b8b333d6a976f0ea65c4949149d01f463f23bccee653e",
+          "specification_sha256": "a82c89c1a2315b93f39775d8e025471a01b738647c9772658368ee6b1b6f4867"
+        },
+        "generator_sha256": "5a987886f75daad0bbf988b7aaa1d1014d620930a79d9480f778c159f1002d6e",
+        "opportunity_mutations_sha256": "f4f46e42a0c6d515de105168eb3836c466cc1b1e39671a4e523a43da511c4a96",
+        "source": {
+          "source": "/mnt/d/Projects/kaggle-projects/kaggriculture/opponents/public/yhay_router_0908/actions.json",
+          "source_sha256": "171c8550addac9fdb49acb44af36f64b4eb54e34c561eb6f3d4a83e2dcc803a6",
+          "tape_index": 0,
+          "initial_tape_sha256": "2c413946a556e6fb93d939d31db64ec39fddba53b45ac3873ad687451889beb5",
+          "source_url": "https://www.kaggle.com/code/yhay81/shop-router-0908",
+          "license": "Apache-2.0 (author states handwritten code is Apache-2.0; Kaggle notebook default)"
+        }
+      },
+      "history": [
+        {
+          "round": 0,
+          "mutation": {
+            "kind": "admissible_work",
+            "work": "WATER",
+            "targets": 6,
+            "turns": [
+              152,
+              164,
+              187,
+              190,
+              191,
+              210
+            ]
+          },
+          "tape_sha256": "c4c28726b80bf70e27862e21e7f19db276ff594639b2bd281e314a8e0a12da48",
+          "artifact_hash": "8013b2f53812eeb9c0bd9ac6c0ecb019a63ca35852f84848b003692e54e463c0",
+          "fitness": [
+            0.5,
+            0.5
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "delta_margin_diagnostic": 0.0
+          },
+          "ineffective_unit_actions": 224
+        },
+        {
+          "round": 0,
+          "mutation": {
+            "kind": "admissible_work",
+            "work": "HARVEST",
+            "targets": 2,
+            "turns": [
+              210,
+              261
+            ]
+          },
+          "tape_sha256": "cce5cbb6bd6cffb47b6a3494fd08e11fef5e85eb3d970f6a20718012323ba137",
+          "artifact_hash": "cc1664ca3189b4011562180172a1c2dffa3aecb7f27e8c9925f353f24ee22776",
+          "fitness": [
+            0.5,
+            0.5
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "delta_margin_diagnostic": -85.625
+          },
+          "ineffective_unit_actions": 192
+        },
+        {
+          "round": 0,
+          "mutation": {
+            "kind": "admissible_work",
+            "work": "CARE",
+            "targets": 6,
+            "turns": [
+              173,
+              193,
+              217,
+              226,
+              265,
+              278
+            ]
+          },
+          "tape_sha256": "9c5c6f1d6a0d2d06dda71acedccf5704becec5d618e2590f365ae9a956d9bf7a",
+          "artifact_hash": "43f95a31bfd8c60825713703102d6aa2d875fdf29cb1cd07550973773bcc3f3d",
+          "fitness": [
+            0.5,
+            0.5
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "delta_margin_diagnostic": 0.0
+          },
+          "ineffective_unit_actions": 224
+        },
+        {
+          "round": 0,
+          "mutation": {
+            "kind": "admissible_work",
+            "work": "FEED",
+            "targets": 2,
+            "turns": [
+              226,
+              278
+            ]
+          },
+          "tape_sha256": "90925ca7906f6a06f0747261d9677c4814ae38f44baccd0553acef871df6d2a5",
+          "artifact_hash": "5280c79f17ed0d7b603590d6462068979ca076fbf1088f99fdec2f5ce098baa5",
+          "fitness": [
+            0.5,
+            0.5
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "delta_margin_diagnostic": 0.0
+          },
+          "ineffective_unit_actions": 160
+        },
+        {
+          "round": 0,
+          "mutation": {
+            "kind": "admissible_work",
+            "work": "COLLECT_FERTILIZER",
+            "targets": 6,
+            "turns": [
+              173,
+              193,
+              217,
+              226,
+              265,
+              278
+            ]
+          },
+          "tape_sha256": "4933bccf7efed7d1ad6ae9e9a240aef1e2a1ec5d0a64bc622bc0d367ee033128",
+          "artifact_hash": "a74d30237826fd5662cc6ee1b2609e4526205971c944905f9dfb4810783b9d0d",
+          "fitness": [
+            0.5,
+            0.5
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "delta_margin_diagnostic": 0.0
+          },
+          "ineffective_unit_actions": 256
+        },
+        {
+          "round": 0,
+          "mutation": {
+            "kind": "admissible_work",
+            "work": "FERTILIZE",
+            "targets": 1,
+            "turns": [
+              210
+            ]
+          },
+          "tape_sha256": "6ab35acc77f18d135fa703dded78ccfdad85835f4582ed4cf492f3bfd6c00dea",
+          "artifact_hash": "120aae0816f08f13a06f464a5b1ed94b1d3d23e200030644b16f9c37b4092526",
+          "fitness": [
+            0.5,
+            0.5
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "delta_margin_diagnostic": -32.25
+          },
+          "ineffective_unit_actions": 128
+        },
+        {
+          "round": 0,
+          "mutation": {
+            "kind": "admissible_work",
+            "work": "ALL",
+            "targets": 23,
+            "turns": [
+              152,
+              164,
+              173,
+              187,
+              190,
+              191,
+              193,
+              210
+            ]
+          },
+          "tape_sha256": "fe4f90872f1b1eca56e6d04a94b8207d15c0bcde5869ff3d7c1b2adfa20f30ac",
+          "artifact_hash": "8b0b64261c9cc3c3eccef99bfc1acc122b46c6e01ad85969e8fa97334b9c07e7",
+          "fitness": [
+            0.5,
+            0.5
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "delta_margin_diagnostic": -42.875
+          },
+          "ineffective_unit_actions": 384
+        },
+        {
+          "round": 0,
+          "mutation": {
+            "kind": "admissible_slot",
+            "work": "COLLECT_FERTILIZER",
+            "targets": 1,
+            "turns": [
+              173
+            ]
+          },
+          "tape_sha256": "95aa29797aa94b6562a41007bb352bdb09ba9ffc1a77de170d7d857a5730b1c0",
+          "artifact_hash": "b9166c8a6fb4d334f9c15f1268839aa91afc13e651b2464e46a020f33c8dc359",
+          "fitness": [
+            0.5,
+            0.5
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "delta_margin_diagnostic": 0.0
+          },
+          "ineffective_unit_actions": 144
+        },
+        {
+          "round": 1,
+          "mutation": {
+            "kind": "admissible_slot",
+            "work": "COLLECT_FERTILIZER",
+            "targets": 1,
+            "turns": [
+              278
+            ]
+          },
+          "tape_sha256": "33de4752812b3ce1c48535951e9c819112d98fdf5a28653f5577e7a2d3feba9e",
+          "artifact_hash": "4e5f4795508108d447cf299d30984676bcee217cafe5e84f060ecd43818d902a",
+          "fitness": [
+            0.5,
+            0.5
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "delta_margin_diagnostic": 0.0
+          },
+          "ineffective_unit_actions": 144
+        },
+        {
+          "round": 1,
+          "mutation": {
+            "kind": "admissible_slot",
+            "work": "CARE",
+            "targets": 1,
+            "turns": [
+              193
+            ]
+          },
+          "tape_sha256": "3ffa9551e1c448a6238c3fc4c763e62d73590dd5e49c18fb7bbc4848eeacecf0",
+          "artifact_hash": "8b61f1025db118fd6a5cdabc61e604f987bb30cd149f9892d9259f78c86cb734",
+          "fitness": [
+            0.5,
+            0.5
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "delta_margin_diagnostic": 0.0
+          },
+          "ineffective_unit_actions": 144
+        },
+        {
+          "round": 1,
+          "mutation": {
+            "kind": "admissible_slot",
+            "work": "HARVEST",
+            "targets": 1,
+            "turns": [
+              261
+            ]
+          },
+          "tape_sha256": "b441510de030f27f2b9ec38521e109f6b1ec7f1dd50b985602e4bdefe5e9945f",
+          "artifact_hash": "2ba5da2539da81b8ee44a7888288e02800336ba91cd4549846be7051a6b67c81",
+          "fitness": [
+            0.5,
+            0.5
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "delta_margin_diagnostic": -42.875
+          },
+          "ineffective_unit_actions": 160
+        },
+        {
+          "round": 1,
+          "mutation": {
+            "kind": "admissible_slot",
+            "work": "FEED",
+            "targets": 1,
+            "turns": [
+              278
+            ]
+          },
+          "tape_sha256": "2b58929a0479758a54163142ad70b7892bf91950a071e12dbdd11b92e614d3e4",
+          "artifact_hash": "3c4b42b61e308fe5f7e4ee35952e4223f24d52bd6a66504d69d4d9c7f91ca3a9",
+          "fitness": [
+            0.5,
+            0.5
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "delta_margin_diagnostic": 0.0
+          },
+          "ineffective_unit_actions": 144
+        },
+        {
+          "round": 1,
+          "mutation": {
+            "kind": "admissible_slot",
+            "work": "HARVEST",
+            "targets": 1,
+            "turns": [
+              210
+            ]
+          },
+          "tape_sha256": "539592e77d0c8cf1227f1259cfdf287c16a671a4f4afa2e791fc34b4b3a29976",
+          "artifact_hash": "1e1bc3491c9e2d6e7d4fabdcb59bde5bb4b493a90f783209dc6c281340ddbdd8",
+          "fitness": [
+            0.5,
+            0.5
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "delta_margin_diagnostic": -42.875
+          },
+          "ineffective_unit_actions": 160
+        },
+        {
+          "round": 1,
+          "mutation": {
+            "kind": "admissible_slot",
+            "work": "WATER",
+            "targets": 1,
+            "turns": [
+              210
+            ]
+          },
+          "tape_sha256": "4d7977385933cd74893ed005427d08442da06ca6c9783cb21deeb74318d8122e",
+          "artifact_hash": "e2222005a21870314579f8e1aff02fb47a2f23d6d27c64111666da5df13c6f1b",
+          "fitness": [
+            0.5,
+            0.5
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "delta_margin_diagnostic": 0.0
+          },
+          "ineffective_unit_actions": 144
+        },
+        {
+          "round": 1,
+          "mutation": {
+            "kind": "admissible_slot",
+            "work": "COLLECT_FERTILIZER",
+            "targets": 1,
+            "turns": [
+              265
+            ]
+          },
+          "tape_sha256": "9e370619bfc72a8e830a223ef19ff837c024c236d47fc4727b44a58b9cb4ee28",
+          "artifact_hash": "b5241dfe76136869cd3338d3ee3fd3fe4720a706bc6a95187b55369b5f593078",
+          "fitness": [
+            0.5,
+            0.5
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "delta_margin_diagnostic": 0.0
+          },
+          "ineffective_unit_actions": 144
+        },
+        {
+          "round": 1,
+          "mutation": {
+            "kind": "admissible_slot",
+            "work": "WATER",
+            "targets": 1,
+            "turns": [
+              152
+            ]
+          },
+          "tape_sha256": "f095c1ff471a61093aa4e84ec7d8ec0477ef5d055080088bfce989a630d7fddc",
+          "artifact_hash": "ea043cf35f09774eba61cc3cd57acd5fa3db616f7625a2a59afb813e93410034",
+          "fitness": [
+            0.5,
+            0.5
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "delta_margin_diagnostic": 0.0
+          },
+          "ineffective_unit_actions": 144
+        }
+      ],
+      "accepted": [],
+      "initial_fitness": [
+        0.5,
+        0.5
+      ],
+      "selected_fitness": [
+        0.5,
+        0.5
+      ],
+      "evaluated_mutations": 16,
+      "check": {
+        "games": 16,
+        "delta_win": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "delta_margin_diagnostic": 0.0
+      },
+      "wall_seconds": 165.44462433800072,
+      "release_status": "not_validated",
+      "evidence_sha256": {
+        "main.manifest.json": "fa9931d01a83e5dda67b04a28d961e53d3526f8dfe71b8b17bb671e5ee28b92a",
+        "plan.json": "af69574a40f8287ea0d30577be5536a088f787629c8f98a992ed650cf5124e40",
+        "report.json": "96660738f512ff3b2a4b71ddfc6b744ee7ebf31bb00ac9dc8d755b1e782869f5",
+        "selection.json": "f827c3a99f10b093db0b30ffcde3e89239449826fbfce6425669ae2315888c32",
+        "tapes.json": "2f990b028f14194474ad4a47b94817617ddc0a5ddd34e3ad9398bdc0a66d06e8"
+      }
+    },
+    "opportunity-648-01": {
+      "plan": {
+        "kind": "opportunity_block_local_search",
+        "mutation_space": "opportunity",
+        "split": "dev",
+        "start": 648,
+        "end": 719,
+        "days": 3,
+        "proposals": 8,
+        "rounds": 2,
+        "seeds": [
+          1046,
+          1047,
+          1048,
+          1049
+        ],
+        "check_seeds": [
+          1050,
+          1051,
+          1052,
+          1053
+        ],
+        "opponents": [
+          "clock::opponents/public/thomas_t95/main.py",
+          "clock::opponents/public/aberatozer_d5e3/main.py"
+        ],
+        "opponent_hashes": {
+          "clock::opponents/public/thomas_t95/main.py": "76254cf98142ec312ec677a73b678294f5ff574295640c74b319683fa6b00c4b",
+          "clock::opponents/public/aberatozer_d5e3/main.py": "e0a3f8d4ce19b39e32a3db73329d1fc4c89a8e1c9f10dd041608a3f00e60129c"
+        },
+        "search_seed": 771,
+        "registry": {
+          "search": {
+            "registry_schema": 1,
+            "registry_revision": 2,
+            "registry_sha256": "911be9bb20b421dc66ac6bf77a1a25d993e0de327c98f3a42876e2c744b2c8b9",
+            "split": "dev",
+            "competitive": true
+          },
+          "check": {
+            "registry_schema": 1,
+            "registry_revision": 2,
+            "registry_sha256": "911be9bb20b421dc66ac6bf77a1a25d993e0de327c98f3a42876e2c744b2c8b9",
+            "split": "dev",
+            "competitive": true
+          }
+        },
+        "environment": {
+          "version": "1.32.7",
+          "interpreter_sha256": "bc8a54879ef02c7ea64b8b333d6a976f0ea65c4949149d01f463f23bccee653e",
+          "specification_sha256": "a82c89c1a2315b93f39775d8e025471a01b738647c9772658368ee6b1b6f4867"
+        },
+        "generator_sha256": "5a987886f75daad0bbf988b7aaa1d1014d620930a79d9480f778c159f1002d6e",
+        "opportunity_mutations_sha256": "f4f46e42a0c6d515de105168eb3836c466cc1b1e39671a4e523a43da511c4a96",
+        "source": {
+          "source": "/mnt/d/Projects/kaggle-projects/kaggriculture/opponents/public/yhay_router_0908/actions.json",
+          "source_sha256": "171c8550addac9fdb49acb44af36f64b4eb54e34c561eb6f3d4a83e2dcc803a6",
+          "tape_index": 0,
+          "initial_tape_sha256": "2c413946a556e6fb93d939d31db64ec39fddba53b45ac3873ad687451889beb5",
+          "source_url": "https://www.kaggle.com/code/yhay81/shop-router-0908",
+          "license": "Apache-2.0 (author states handwritten code is Apache-2.0; Kaggle notebook default)"
+        }
+      },
+      "history": [
+        {
+          "round": 0,
+          "mutation": {
+            "kind": "admissible_work",
+            "work": "WATER",
+            "targets": 2,
+            "turns": [
+              666,
+              668
+            ]
+          },
+          "tape_sha256": "1b3ad0e28befd753f2b9337e8cf6bc9f9a983566380d99b9998e9ada979471d4",
+          "artifact_hash": "87cb7b919e3a5cc202d166854368832a7890f16918584f53ce1ab4ba7cfb7c7e",
+          "fitness": [
+            0.75,
+            0.75
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "delta_margin_diagnostic": 86.375
+          },
+          "ineffective_unit_actions": 144
+        },
+        {
+          "round": 0,
+          "mutation": {
+            "kind": "admissible_work",
+            "work": "HARVEST",
+            "targets": 6,
+            "turns": [
+              668,
+              671,
+              675,
+              679,
+              694,
+              704
+            ]
+          },
+          "tape_sha256": "f45cbd020c38b27bcbbcb8b92f5e29d1ec65e47ca4d04fd7dd74627a4dffa3cc",
+          "artifact_hash": "42f0e08062a04b9a78dfdfd3030e50498a466d70dac3f3c10d7c2c2f98bc3aba",
+          "fitness": [
+            0.75,
+            0.75
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "delta_margin_diagnostic": -94.875
+          },
+          "ineffective_unit_actions": 258
+        },
+        {
+          "round": 0,
+          "mutation": {
+            "kind": "admissible_work",
+            "work": "CARE",
+            "targets": 7,
+            "turns": [
+              675,
+              676,
+              679,
+              695,
+              711,
+              712,
+              716
+            ]
+          },
+          "tape_sha256": "6dfeebe243dab25a400c5038fa85f3308f47604beafbe89700669985d1227d6a",
+          "artifact_hash": "c2ebd82847051d77696b4f20c60e357f43f8530d5e15fba6cbd249ab21290815",
+          "fitness": [
+            0.75,
+            0.75
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "delta_margin_diagnostic": 0.0
+          },
+          "ineffective_unit_actions": 160
+        },
+        {
+          "round": 0,
+          "mutation": {
+            "kind": "admissible_work",
+            "work": "FEED",
+            "targets": 4,
+            "turns": [
+              675,
+              676,
+              679,
+              688
+            ]
+          },
+          "tape_sha256": "033d836461cde445cc812bc6ef9e21c28c1ba998b6ef8dc523c4391bedbebcca",
+          "artifact_hash": "f0835d27e9f24a9634e1f6bf35f89398b6f3fadb30281973ad3602af1aa4bf52",
+          "fitness": [
+            0.75,
+            0.75
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "delta_margin_diagnostic": -175.5
+          },
+          "ineffective_unit_actions": 128
+        },
+        {
+          "round": 0,
+          "mutation": {
+            "kind": "admissible_work",
+            "work": "COLLECT_FERTILIZER",
+            "targets": 7,
+            "turns": [
+              675,
+              676,
+              679,
+              695,
+              711,
+              712,
+              716
+            ]
+          },
+          "tape_sha256": "f8b07910112f39fd90427abf192c3ccf6acacbd089f842d7919243b18c0eee32",
+          "artifact_hash": "8eef208c62cb8a781359a4ed1c24d6e3ed66d0520d52ee55009041b225dfc9ad",
+          "fitness": [
+            0.75,
+            0.75
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "delta_margin_diagnostic": 0.0
+          },
+          "ineffective_unit_actions": 160
+        },
+        {
+          "round": 0,
+          "mutation": {
+            "kind": "admissible_work",
+            "work": "FERTILIZE",
+            "targets": 2,
+            "turns": [
+              666,
+              671
+            ]
+          },
+          "tape_sha256": "acc4a14d20728840db82c7d0ac935ac35e12d585e2d923edce0ada8d208eaf13",
+          "artifact_hash": "937bcb383b21d3be8a66a97127ca1c8fd2faaad96df9676877fa13cd5e159d46",
+          "fitness": [
+            0.75,
+            0.75
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "delta_margin_diagnostic": 121.125
+          },
+          "ineffective_unit_actions": 128
+        },
+        {
+          "round": 0,
+          "mutation": {
+            "kind": "admissible_work",
+            "work": "ALL",
+            "targets": 28,
+            "turns": [
+              666,
+              668,
+              671,
+              675,
+              676,
+              679,
+              688,
+              694
+            ]
+          },
+          "tape_sha256": "9966c50ee63ed7d3e9b73540a2c8cbc585b65ac2e94061c58f7a66d733adb56b",
+          "artifact_hash": "802e11ef7534fe32fcaa02dbcdb588e70518c33a11d45df0e4331221e4b3fde3",
+          "fitness": [
+            0.75,
+            0.75
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "delta_margin_diagnostic": -93.5
+          },
+          "ineffective_unit_actions": 258
+        },
+        {
+          "round": 0,
+          "mutation": {
+            "kind": "admissible_slot",
+            "work": "WATER",
+            "targets": 1,
+            "turns": [
+              668
+            ]
+          },
+          "tape_sha256": "82e08c3b06dc9aa7559cb6785e9d1106ac33edbb27be9ad07760fbcfc12d4c10",
+          "artifact_hash": "d38ebc9420e6d1e809d53a3af3b97e9e935db5119991c5cbc0852df8181d62f0",
+          "fitness": [
+            0.75,
+            0.75
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "delta_margin_diagnostic": 86.375
+          },
+          "ineffective_unit_actions": 128
+        },
+        {
+          "round": 1,
+          "mutation": {
+            "kind": "admissible_slot",
+            "work": "FEED",
+            "targets": 1,
+            "turns": [
+              679
+            ]
+          },
+          "tape_sha256": "e2d8fa4aa4ce0a58c350d6614f3bb66888d9104eca289d8931fb4ec55e63f9dd",
+          "artifact_hash": "e0710a839656e1de22ddf6a62da46d348c26f8c16df2f88378e0c7a42619b1ef",
+          "fitness": [
+            0.75,
+            0.75
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "delta_margin_diagnostic": -44.75
+          },
+          "ineffective_unit_actions": 128
+        },
+        {
+          "round": 1,
+          "mutation": {
+            "kind": "admissible_slot",
+            "work": "CARE",
+            "targets": 1,
+            "turns": [
+              695
+            ]
+          },
+          "tape_sha256": "4df2e59af8c5612ff42c15c08517467814f9071baa7d502be076fd03d6a983fe",
+          "artifact_hash": "168e3def3fa45f6d63d8f11fc49509d6d02ff8c17165132bb2bf609a73123f56",
+          "fitness": [
+            0.75,
+            0.75
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "delta_margin_diagnostic": 0.0
+          },
+          "ineffective_unit_actions": 128
+        },
+        {
+          "round": 1,
+          "mutation": {
+            "kind": "admissible_slot",
+            "work": "FERTILIZE",
+            "targets": 1,
+            "turns": [
+              671
+            ]
+          },
+          "tape_sha256": "bb557e1e7bb9fb3650f5f24378bdf2ff50f6a70dce92bf1b0517a95845812ee9",
+          "artifact_hash": "2e8adcca1d292beb71f504b8b58b83dd5af47d550431c5f77ea14b9e3e871beb",
+          "fitness": [
+            0.75,
+            0.75
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "delta_margin_diagnostic": 39.625
+          },
+          "ineffective_unit_actions": 128
+        },
+        {
+          "round": 1,
+          "mutation": {
+            "kind": "admissible_slot",
+            "work": "HARVEST",
+            "targets": 1,
+            "turns": [
+              675
+            ]
+          },
+          "tape_sha256": "d734269620dc27214dfd47f5aba4421192494c70c790c1f0380975668f7b52c3",
+          "artifact_hash": "347c6e5f5f19e4b9fda5a19e14d1d11cf7ca7e95cca9ff3fb4e65aaacdbd871b",
+          "fitness": [
+            0.75,
+            0.75
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "delta_margin_diagnostic": 0.0
+          },
+          "ineffective_unit_actions": 144
+        },
+        {
+          "round": 1,
+          "mutation": {
+            "kind": "admissible_slot",
+            "work": "FEED",
+            "targets": 1,
+            "turns": [
+              675
+            ]
+          },
+          "tape_sha256": "354438b8b44d1e39a93ad535fa4fbf01e5e6155811fb4c0d1ffe7c1c30fdd03d",
+          "artifact_hash": "f3ca8247625f313ebb6061c5c26311f1aba5a090965b468783931f73c9b799e6",
+          "fitness": [
+            0.75,
+            0.75
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "delta_margin_diagnostic": -44.75
+          },
+          "ineffective_unit_actions": 128
+        },
+        {
+          "round": 1,
+          "mutation": {
+            "kind": "admissible_slot",
+            "work": "COLLECT_FERTILIZER",
+            "targets": 1,
+            "turns": [
+              679
+            ]
+          },
+          "tape_sha256": "4a4182deacdd363567492b21933ee5769aa20fb45b0efa3bfba6d8b5c2a59591",
+          "artifact_hash": "15d48057af8367a237acfc5563f9f6a2253a6ac07d8acd155015b55136e74ad0",
+          "fitness": [
+            0.75,
+            0.75
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "delta_margin_diagnostic": 0.0
+          },
+          "ineffective_unit_actions": 144
+        },
+        {
+          "round": 1,
+          "mutation": {
+            "kind": "admissible_slot",
+            "work": "HARVEST",
+            "targets": 1,
+            "turns": [
+              668
+            ]
+          },
+          "tape_sha256": "7c04f0d44c9c98ecfe54a21c9006108e83dd695056610c40877e036c70109d3a",
+          "artifact_hash": "bd380446e853848f1c76923dc24a703623af5611ad4504730de10ef02c66a9de",
+          "fitness": [
+            0.75,
+            0.75
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "delta_margin_diagnostic": 0.0
+          },
+          "ineffective_unit_actions": 144
+        },
+        {
+          "round": 1,
+          "mutation": {
+            "kind": "admissible_slot",
+            "work": "COLLECT_FERTILIZER",
+            "targets": 1,
+            "turns": [
+              695
+            ]
+          },
+          "tape_sha256": "af069eff69a0ab665b51fa13970415c5ddc4693db9e51b40ba10db266d26f61e",
+          "artifact_hash": "75efa2cbdd25ffd5a162457c51edcba534d99f44113f173d1cf8a3e8ba5e4604",
+          "fitness": [
+            0.75,
+            0.75
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "delta_margin_diagnostic": 0.0
+          },
+          "ineffective_unit_actions": 128
+        }
+      ],
+      "accepted": [],
+      "initial_fitness": [
+        0.75,
+        0.75
+      ],
+      "selected_fitness": [
+        0.75,
+        0.75
+      ],
+      "evaluated_mutations": 16,
+      "check": {
+        "games": 16,
+        "delta_win": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "delta_margin_diagnostic": 0.0
+      },
+      "wall_seconds": 154.83380984200085,
+      "release_status": "not_validated",
+      "evidence_sha256": {
+        "main.manifest.json": "c2b24a9203d44519c53d0903d3e3e0438d46112fb99143d778b3e7f56f0e010b",
+        "plan.json": "72d748b9695fa1064d22203fdc7ba0bc18a7944c5de2722738c07d4448a2949d",
+        "report.json": "8c49b1540e6851200442cb9e401a3c1e01bd05150c391faafe887b40c9ec54ac",
+        "selection.json": "d4dca2c503290767bc0af26b5b9bd76e1e7c6a38f1ab24e0268297efdbcf806e",
+        "tapes.json": "2f990b028f14194474ad4a47b94817617ddc0a5ddd34e3ad9398bdc0a66d06e8"
+      }
+    }
+  }
+}
