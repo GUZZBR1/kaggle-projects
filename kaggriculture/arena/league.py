@@ -1,17 +1,29 @@
 import argparse
 from datetime import datetime, timezone
 import json
+from pathlib import Path
 import time
 
 from .agents import agent_hash
+from .jobs import JobStore, execute, plan, single_provenance
 from .parallel import matches
 from .seeds import REGISTRY, SPLITS, admit_run, parse_seeds
 from eval.metrics import summarize
 from eval.reports import write_report
 
 
+def store_path(output):
+    """A sibling of the report, not a file inside it.
+
+    `write_report` creates its directory with `exist_ok=False`, so the report can only
+    be written once, and a store living inside it could not survive the interrupted run
+    it exists to rescue.
+    """
+    return None if output is None else Path(str(output) + '.jobs.sqlite3')
+
+
 def run_league(candidate, opponents, seeds, workers=4, backend='fast', output=None, split='dev',
-               paired_with=(), registry_path=REGISTRY):
+               paired_with=(), registry_path=REGISTRY, resume=False, attempts=3, store=None):
     if len(set(opponents)) != len(opponents) or not opponents or len(set(seeds)) != len(seeds) or not seeds:
         raise ValueError('Require unique, nonempty opponents and seeds')
     started = time.perf_counter()
@@ -27,14 +39,32 @@ def run_league(candidate, opponents, seeds, workers=4, backend='fast', output=No
                   'opponents': opponents, 'opponent_hashes': hashes, 'backend': backend,
                   'seeds': list(seeds), 'seats': [0, 1],
                   'requested_at': datetime.now(timezone.utc).isoformat()}
+    # Admission is the head's job and happens exactly once per run, before any game.
+    # A resume re-declares the same batch, which `admit_run` readmits against the
+    # recorded batch id rather than burning the validation seeds a second time.
     registry = admit_run(seeds, split, provenance, path=registry_path)
-    jobs = [dict(candidate=candidate, opponent=opponent, seed=seed, seat=seat, backend=backend)
-            for seed in seeds for opponent in opponents for seat in (0, 1)]
-    rows = []
-    for row in matches(jobs, workers):
-        rows.append(row)
-        if len(rows) % 20 == 0:
-            print(f'{len(rows)}/{len(jobs)} games; {time.perf_counter()-started:.1f}s', flush=True)
+    jobs = plan(candidate, opponents, seeds, backend=backend, split=split)
+    target = store if store is not None else store_path(output)
+    if target is None:
+        target = ':memory:'
+    elif not resume and Path(target).exists():
+        raise ValueError(f'{target} already holds games for this run; pass resume to continue it')
+    with JobStore(target) as job_store:
+        remaining = len(job_store.pending(jobs))
+        if resume and remaining != len(jobs):
+            print(f'resuming: {len(jobs) - remaining}/{len(jobs)} games already recorded', flush=True)
+        counter = {'n': len(jobs) - remaining}
+
+        def progress(_row):
+            counter['n'] += 1
+            if counter['n'] % 20 == 0:
+                print(f'{counter["n"]}/{len(jobs)} games; {time.perf_counter()-started:.1f}s', flush=True)
+
+        rows = execute(jobs, job_store, split, matches, workers=workers,
+                       attempts=attempts, on_row=progress)
+    # The store may hold games from an earlier attempt; refusing a mixed set here is
+    # what makes a resumed or distributed run as trustworthy as a single-process one.
+    single_provenance(rows)
     summary = summarize(rows)
     metadata = {'candidate': candidate, 'candidate_hash': provenance['candidate_hash'],
                 'opponents': opponents, 'opponent_hashes': hashes,
@@ -56,6 +86,10 @@ def main():
     parser.add_argument('--split', choices=list(SPLITS), default='dev')
     parser.add_argument('--paired-with', dest='paired_with', default='',
                         help='other candidates in the same declared validation batch')
+    parser.add_argument('--resume', action='store_true',
+                        help='skip games the job store already holds for this exact plan')
+    parser.add_argument('--attempts', type=int, default=3,
+                        help='infrastructure-fault retries; agent failures are never retried')
     parser.add_argument('--output', required=True)
     args = parser.parse_args()
     args.opponents = args.opponents.split(',')
