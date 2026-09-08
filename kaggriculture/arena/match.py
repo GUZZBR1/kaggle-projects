@@ -82,9 +82,11 @@ def observations(state):
     result = []
     for i in range(2):
         obs = dict(state[i].observation)
-        # Mirror upstream: step is NOT shared with seat 1. Agents must use the
-        # public day/hour clock. Injecting step here hides submission failures.
-        for key in ('day', 'hour', 'farms', 'market', 'town'):
+        # The official framework hands `step` to BOTH players, always equal to
+        # day * turnsPerDay + hour (verified in tests/test_clock.py against a
+        # real episode). The fast backend only advances state[0], so seat 1
+        # must read the shared value or it would silently see a stale clock.
+        for key in ('step', 'day', 'hour', 'farms', 'market', 'town'):
             obs[key] = shared[key]
         # Isolate callbacks from each other and the interpreter. No opponent private data.
         result.append(json.loads(json.dumps(obs)))

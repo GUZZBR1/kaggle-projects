@@ -41,13 +41,39 @@ def test_turns_left_follows_the_derived_step():
     assert state.turns_left == 0
 
 
+def test_the_official_framework_gives_both_players_the_same_clock():
+    """Ground truth for what the arena must mirror, taken from a real episode.
+
+    The spec does not declare `step` as a shared observation field, which makes
+    it tempting to conclude seat 1 never receives one. It does: the framework
+    writes it for both players, always equal to day * turnsPerDay + hour.
+    """
+    from arena.engine import make_environment
+    seen = {0: [], 1: []}
+
+    def spy(player):
+        def agent(obs, config=None):
+            seen[player].append((obs.get('step'), obs['day'], obs['hour']))
+            return {'farmer': ['PASS'], 'hands': [], 'market': []}
+        return agent
+
+    make_environment(7).run([spy(0), spy(1)])
+    assert len(seen[0]) == len(seen[1]) == 719
+    assert seen[0] == seen[1]
+    assert all(step == day * 24 + hour for step, day, hour in seen[0])
+
+
 @pytest.mark.parametrize('seat', [0, 1])
-def test_arena_never_lends_seat_one_a_step_it_would_not_receive(seat):
-    # Upstream ships `step` to seat 0 only. Mirroring it would hide a submission
-    # that reads the private key and passes in the lab but fails on Kaggle.
-    obs = observations(make_environment(11).state)
-    assert 'step' in obs[0] and 'step' not in obs[1]
-    assert obs[seat]['day'] == 0 and obs[seat]['hour'] == 0
+def test_the_arena_hands_both_seats_the_clock_the_framework_would(seat):
+    # The fast backend only advances state[0], so seat 1 must read the shared
+    # value; dropping it would let seat 1 act on a stale step and would break
+    # any step-driven submission in one seat only.
+    env = make_environment(11)
+    for _ in range(30):
+        env.step([{'farmer': ['PASS'], 'hands': [], 'market': []}] * 2)
+    obs = observations(env.state)
+    assert obs[0]['step'] == obs[1]['step']
+    assert obs[seat]['step'] == obs[seat]['day'] * 24 + obs[seat]['hour']
 
 
 @pytest.mark.parametrize('mutate', [lambda o: o.pop('step', None), lambda o: o.update(step=None)])
