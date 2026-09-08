@@ -1,5 +1,6 @@
 import copy
 import json
+from pathlib import Path
 import random
 
 import pytest
@@ -138,7 +139,10 @@ def test_candidate_with_different_frontier_is_refused(tmp_path, monkeypatch):
     from experiments import block_solver as solver
     def matches(jobs, workers):
         for job in jobs:
-            obs = dict(player=job['seat'], step=648, day=27, hour=0, farms=[], private={})
+            # The frontier digest reads the same keys the arrival state does, so the
+            # stand-in observation carries them like a real one.
+            obs = dict(player=job['seat'], step=648, day=27, hour=0, market={}, town={},
+                       farms=[{'money': 0}, {'money': 0}], private={})
             from pathlib import Path
             Path(job['replay']).write_text(json.dumps({'turns': [
                 dict(step=step, observations=[obs, obs]) for step in (648, 719)]}))
@@ -149,3 +153,107 @@ def test_candidate_with_different_frontier_is_refused(tmp_path, monkeypatch):
     with pytest.raises(ValueError, match='same frontier'):
         solver.evaluate(tape(), tmp_path / 'trial', ['starter'], [1000], 648, 719, 1,
                         'unit test', expected_frontiers={})
+
+
+def test_a_turn_without_a_market_key_yields_no_proposal():
+    """A tape that omits `market` is unchanged by a market edit, and must not be proposed.
+
+    `setdefault` used to insert the key, which changes the digest without changing
+    behaviour, so an identical tape slipped past the deduplication and spent a full
+    evaluation -- sixteen games at the documented settings -- on nothing.
+    """
+    bare = [dict(farmer=['PASS'], hands=[]) for _ in range(719)]
+    assert mutations(bare, 0, 72, 4, random.Random(1)) == []
+    assert all('market' not in action for action in bare)
+
+
+def test_structural_variants_leave_room_for_sampled_edits():
+    """All three block reorderings ahead of the shuffle would leave one random proposal."""
+    variants = mutations(tape(), 648, 719, 4, random.Random(7))
+    kinds = [variant['mutation']['kind'] for variant in variants]
+    assert kinds.count('block_order') <= 2, kinds
+    assert len(variants) == 4
+
+
+def test_a_mutation_that_escapes_its_block_is_refused_not_asserted(tmp_path, monkeypatch):
+    """Bare asserts vanish under -O; an escaped mutation would then be measured."""
+    from experiments import block_solver as solver
+    source = tmp_path / 'source.json'
+    source.write_text(json.dumps([tape()]))
+    escaped = copy.deepcopy(tape())
+    escaped[0]['market'] = [['SELL', 'WHEAT', 1]]
+    monkeypatch.setattr(solver, 'mutations', lambda *args, **kwargs: [
+        dict(actions=escaped, sha256='escaped', mutation=dict(kind='bogus'))])
+    monkeypatch.setattr(solver, 'engine_fingerprint', lambda: {})
+
+    def evaluate(actions, directory, *, seeds, **kwargs):
+        directory.mkdir()
+        (directory / 'main.py').write_text('def agent(obs): return {}\n')
+        rows = [dict(seed=seed, seat=seat, opponent='starter', score=.5, margin=0,
+                     candidate_hash='same', opponent_hash='opponent', environment={},
+                     configuration={}, backend='fast', failures=[], opponent_failures=[],
+                     audit={}) for seed in seeds for seat in (0, 1)]
+        return dict(rows=rows, frontiers={}, fitness=(.5, .5),
+                    artifact=str(directory / 'main.py'), artifact_hash='same')
+    monkeypatch.setattr(solver, 'evaluate', evaluate)
+    with pytest.raises(ValueError, match='escaped its block'):
+        solver.search(source, tmp_path / 'out', opponents=['starter'], seeds=[1000, 1001],
+                      check_seeds=[1002, 1003], proposals=1, rounds=1)
+    assert (tmp_path / 'out' / 'failure.json').is_file()
+
+
+def test_a_refused_evaluation_leaves_no_transient_snapshot(tmp_path, monkeypatch):
+    """The doc promises the solver removes the snapshots it produced. A raise included."""
+    from experiments import block_solver as solver
+
+    def matches(jobs, workers):
+        for job in jobs:
+            obs = dict(player=job['seat'], step=648, day=27, hour=0, market={}, town={},
+                       farms=[{'money': 0}, {'money': 0}], private={})
+            Path(job['replay']).write_text(json.dumps({'turns': [
+                dict(step=step, observations=[obs, obs]) for step in (648, 719)]}))
+            yield dict(candidate_hash='not the artifact hash', opponent_hash='x',
+                       failures=[], opponent_failures=[], seat=job['seat'], seed=job['seed'],
+                       opponent=job['opponent'])
+    monkeypatch.setattr(solver, 'matches', matches)
+    trial = tmp_path / 'trial'
+    with pytest.raises(ValueError, match='Artifact changed'):
+        solver.evaluate(tape(), trial, ['starter'], [1000, 1001], 648, 719, 1, 'unit test')
+    assert list(trial.glob('snapshot-*.json')) == []
+
+
+def test_frontier_digest_ignores_wall_clock_fields():
+    """`remainingOverageTime` is pinned under the fast backend and free under the official."""
+    from experiments.block_solver import frontier_digest
+    observation = dict(player=0, step=648, day=27, hour=0, market={}, town={},
+                       farms=[{'money': 1}, {'money': 2}], private={}, remainingOverageTime=60)
+    other = dict(observation, remainingOverageTime=41.5)
+    assert frontier_digest(observation, 0) == frontier_digest(other, 0)
+
+
+def test_iterating_on_a_previous_run_keeps_the_upstream_credit(tmp_path, monkeypatch):
+    """This tool nests source_url and license under `source`; feeding that back must not
+    silently drop the upstream Apache-2.0 attribution."""
+    from experiments import block_solver as solver
+    source = tmp_path / 'source.json'
+    source.write_text(json.dumps({'tapes': [dict(actions=tape(), sha256='x')]}))
+    (tmp_path / 'main.manifest.json').write_text(json.dumps(
+        {'source': {'source_url': 'https://example.invalid/notebook', 'license': 'Apache-2.0'}}))
+    monkeypatch.setattr(solver, 'engine_fingerprint', lambda: {})
+
+    def evaluate(actions, directory, *, seeds, **kwargs):
+        directory.mkdir()
+        (directory / 'main.py').write_text('def agent(obs): return {}\n')
+        rows = [dict(seed=seed, seat=seat, opponent='starter', score=.5, margin=0,
+                     candidate_hash='same', opponent_hash='opponent', environment={},
+                     configuration={}, backend='fast', failures=[], opponent_failures=[],
+                     audit={}) for seed in seeds for seat in (0, 1)]
+        return dict(rows=rows, frontiers={}, fitness=(.5, .5),
+                    artifact=str(directory / 'main.py'), artifact_hash='same')
+    monkeypatch.setattr(solver, 'evaluate', evaluate)
+    output = tmp_path / 'out'
+    solver.search(source, output, opponents=['starter'], seeds=[1000, 1001],
+                  check_seeds=[1002, 1003], proposals=1, rounds=1)
+    provenance = json.loads((output / 'plan.json').read_text())['source']
+    assert provenance['source_url'] == 'https://example.invalid/notebook'
+    assert provenance['license'] == 'Apache-2.0'

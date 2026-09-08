@@ -54,6 +54,16 @@ def arrival_state(observation, seat):
     return {'sha256': digest(state), 'state': state}
 
 
+def frontier_digest(observation, seat):
+    """Digest the same key subset `arrival_state` keeps, so no wall-clock field enters it.
+
+    Digesting the whole observation would include `remainingOverageTime`, which is pinned
+    under the fast backend but becomes wall-clock dependent under the official one; every
+    frontier check would then fail spuriously the day a backend is threaded through.
+    """
+    return arrival_state(observation, seat)['sha256']
+
+
 def mutations(actions, start, end, count, rng, excluded=()):
     """Local market edits; prefix, suffix and worker actions remain exactly fixed."""
     if len(actions) != TURNS or not 0 <= start < end <= TURNS or count < 1:
@@ -76,11 +86,20 @@ def mutations(actions, start, end, count, rng, excluded=()):
         if len(orders) > 1:
             candidates.append(('rotate', turn, None, None))
     rng.shuffle(candidates)
-    candidates = [('block_order', start, None, direction) for direction in (1, -1, 0)] + candidates
+    # The three structural variants are cheap and deterministic, but they must not crowd
+    # out the sampled local edits: ahead of the whole list they leave a single random
+    # proposal per round at the default budget of four.
+    structural = [('block_order', start, None, direction) for direction in (1, -1, 0)]
+    candidates = structural[:max(1, count // 2)] + candidates
     seen, result = set(excluded) | {tape_digest(actions)}, []
     for kind, turn, slot, value in candidates:
         tape = copy.deepcopy(actions)
-        orders = tape[turn].setdefault('market', [])
+        # `get`, never `setdefault`. A turn that omits `market` is behaviourally identical
+        # to one carrying an empty list, but inserting the key changes the digest, so the
+        # deduplication below would pass an unchanged tape off as a proposal and spend a
+        # full evaluation on it. Every candidate that reads `orders` was built from a turn
+        # that already has the key.
+        orders = tape[turn].get('market', [])
         if kind == 'block_order':
             for action in tape[start:end]:
                 market = action.get('market', [])
@@ -128,6 +147,24 @@ def evaluate(actions, directory, opponents, seeds, start, end, workers, provenan
             for index, opponent in enumerate(opponents) for seed in seeds for seat in (0, 1)]
     rows, arrivals, frontiers = [], [], {}
     artifact_hash = agent_hash(str(artifact))
+    try:
+        rows, arrivals, frontiers = _collect(jobs, workers, artifact_hash, snapshots, start, end,
+                                             expected_frontiers, expected_hashes,
+                                             expected_environment)
+    finally:
+        # Any raise above leaves this job's snapshot and every unconsumed one on disk.
+        for leftover in directory.glob('snapshot-*.json'):
+            leftover.unlink()
+    paired_rows(rows, rows)
+    (directory / 'matches.jsonl').write_text(''.join(json.dumps(row) + '\n' for row in rows))
+    (directory / 'arrivals.json').write_text(json.dumps(arrivals) + '\n')
+    return dict(rows=rows, frontiers=frontiers, fitness=fitness(rows), artifact=str(artifact),
+                artifact_hash=artifact_hash)
+
+
+def _collect(jobs, workers, artifact_hash, snapshots, start, end,
+             expected_frontiers, expected_hashes, expected_environment):
+    rows, arrivals, frontiers = [], [], {}
     for job, row in zip(jobs, matches(jobs, workers), strict=True):
         if row['failures'] or row['opponent_failures']:
             raise ValueError('Failed callbacks invalidate block evaluation')
@@ -142,7 +179,7 @@ def evaluate(actions, directory, opponents, seeds, start, end, workers, provenan
         if set(observations) != set(snapshots):
             raise ValueError('Block evaluation did not reach every requested boundary')
         key = (row['seed'], row['seat'], row['opponent'])
-        frontiers[key] = digest(observations[start])
+        frontiers[key] = frontier_digest(observations[start], row['seat'])
         if expected_frontiers is not None and frontiers[key] != expected_frontiers.get(key):
             raise ValueError('Candidate did not start from the same frontier')
         arrivals.append(dict(seed=row['seed'], seat=row['seat'], opponent=row['opponent'],
@@ -152,11 +189,7 @@ def evaluate(actions, directory, opponents, seeds, start, end, workers, provenan
                              margin_diagnostic=row['margin']))
         rows.append(row)
         replay_path.unlink()  # The compact, own-state record below replaces the transient replay.
-    paired_rows(rows, rows)
-    (directory / 'matches.jsonl').write_text(''.join(json.dumps(row) + '\n' for row in rows))
-    (directory / 'arrivals.json').write_text(json.dumps(arrivals) + '\n')
-    return dict(rows=rows, frontiers=frontiers, fitness=fitness(rows), artifact=str(artifact),
-                artifact_hash=artifact_hash)
+    return rows, arrivals, frontiers
 
 
 def search(source, output, *, tape_index=0, start=648, days=3, proposals=4, rounds=2,
@@ -189,7 +222,11 @@ def search(source, output, *, tape_index=0, start=648, days=3, proposals=4, roun
                       initial_tape_sha256=tape_digest(initial))
     if source_manifest.is_file():
         manifest = json.loads(source_manifest.read_text())
-        provenance.update(source_url=manifest.get('source_url'), license=manifest.get('license'))
+        # Upstream opponent manifests carry these flat; the manifest this tool writes nests
+        # them under `source`, so iterating on a previous run must not drop the credit.
+        nested = manifest.get('source') if isinstance(manifest.get('source'), dict) else {}
+        provenance.update(source_url=manifest.get('source_url') or nested.get('source_url'),
+                          license=manifest.get('license') or nested.get('license'))
     credit = json.dumps(provenance, sort_keys=True)
     output = Path(output)
     output.mkdir(parents=True, exist_ok=False)
@@ -219,8 +256,11 @@ def search(source, output, *, tape_index=0, start=648, days=3, proposals=4, roun
                 if proposal['sha256'] in visited:
                     continue
                 visited.add(proposal['sha256'])
-                assert proposal['actions'][:start] == initial[:start]
-                assert proposal['actions'][end:] == initial[end:]
+                if (proposal['actions'][:start] != initial[:start]
+                        or proposal['actions'][end:] != initial[end:]):
+                    # Every other invariant here raises; an assert would vanish under -O
+                    # and a mutation that escaped the block would be measured and accepted.
+                    raise ValueError('Mutation escaped its block: prefix and suffix are fixed')
                 result = evaluate(proposal['actions'], output / f'round-{generation}-proposal-{index}',
                                   expected_frontiers=original['frontiers'], **common)
                 # Strict pairing checks the complete context, engine and adapters as well as seeds.
