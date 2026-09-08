@@ -41,23 +41,36 @@ def crash_once(batch, workers, timeout, gate):
     import ray
     if ray.get(gate.first.remote(batch['batch_id'])):
         os._exit(86)
-    return run_batch(batch, workers=workers, timeout=timeout)
+    result = run_batch(batch, workers=workers, timeout=timeout)
+    result['ray_node_id'] = str(ray.get_runtime_context().get_node_id())
+    return result
 
 
 def verify_worker_recovery(mapper, batch, workers):
-    gate = mapper.ray.remote(num_cpus=0)(CrashGate).remote()
-    recovery_task = mapper.ray.remote(num_cpus=workers, max_retries=0,
-                                      retry_exceptions=False)(
-        lambda work, count, timeout: crash_once(work, count, timeout, gate))
-    original_task, mapper._task = mapper._task, recovery_task
-    try:
-        recovered = list(mapper([batch], workers))
-    finally:
-        mapper._task = original_task
-    calls = mapper.ray.get(gate.count.remote())
-    if len(recovered) != 1 or calls != 2:
-        raise SystemExit('A killed Ray worker did not resubmit exactly one batch')
-    return calls
+    """Kill and recover one worker pinned to every live Ray node."""
+    strategy = mapper.ray.util.scheduling_strategies.NodeAffinitySchedulingStrategy
+    recovered_nodes = []
+    for node in [item for item in mapper.ray.nodes() if item.get('Alive')]:
+        gate = mapper.ray.remote(num_cpus=0)(CrashGate).remote()
+        recovery_task = mapper.ray.remote(num_cpus=workers, max_retries=0,
+                                          retry_exceptions=False)(
+            lambda work, count, timeout: crash_once(work, count, timeout, gate))
+        pinned_task = recovery_task.options(scheduling_strategy=strategy(
+            node['NodeID'], soft=False))
+        original_task, mapper._task = mapper._task, pinned_task
+        try:
+            recovered = list(mapper([batch], workers))
+        finally:
+            mapper._task = original_task
+        calls = mapper.ray.get(gate.count.remote())
+        if len(recovered) != 1 or calls != 2:
+            raise SystemExit(f'Killed worker on node {node["NodeID"]} did not recover once')
+        if recovered[0].get('ray_node_id') != node['NodeID']:
+            raise SystemExit(f'Recovery escaped node affinity for {node["NodeID"]}')
+        recovered_nodes.append({'node_id': node['NodeID'],
+                                'hostname': recovered[0]['hostname'],
+                                'attempts': calls})
+    return recovered_nodes
 
 
 def exact_result(row):
@@ -121,10 +134,10 @@ def main():
     # Ray's hidden retry stays disabled. The mapper observes one real worker death and
     # explicitly resubmits the same batch; the actor keeps the probe's state outside the
     # process being killed so the second attempt can finish.
-    recovery_attempts = verify_worker_recovery(mapper, make_batch([work[0]]),
-                                               args.cpus_per_worker)
+    recovery_nodes = verify_worker_recovery(mapper, make_batch([work[0]]),
+                                            args.cpus_per_worker)
 
-    report = {'schema_version': 1, 'nodes': environments, 'hostnames': sorted(hostnames),
+    report = {'schema_version': 2, 'nodes': environments, 'hostnames': sorted(hostnames),
               'jobs_per_node': len(work), 'candidate': args.candidate,
               'opponent': args.opponent, 'seed_start': args.seed,
               'seed_pairs': args.pairs, 'bit_exact': True,
@@ -132,7 +145,7 @@ def main():
               'deadline_limit_seconds': deadline_limit,
               'deadline_passed_on_every_node': True,
               'worker_recovery_passed': True,
-              'worker_recovery_attempts': recovery_attempts}
+              'worker_recovery_nodes': recovery_nodes}
     Path(args.output).write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
     print(json.dumps(report, indent=2))
     mapper.ray.shutdown()

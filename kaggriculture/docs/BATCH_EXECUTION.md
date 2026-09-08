@@ -96,4 +96,5 @@ Um cluster local de um nó já executou o caminho completo, com dois jobs distin
 hashes e resultados idênticos, e pacote de runtime de 6,7 MiB. Isso prova integração, não
 distribuição. A #43 continua aberta até existirem os dois artefatos de evidência descritos
 em `RAY_CLUSTER.md`: determinismo e deadline em dois hostnames, seguidos do benchmark de
-32, 256, 1 024 e 8 000 jobs com ganho material sobre o PC mais rápido.
+32, 256, 1 024 e 8 000 jobs. O benchmark mede o `forkserver` em cada nó e usa o menor
+wall-clock como baseline; 8 000 jobs precisam superar esse baseline em pelo menos 1,10×.

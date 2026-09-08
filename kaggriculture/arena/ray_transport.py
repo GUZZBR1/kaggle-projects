@@ -105,17 +105,45 @@ class RayBatchMapper:
 
     def run_on_every_node(self, batch, *, timeout=None):
         """Run the same batch once per node for exact cross-machine comparison."""
+        return [(node, result) for node, result, _ in
+                self._run_on_every_node(batch, timeout=timeout,
+                                        workers=lambda _node: self.cpus_per_worker)]
+
+    def local_baseline_on_every_node(self, batch, *, timeout=None, maximum_workers=None):
+        """Measure the local pool on every node so the fastest host is the baseline."""
+        if maximum_workers is not None and maximum_workers < 1:
+            raise ValueError('maximum_workers must be positive')
+
+        def workers(node):
+            capacity = self._node_capacity(node)
+            return capacity if maximum_workers is None else min(capacity, maximum_workers)
+
+        return self._run_on_every_node(batch, timeout=timeout, workers=workers)
+
+    @staticmethod
+    def _node_capacity(node):
+        return int(node.get('Resources', {}).get('CPU', 0))
+
+    def _run_on_every_node(self, batch, *, timeout, workers):
         strategy = self.ray.util.scheduling_strategies.NodeAffinitySchedulingStrategy
         nodes = [node for node in self.ray.nodes() if node.get('Alive')]
         limit = self.timeout if timeout is None else timeout
-        refs = [(node, self._task.options(scheduling_strategy=strategy(
-                 node['NodeID'], soft=False)).remote(self._with_source(batch),
-                                                     self.cpus_per_worker, limit))
-                for node in nodes]
+        refs = []
+        for node in nodes:
+            count = workers(node)
+            capacity = self._node_capacity(node)
+            if capacity < 1:
+                raise ValueError(f'Node {node["NodeID"]} advertises no CPUs')
+            if count > capacity:
+                raise ValueError(f'Node {node["NodeID"]} advertises only {capacity} CPUs; '
+                                 f'cannot reserve {count}')
+            task = self._task.options(num_cpus=count, scheduling_strategy=strategy(
+                node['NodeID'], soft=False))
+            refs.append((node, count, task.remote(self._with_source(batch), count, limit)))
         results = []
-        for node, ref in refs:
+        for node, count, ref in refs:
             try:
-                results.append((node, self.ray.get(ref)))
+                results.append((node, self.ray.get(ref), count))
             except self.ray.exceptions.RayTaskError as exc:
                 raise exc.as_instanceof_cause() from exc
             except self.ray.exceptions.RayError as exc:

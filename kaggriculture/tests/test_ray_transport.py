@@ -50,7 +50,7 @@ class FakeRay:
         return {'CPU': 4}
 
     def nodes(self):
-        return [{'Alive': True, 'NodeID': 'node-a'}]
+        return [{'Alive': True, 'NodeID': 'node-a', 'Resources': {'CPU': 4}}]
 
     def remote(self, **options):
         self.remote_options.append(options)
@@ -77,6 +77,18 @@ class SequenceTask:
         return next(self.refs)
 
 
+class RecordingTask:
+    def __init__(self):
+        self.options_seen = []
+
+    def options(self, **options):
+        self.options_seen.append(options)
+        return self
+
+    def remote(self, batch, workers, timeout):
+        return Ref(value={'workers': workers, 'timeout': timeout, 'batch': batch})
+
+
 def test_mapper_disables_ray_retries_and_counts_cluster_slots():
     ray = FakeRay()
     mapper = RayBatchMapper(ray, cpus_per_worker=2)
@@ -85,6 +97,23 @@ def test_mapper_disables_ray_retries_and_counts_cluster_slots():
         {'num_cpus': 2, 'max_retries': 0, 'retry_exceptions': False},
         {'num_cpus': 0, 'max_retries': 0, 'retry_exceptions': False},
     ]
+
+
+def test_local_baseline_reserves_and_uses_each_nodes_full_capacity():
+    ray = FakeRay()
+    mapper = RayBatchMapper(ray, cpus_per_worker=1)
+    task = RecordingTask()
+    mapper._task = task
+    batch = make_batch([{'candidate': 'pass', 'opponent': 'pass', 'seed': 1,
+                         'seat': 0, 'backend': 'fast'}])
+
+    [(node, result, workers)] = mapper.local_baseline_on_every_node(batch, timeout=9)
+
+    assert node['NodeID'] == 'node-a'
+    assert workers == result['workers'] == 4
+    assert result['timeout'] == 9
+    assert task.options_seen[0]['num_cpus'] == 4
+    assert task.options_seen[0]['scheduling_strategy'] == ('node-a', False)
 
 
 def test_mapper_retries_a_system_failure_but_not_application_failure(monkeypatch):

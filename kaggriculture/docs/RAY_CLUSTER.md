@@ -50,7 +50,8 @@ resultado relevante serializado exatamente e roda em cada nó um agente que desl
 O comando recusa cluster de um único hostname, hash de agente diferente, fingerprint do
 motor diferente, qualquer diferença exata no resultado e deadline remoto que não mate o
 filho. Ao final, ele mata um worker Ray de verdade na primeira tentativa e exige que o
-mapper reenvie aquele lote uma única vez; retries implícitos do Ray continuam desligados.
+mapper reenvie aquele lote uma única vez. A morte e a recuperação são fixadas por afinidade
+e repetidas em cada NodeID vivo; retries implícitos do Ray continuam desligados.
 
 Somente depois rode o benchmark. Os quatro tamanhos têm papéis diferentes: 32 é smoke,
 256 mede o scheduler local, 1024 mede throughput e 8000 representa a busca real.
@@ -60,9 +61,14 @@ Somente depois rode o benchmark. Os quatro tamanhos têm papéis diferentes: 32 
   --jobs=32,256,1024,8000 --output=docs/ray-benchmark.json
 ```
 
-O relatório grava jobs/s, speedup contra `forkserver` no head, eficiência paralela, p50 e
-p95 de partida, cauda de lote e utilização de CPU. A #43 só passa se os dois PCs forem
-materialmente mais rápidos que o `forkserver` no PC mais rápido.
+Antes da medição distribuída, o script roda o lote inteiro pela pool local em **cada** nó,
+usando todos os CPUs que esse nó anunciou ao Ray. O menor wall-clock vira a linha de base;
+assim não existe a suposição de que o head seja o PC mais rápido. O relatório grava essas
+linhas por hostname, jobs/s, speedup, eficiência paralela, p50 e p95 de partida, cauda de
+lote e utilização de CPU. No workload representativo de 8 000 jobs, o comando falha se o
+cluster não atingir ao menos 1,10× sobre o melhor `forkserver` local; esse limite pode ser
+elevado com `--minimum-representative-speedup`. Uma série que inclui 8 000 também recusa
+menos de dois hostnames distintos e mudança de membros durante a medição.
 
 Referências operacionais: [segurança do Ray](https://docs.ray.io/en/latest/ray-security/index.html),
 [tolerância a falhas de tasks](https://docs.ray.io/en/latest/ray-core/fault_tolerance/tasks.html)
