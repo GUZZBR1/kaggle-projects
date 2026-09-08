@@ -1,5 +1,7 @@
+import builtins
 import hashlib
 import inspect
+import random
 import sys
 import types
 from pathlib import Path
@@ -12,9 +14,59 @@ VARIANTS = {
 }
 
 
-def load_agent(name, seed=0):
+# Unwinding sys.modules cannot undo a bundle that reaches into a module the
+# arena already imported. Nothing at load time can, so the isolation itself
+# comes from one process per game. What load time *can* do is notice, which is
+# the difference between evidence and a silently corrupted game.
+INTERPRETER = 'kaggle_environments.envs.kaggriculture.kaggriculture'
+WATCHED = ('builtins', 'json', 'random', 'time', 'math', 'copy', INTERPRETER)
+
+
+def _watched_modules():
+    # Import the interpreter if a caller has not already, so detection never
+    # depends silently on which module happened to be imported first.
+    if INTERPRETER not in sys.modules:
+        from .engine import official
+        official()
+    modules = [sys.modules[name] for name in WATCHED if name in sys.modules]
+    return modules + [module for name, module in sys.modules.items()
+                      if name.split('.')[0] in ('arena', 'agent', 'eval')
+                      and isinstance(module, types.ModuleType)]
+
+
+def module_fingerprint():
+    """Identity of every attribute the arena relies on, plus the global RNG."""
+    snapshot = {}
+    for module in _watched_modules():
+        name = getattr(module, '__name__', None)
+        if name is None:
+            continue
+        snapshot[name] = {key: id(value) for key, value in vars(module).items()}
+    snapshot['__builtins__'] = {key: id(value) for key, value in vars(builtins).items()}
+    snapshot['__random_state__'] = {'state': hash(repr(random.getstate()))}
+    return snapshot
+
+
+def tampering(before, after):
+    """Report names a load rebound, added or removed in an arena-visible module."""
+    findings = []
+    for name in sorted(set(before) | set(after)):
+        old, new = before.get(name, {}), after.get(name, {})
+        for key in sorted(set(old) | set(new)):
+            if key.startswith('__') and key.endswith('__') and name != '__random_state__':
+                continue
+            if key not in new:
+                findings.append(f'{name}.{key} removed')
+            elif key not in old:
+                findings.append(f'{name}.{key} added')
+            elif old[key] != new[key]:
+                findings.append(f'{name}.{key} rebound')
+    return findings
+
+
+def load_agent(name, seed=0, strict=True):
     if name == 'champion':
-        return load_agent(str(ROOT / 'versions/v000/main.py'), seed)
+        return load_agent(str(ROOT / 'versions/v000/main.py'), seed, strict)
     if name in ('starter', 'pass'):
         from .engine import official
         return official().agents[name]
@@ -46,6 +98,11 @@ def load_agent(name, seed=0):
     # Fresh namespace per seat/game prevents accidental state leakage.
     # Public bundles register names such as v23/v43 in sys.modules. Keep those
     # modules private to this load, including when two seats load the same file.
+    # Fingerprint first: it may import the interpreter, and anything the arena
+    # itself pulled in must be inside `before` so the unwind never deletes it.
+    # Dropping a native extension from sys.modules and re-importing it later
+    # crashes the interpreter outright.
+    fingerprint_before = module_fingerprint()
     before = dict(sys.modules)
     name = '__kaggriculture_submission__'
     module = types.ModuleType(name)
@@ -58,6 +115,10 @@ def load_agent(name, seed=0):
         for key in set(sys.modules) - before.keys():
             del sys.modules[key]
         sys.modules.update(before)
+    found = tampering(fingerprint_before, module_fingerprint())
+    if found and strict:
+        raise RuntimeError(f'{path} mutated arena-visible state at import: ' + '; '.join(found[:8]))
+    load_agent.last_tampering = found
     return function
 
 

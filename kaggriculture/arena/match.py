@@ -101,6 +101,8 @@ def run_match(candidate, opponent, seed, seat=0, backend='fast', configuration=N
         state=copy.deepcopy(reference.state))
     cfg = dict(env.configuration)
     names = [candidate, opponent] if seat == 0 else [opponent, candidate]
+    # A bundle that mutates arena-visible state at import is refused here, so a
+    # corrupted game never becomes evidence. Audit patching happens afterwards.
     functions = [load_agent(name, seed * 2 + i) for i, name in enumerate(names)]
     timings, failures = [[], []], [[], []]
     audit = Audit(module)
