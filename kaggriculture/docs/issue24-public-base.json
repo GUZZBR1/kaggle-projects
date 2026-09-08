@@ -1,0 +1,901 @@
+{
+  "schema_version": 1,
+  "issue": 24,
+  "status": "selected",
+  "selection_rule": "max worst-family score CI95 lower; worst score and lower variance break ties",
+  "split": "dev",
+  "seeds": {
+    "start": 1000,
+    "end": 1100,
+    "count": 100
+  },
+  "backend": "fast",
+  "seats": [
+    0,
+    1
+  ],
+  "min_seed_blocks": 100,
+  "tie_tolerance": 0.05,
+  "selected_base": {
+    "id": "cok_v10",
+    "family": "public_adaptive_livestock_routes",
+    "path": "C:\\Users\\gusta\\OneDrive\\Documentos\\ChatGPT\\kaggle\\kaggriculture\\opponents\\public\\cok_v10\\main.py",
+    "agent_spec": "clock::C:\\Users\\gusta\\OneDrive\\Documentos\\ChatGPT\\kaggle\\kaggriculture\\opponents\\public\\cok_v10\\main.py",
+    "sha256": "1c7335f698692f1c7bac34913a9ededc0f736dfb2b51346a4fa59098ab471d01",
+    "lineage": "Public adaptive livestock routes reconstructed from public episode replay behavior.",
+    "source": "https://github.com/COK-ZhangZiliang/Kaggriculture",
+    "version": "v10"
+  },
+  "selected_bases_within_tolerance": [
+    "cok_v10"
+  ],
+  "metrics": {
+    "v002": {
+      "family": "internal_adaptive_planner",
+      "aggregate": {
+        "games": 800,
+        "seed_blocks": 100,
+        "win_rate": 0.10375,
+        "draw_rate": 0.05,
+        "loss_rate": 0.84625,
+        "score_rate": 0.12875,
+        "score_ci95": [
+          0.125,
+          0.135
+        ],
+        "mean_margin": -67177.3675,
+        "median_margin": -77696.0,
+        "failures": 0,
+        "opponent_failures": 0,
+        "no_effect_actions": 3,
+        "unit_actions": 4102917,
+        "unsold_items_mean": 2.36,
+        "overflow_items": 0,
+        "sales": {
+          "MELON": {
+            "units": 86780,
+            "revenue": 14878928,
+            "revenue_per_unit": 171.4557271260659
+          },
+          "STRAWBERRY": {
+            "units": 109932,
+            "revenue": 22293208,
+            "revenue_per_unit": 202.79088891314632
+          },
+          "WHEAT": {
+            "units": 35257,
+            "revenue": 1560522,
+            "revenue_per_unit": 44.26133817397964
+          },
+          "FERTILIZER": {
+            "units": 79328,
+            "revenue": 5629288,
+            "revenue_per_unit": 70.96218233158531
+          },
+          "TOMATO": {
+            "units": 9378,
+            "revenue": 1367044,
+            "revenue_per_unit": 145.77137982512264
+          },
+          "CARROT": {
+            "units": 22192,
+            "revenue": 1531516,
+            "revenue_per_unit": 69.01207642393655
+          }
+        },
+        "telemetry_version": 1,
+        "runtime_ms": {
+          "p50": 1.6361999987566378,
+          "p95": 4.131099998721766,
+          "p99": 6.047802001394304,
+          "max": 139.37890000124753
+        },
+        "per_opponent": {
+          "clock::C:\\Users\\gusta\\OneDrive\\Documentos\\ChatGPT\\kaggle\\kaggriculture\\opponents\\public\\cok_v10\\main.py": {
+            "games": 200,
+            "score_rate": 0.0,
+            "score_ci95": [
+              0.0,
+              0.0
+            ],
+            "mean_margin": -110675.53
+          },
+          "clock::C:\\Users\\gusta\\OneDrive\\Documentos\\ChatGPT\\kaggle\\kaggriculture\\opponents\\public\\lonespear_v11\\main.py": {
+            "games": 200,
+            "score_rate": 0.015,
+            "score_ci95": [
+              0.0,
+              0.04
+            ],
+            "mean_margin": -60736.81
+          },
+          "clock::C:\\Users\\gusta\\OneDrive\\Documentos\\ChatGPT\\kaggle\\kaggriculture\\opponents\\public\\seyamalam_v21\\main.py": {
+            "games": 200,
+            "score_rate": 0.0,
+            "score_ci95": [
+              0.0,
+              0.0
+            ],
+            "mean_margin": -97297.13
+          },
+          "clock::C:\\Users\\gusta\\OneDrive\\Documentos\\ChatGPT\\kaggle\\kaggriculture\\versions\\v002\\main.py": {
+            "games": 200,
+            "score_rate": 0.5,
+            "score_ci95": [
+              0.5,
+              0.5
+            ],
+            "mean_margin": 0.0
+          }
+        }
+      },
+      "families": {
+        "internal_adaptive_planner": {
+          "games": 200,
+          "seed_blocks": 100,
+          "score": 0.5,
+          "score_ci95": [
+            0.5,
+            0.5
+          ],
+          "money": 47424.495,
+          "margin": 0.0
+        },
+        "public_adaptive_livestock_routes": {
+          "games": 200,
+          "seed_blocks": 100,
+          "score": 0.0,
+          "score_ci95": [
+            0.0,
+            0.0
+          ],
+          "money": 34979.2,
+          "margin": -110675.53
+        },
+        "route_market_recovery": {
+          "games": 200,
+          "seed_blocks": 100,
+          "score": 0.0,
+          "score_ci95": [
+            0.0,
+            0.0
+          ],
+          "money": 37490.52,
+          "margin": -97297.13
+        },
+        "standing_on_work_livestock": {
+          "games": 200,
+          "seed_blocks": 100,
+          "score": 0.015,
+          "score_ci95": [
+            0.0,
+            0.04
+          ],
+          "money": 53589.185,
+          "margin": -60736.81
+        }
+      },
+      "worst_family_score": 0.0,
+      "worst_family_ci95_lower": 0.0,
+      "cross_family_score_stdev": 0.21442874690675223,
+      "matchup_imbalance": 0.5
+    },
+    "cok_v10": {
+      "family": "public_adaptive_livestock_routes",
+      "aggregate": {
+        "games": 800,
+        "seed_blocks": 100,
+        "win_rate": 0.815,
+        "draw_rate": 0.1175,
+        "loss_rate": 0.0675,
+        "score_rate": 0.87375,
+        "score_ci95": [
+          0.87125,
+          0.875
+        ],
+        "mean_margin": 43273.74375,
+        "median_margin": 29664.5,
+        "failures": 0,
+        "opponent_failures": 0,
+        "no_effect_actions": 21515,
+        "unit_actions": 5531455,
+        "unsold_items_mean": 0.0225,
+        "overflow_items": 16394,
+        "sales": {
+          "WHEAT": {
+            "units": 494094,
+            "revenue": 22696764,
+            "revenue_per_unit": 45.9361255145782
+          },
+          "FERTILIZER": {
+            "units": 195675,
+            "revenue": 11356951,
+            "revenue_per_unit": 58.039867126613004
+          },
+          "WOOL": {
+            "units": 130540,
+            "revenue": 19145726,
+            "revenue_per_unit": 146.66558909146622
+          },
+          "MILK": {
+            "units": 195214,
+            "revenue": 23303985,
+            "revenue_per_unit": 119.37660721054843
+          },
+          "MELON": {
+            "units": 60150,
+            "revenue": 13201422,
+            "revenue_per_unit": 219.47501246882794
+          },
+          "STRAWBERRY": {
+            "units": 211919,
+            "revenue": 30808806,
+            "revenue_per_unit": 145.3801027751169
+          },
+          "CARROT": {
+            "units": 6390,
+            "revenue": 404607,
+            "revenue_per_unit": 63.318779342723005
+          }
+        },
+        "telemetry_version": 1,
+        "runtime_ms": {
+          "p50": 1.7782999984774506,
+          "p95": 3.259999999499996,
+          "p99": 5.435601000062889,
+          "max": 83.87750000110827
+        },
+        "per_opponent": {
+          "clock::C:\\Users\\gusta\\OneDrive\\Documentos\\ChatGPT\\kaggle\\kaggriculture\\opponents\\public\\cok_v10\\main.py": {
+            "games": 200,
+            "score_rate": 0.5,
+            "score_ci95": [
+              0.5,
+              0.5
+            ],
+            "mean_margin": 0.0
+          },
+          "clock::C:\\Users\\gusta\\OneDrive\\Documentos\\ChatGPT\\kaggle\\kaggriculture\\opponents\\public\\lonespear_v11\\main.py": {
+            "games": 200,
+            "score_rate": 1.0,
+            "score_ci95": [
+              1.0,
+              1.0
+            ],
+            "mean_margin": 43675.05
+          },
+          "clock::C:\\Users\\gusta\\OneDrive\\Documentos\\ChatGPT\\kaggle\\kaggriculture\\opponents\\public\\seyamalam_v21\\main.py": {
+            "games": 200,
+            "score_rate": 0.995,
+            "score_ci95": [
+              0.985,
+              1.0
+            ],
+            "mean_margin": 18744.395
+          },
+          "clock::C:\\Users\\gusta\\OneDrive\\Documentos\\ChatGPT\\kaggle\\kaggriculture\\versions\\v002\\main.py": {
+            "games": 200,
+            "score_rate": 1.0,
+            "score_ci95": [
+              1.0,
+              1.0
+            ],
+            "mean_margin": 110675.53
+          }
+        }
+      },
+      "families": {
+        "internal_adaptive_planner": {
+          "games": 200,
+          "seed_blocks": 100,
+          "score": 1.0,
+          "score_ci95": [
+            1.0,
+            1.0
+          ],
+          "money": 145654.73,
+          "margin": 110675.53
+        },
+        "public_adaptive_livestock_routes": {
+          "games": 200,
+          "seed_blocks": 100,
+          "score": 0.5,
+          "score_ci95": [
+            0.5,
+            0.5
+          ],
+          "money": 84164.05,
+          "margin": 0.0
+        },
+        "route_market_recovery": {
+          "games": 200,
+          "seed_blocks": 100,
+          "score": 0.995,
+          "score_ci95": [
+            0.985,
+            1.0
+          ],
+          "money": 91804.95,
+          "margin": 18744.395
+        },
+        "standing_on_work_livestock": {
+          "games": 200,
+          "seed_blocks": 100,
+          "score": 1.0,
+          "score_ci95": [
+            1.0,
+            1.0
+          ],
+          "money": 101314.195,
+          "margin": 43675.05
+        }
+      },
+      "worst_family_score": 0.5,
+      "worst_family_ci95_lower": 0.5,
+      "cross_family_score_stdev": 0.21579431758042195,
+      "matchup_imbalance": 0.5
+    },
+    "seyamalam_v21": {
+      "family": "route_market_recovery",
+      "aggregate": {
+        "games": 800,
+        "seed_blocks": 100,
+        "win_rate": 0.6225,
+        "draw_rate": 0.0075,
+        "loss_rate": 0.37,
+        "score_rate": 0.62625,
+        "score_ci95": [
+          0.625,
+          0.62875
+        ],
+        "mean_margin": 28736.6375,
+        "median_margin": 14960.0,
+        "failures": 0,
+        "opponent_failures": 0,
+        "no_effect_actions": 49889,
+        "unit_actions": 5870068,
+        "unsold_items_mean": 0.10125,
+        "overflow_items": 96,
+        "sales": {
+          "WHEAT": {
+            "units": 669413,
+            "revenue": 29084555,
+            "revenue_per_unit": 43.447849085691495
+          },
+          "FERTILIZER": {
+            "units": 172619,
+            "revenue": 10635136,
+            "revenue_per_unit": 61.610460030471735
+          },
+          "WOOL": {
+            "units": 132883,
+            "revenue": 17391632,
+            "revenue_per_unit": 130.87928478435919
+          },
+          "MILK": {
+            "units": 182967,
+            "revenue": 21284977,
+            "revenue_per_unit": 116.33232768750649
+          },
+          "MELON": {
+            "units": 95167,
+            "revenue": 14849796,
+            "revenue_per_unit": 156.03934136833146
+          },
+          "STRAWBERRY": {
+            "units": 215069,
+            "revenue": 31445304,
+            "revenue_per_unit": 146.21030459991908
+          }
+        },
+        "telemetry_version": 1,
+        "runtime_ms": {
+          "p50": 0.24330000087502412,
+          "p95": 0.5459000003611436,
+          "p99": 1.2152009999408628,
+          "max": 55.250100000193925
+        },
+        "per_opponent": {
+          "clock::C:\\Users\\gusta\\OneDrive\\Documentos\\ChatGPT\\kaggle\\kaggriculture\\opponents\\public\\cok_v10\\main.py": {
+            "games": 200,
+            "score_rate": 0.005,
+            "score_ci95": [
+              0.0,
+              0.015
+            ],
+            "mean_margin": -18744.395
+          },
+          "clock::C:\\Users\\gusta\\OneDrive\\Documentos\\ChatGPT\\kaggle\\kaggriculture\\opponents\\public\\lonespear_v11\\main.py": {
+            "games": 200,
+            "score_rate": 1.0,
+            "score_ci95": [
+              1.0,
+              1.0
+            ],
+            "mean_margin": 36393.815
+          },
+          "clock::C:\\Users\\gusta\\OneDrive\\Documentos\\ChatGPT\\kaggle\\kaggriculture\\opponents\\public\\seyamalam_v21\\main.py": {
+            "games": 200,
+            "score_rate": 0.5,
+            "score_ci95": [
+              0.5,
+              0.5
+            ],
+            "mean_margin": 0.0
+          },
+          "clock::C:\\Users\\gusta\\OneDrive\\Documentos\\ChatGPT\\kaggle\\kaggriculture\\versions\\v002\\main.py": {
+            "games": 200,
+            "score_rate": 1.0,
+            "score_ci95": [
+              1.0,
+              1.0
+            ],
+            "mean_margin": 97297.13
+          }
+        }
+      },
+      "families": {
+        "internal_adaptive_planner": {
+          "games": 200,
+          "seed_blocks": 100,
+          "score": 1.0,
+          "score_ci95": [
+            1.0,
+            1.0
+          ],
+          "money": 134787.65,
+          "margin": 97297.13
+        },
+        "public_adaptive_livestock_routes": {
+          "games": 200,
+          "seed_blocks": 100,
+          "score": 0.005,
+          "score_ci95": [
+            0.0,
+            0.015
+          ],
+          "money": 73060.555,
+          "margin": -18744.395
+        },
+        "route_market_recovery": {
+          "games": 200,
+          "seed_blocks": 100,
+          "score": 0.5,
+          "score_ci95": [
+            0.5,
+            0.5
+          ],
+          "money": 78208.305,
+          "margin": 0.0
+        },
+        "standing_on_work_livestock": {
+          "games": 200,
+          "seed_blocks": 100,
+          "score": 1.0,
+          "score_ci95": [
+            1.0,
+            1.0
+          ],
+          "money": 96846.7,
+          "margin": 36393.815
+        }
+      },
+      "worst_family_score": 0.005,
+      "worst_family_ci95_lower": 0.0,
+      "cross_family_score_stdev": 0.412695029652648,
+      "matchup_imbalance": 0.995
+    },
+    "lonespear_v11": {
+      "family": "standing_on_work_livestock",
+      "aggregate": {
+        "games": 800,
+        "seed_blocks": 100,
+        "win_rate": 0.37125,
+        "draw_rate": 0.0,
+        "loss_rate": 0.62875,
+        "score_rate": 0.37125,
+        "score_ci95": [
+          0.365,
+          0.375
+        ],
+        "mean_margin": -4833.01375,
+        "median_margin": -17872.5,
+        "failures": 0,
+        "opponent_failures": 0,
+        "no_effect_actions": 11682,
+        "unit_actions": 5826244,
+        "unsold_items_mean": 25.6725,
+        "overflow_items": 39502,
+        "sales": {
+          "FERTILIZER": {
+            "units": 217891,
+            "revenue": 11963554,
+            "revenue_per_unit": 54.90614114396648
+          },
+          "WHEAT": {
+            "units": 861750,
+            "revenue": 39944470,
+            "revenue_per_unit": 46.352735712213516
+          },
+          "WOOL": {
+            "units": 130167,
+            "revenue": 16278603,
+            "revenue_per_unit": 125.05936988637673
+          },
+          "MILK": {
+            "units": 189317,
+            "revenue": 22206792,
+            "revenue_per_unit": 117.29951351437008
+          },
+          "STRAWBERRY": {
+            "units": 115578,
+            "revenue": 20990862,
+            "revenue_per_unit": 181.61641488864663
+          },
+          "CARROT": {
+            "units": 16575,
+            "revenue": 1136157,
+            "revenue_per_unit": 68.54642533936652
+          }
+        },
+        "telemetry_version": 1,
+        "runtime_ms": {
+          "p50": 0.846500000989181,
+          "p95": 1.8632999999681488,
+          "p99": 3.1203999988247233,
+          "max": 56.07620000046154
+        },
+        "per_opponent": {
+          "clock::C:\\Users\\gusta\\OneDrive\\Documentos\\ChatGPT\\kaggle\\kaggriculture\\opponents\\public\\cok_v10\\main.py": {
+            "games": 200,
+            "score_rate": 0.0,
+            "score_ci95": [
+              0.0,
+              0.0
+            ],
+            "mean_margin": -43675.05
+          },
+          "clock::C:\\Users\\gusta\\OneDrive\\Documentos\\ChatGPT\\kaggle\\kaggriculture\\opponents\\public\\lonespear_v11\\main.py": {
+            "games": 200,
+            "score_rate": 0.5,
+            "score_ci95": [
+              0.5,
+              0.5
+            ],
+            "mean_margin": 0.0
+          },
+          "clock::C:\\Users\\gusta\\OneDrive\\Documentos\\ChatGPT\\kaggle\\kaggriculture\\opponents\\public\\seyamalam_v21\\main.py": {
+            "games": 200,
+            "score_rate": 0.0,
+            "score_ci95": [
+              0.0,
+              0.0
+            ],
+            "mean_margin": -36393.815
+          },
+          "clock::C:\\Users\\gusta\\OneDrive\\Documentos\\ChatGPT\\kaggle\\kaggriculture\\versions\\v002\\main.py": {
+            "games": 200,
+            "score_rate": 0.985,
+            "score_ci95": [
+              0.96,
+              1.0
+            ],
+            "mean_margin": 60736.81
+          }
+        }
+      },
+      "families": {
+        "internal_adaptive_planner": {
+          "games": 200,
+          "seed_blocks": 100,
+          "score": 0.985,
+          "score_ci95": [
+            0.96,
+            1.0
+          ],
+          "money": 114325.995,
+          "margin": 60736.81
+        },
+        "public_adaptive_livestock_routes": {
+          "games": 200,
+          "seed_blocks": 100,
+          "score": 0.0,
+          "score_ci95": [
+            0.0,
+            0.0
+          ],
+          "money": 57639.145,
+          "margin": -43675.05
+        },
+        "route_market_recovery": {
+          "games": 200,
+          "seed_blocks": 100,
+          "score": 0.0,
+          "score_ci95": [
+            0.0,
+            0.0
+          ],
+          "money": 60452.885,
+          "margin": -36393.815
+        },
+        "standing_on_work_livestock": {
+          "games": 200,
+          "seed_blocks": 100,
+          "score": 0.5,
+          "score_ci95": [
+            0.5,
+            0.5
+          ],
+          "money": 61444.155,
+          "margin": 0.0
+        }
+      },
+      "worst_family_score": 0.0,
+      "worst_family_ci95_lower": 0.0,
+      "cross_family_score_stdev": 0.40893726597120006,
+      "matchup_imbalance": 0.985
+    }
+  },
+  "paired_vs_v002": {
+    "cok_v10": {
+      "aggregate_score_delta": {
+        "mean": 0.745,
+        "ci95": [
+          0.73875,
+          0.75
+        ]
+      },
+      "aggregate_money_delta": {
+        "mean": 62363.63125,
+        "ci95": [
+          59216.1285,
+          65515.146156250004
+        ]
+      },
+      "by_family_score_delta": {
+        "internal_adaptive_planner": {
+          "mean": 0.5,
+          "ci95": [
+            0.5,
+            0.5
+          ]
+        },
+        "public_adaptive_livestock_routes": {
+          "mean": 0.5,
+          "ci95": [
+            0.5,
+            0.5
+          ]
+        },
+        "route_market_recovery": {
+          "mean": 0.995,
+          "ci95": [
+            0.985,
+            1.0
+          ]
+        },
+        "standing_on_work_livestock": {
+          "mean": 0.985,
+          "ci95": [
+            0.96,
+            1.0
+          ]
+        }
+      }
+    },
+    "seyamalam_v21": {
+      "aggregate_score_delta": {
+        "mean": 0.4975,
+        "ci95": [
+          0.49125,
+          0.5025
+        ]
+      },
+      "aggregate_money_delta": {
+        "mean": 52354.9525,
+        "ci95": [
+          49650.81703125,
+          54975.39425
+        ]
+      },
+      "by_family_score_delta": {
+        "internal_adaptive_planner": {
+          "mean": 0.5,
+          "ci95": [
+            0.5,
+            0.5
+          ]
+        },
+        "public_adaptive_livestock_routes": {
+          "mean": 0.005,
+          "ci95": [
+            0.0,
+            0.015
+          ]
+        },
+        "route_market_recovery": {
+          "mean": 0.5,
+          "ci95": [
+            0.5,
+            0.5
+          ]
+        },
+        "standing_on_work_livestock": {
+          "mean": 0.985,
+          "ci95": [
+            0.96,
+            1.0
+          ]
+        }
+      }
+    },
+    "lonespear_v11": {
+      "aggregate_score_delta": {
+        "mean": 0.2425,
+        "ci95": [
+          0.23,
+          0.25
+        ]
+      },
+      "aggregate_money_delta": {
+        "mean": 30094.695,
+        "ci95": [
+          27521.76315625,
+          32726.1298125
+        ]
+      },
+      "by_family_score_delta": {
+        "internal_adaptive_planner": {
+          "mean": 0.485,
+          "ci95": [
+            0.46,
+            0.5
+          ]
+        },
+        "public_adaptive_livestock_routes": {
+          "mean": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        "route_market_recovery": {
+          "mean": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        "standing_on_work_livestock": {
+          "mean": 0.485,
+          "ci95": [
+            0.46,
+            0.5
+          ]
+        }
+      }
+    }
+  },
+  "candidates": [
+    {
+      "id": "v002",
+      "family": "internal_adaptive_planner",
+      "sha256": "7982002c78d2d308fb2d57defcace23d75dd4bcd32569accb564581607aa9d68",
+      "lineage": "kaggriculture_internal_planner_v000_v002",
+      "source": "this repository",
+      "version": "v002",
+      "agent_spec": "clock::C:\\Users\\gusta\\OneDrive\\Documentos\\ChatGPT\\kaggle\\kaggriculture\\versions\\v002\\main.py"
+    },
+    {
+      "id": "cok_v10",
+      "family": "public_adaptive_livestock_routes",
+      "sha256": "1c7335f698692f1c7bac34913a9ededc0f736dfb2b51346a4fa59098ab471d01",
+      "lineage": "Public adaptive livestock routes reconstructed from public episode replay behavior.",
+      "source": "https://github.com/COK-ZhangZiliang/Kaggriculture",
+      "version": "v10",
+      "agent_spec": "clock::C:\\Users\\gusta\\OneDrive\\Documentos\\ChatGPT\\kaggle\\kaggriculture\\opponents\\public\\cok_v10\\main.py"
+    },
+    {
+      "id": "seyamalam_v21",
+      "family": "route_market_recovery",
+      "sha256": "0cd14b653102d276c4f902fa3b8c6bd81d869b8ab64c422cb881b9d2346ec639",
+      "lineage": "Public route + market-recovery overlay from the upstream Kaggriculture research repository.",
+      "source": "https://github.com/Seyamalam/Kaggriculture",
+      "version": "v21",
+      "agent_spec": "clock::C:\\Users\\gusta\\OneDrive\\Documentos\\ChatGPT\\kaggle\\kaggriculture\\opponents\\public\\seyamalam_v21\\main.py"
+    },
+    {
+      "id": "lonespear_v11",
+      "family": "standing_on_work_livestock",
+      "sha256": "eb5b5f59a8ec2d40b77cc99d4ffe3b932136fdcf9f6b6e168726b7f07ab47cb0",
+      "lineage": "Livestock/economy lineage with standing-on-work assignment and a stateless policy loop.",
+      "source": "https://github.com/lonespear/kaggriculture",
+      "version": "v11",
+      "agent_spec": "clock::C:\\Users\\gusta\\OneDrive\\Documentos\\ChatGPT\\kaggle\\kaggriculture\\opponents\\public\\lonespear_v11\\main.py"
+    }
+  ],
+  "opponents": [
+    {
+      "id": "v002",
+      "family": "internal_adaptive_planner",
+      "sha256": "7982002c78d2d308fb2d57defcace23d75dd4bcd32569accb564581607aa9d68",
+      "source": "this repository",
+      "version": "v002"
+    },
+    {
+      "id": "cok_v10",
+      "family": "public_adaptive_livestock_routes",
+      "sha256": "1c7335f698692f1c7bac34913a9ededc0f736dfb2b51346a4fa59098ab471d01",
+      "source": "https://github.com/COK-ZhangZiliang/Kaggriculture",
+      "version": "v10"
+    },
+    {
+      "id": "seyamalam_v21",
+      "family": "route_market_recovery",
+      "sha256": "0cd14b653102d276c4f902fa3b8c6bd81d869b8ab64c422cb881b9d2346ec639",
+      "source": "https://github.com/Seyamalam/Kaggriculture",
+      "version": "v21"
+    },
+    {
+      "id": "lonespear_v11",
+      "family": "standing_on_work_livestock",
+      "sha256": "eb5b5f59a8ec2d40b77cc99d4ffe3b932136fdcf9f6b6e168726b7f07ab47cb0",
+      "source": "https://github.com/lonespear/kaggriculture",
+      "version": "v11"
+    }
+  ],
+  "compatibility": {
+    "v002": {
+      "status": "compatible",
+      "checks": [
+        {
+          "clock": "missing",
+          "action_sha256": "de5b171b8967b0b921fd8680a06f605223f241fe0c4efc5c4bff1f37c06288e1"
+        },
+        {
+          "clock": "none",
+          "action_sha256": "de5b171b8967b0b921fd8680a06f605223f241fe0c4efc5c4bff1f37c06288e1"
+        }
+      ]
+    },
+    "cok_v10": {
+      "status": "compatible",
+      "checks": [
+        {
+          "clock": "missing",
+          "action_sha256": "047b51c5b9b7e4e558323f271b1326135e9ddd00caa639fe52e3e943093de2e3"
+        },
+        {
+          "clock": "none",
+          "action_sha256": "047b51c5b9b7e4e558323f271b1326135e9ddd00caa639fe52e3e943093de2e3"
+        }
+      ]
+    },
+    "seyamalam_v21": {
+      "status": "compatible",
+      "checks": [
+        {
+          "clock": "missing",
+          "action_sha256": "2d2d7b31f042c2819c3fe770567baf3084191b1c2b8dae6a5298bb8d512177c9"
+        },
+        {
+          "clock": "none",
+          "action_sha256": "2d2d7b31f042c2819c3fe770567baf3084191b1c2b8dae6a5298bb8d512177c9"
+        }
+      ]
+    },
+    "lonespear_v11": {
+      "status": "compatible",
+      "checks": [
+        {
+          "clock": "missing",
+          "action_sha256": "d31aab8b1e0e96a3af7dab5cefdd0f186d5633c4214e420701b6d62b14935443"
+        },
+        {
+          "clock": "none",
+          "action_sha256": "d31aab8b1e0e96a3af7dab5cefdd0f186d5633c4214e420701b6d62b14935443"
+        }
+      ]
+    }
+  }
+}
