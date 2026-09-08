@@ -1,0 +1,29 @@
+{
+  "id": "yhay_router_0908",
+  "version": "0908",
+  "family": "native_solver_tape_router",
+  "kernel": "yhay81/shop-router-0908",
+  "kernel_id": 133520239,
+  "title": "Shop Router 0908",
+  "source_url": "https://www.kaggle.com/code/yhay81/shop-router-0908",
+  "path": "opponents/public/yhay_router_0908/main.py",
+  "bundle_sha256": {
+    "main.py": "66585d1a5dbfe11c946a3c400278592f860342bc4a8f5e5f87f2a9293348984b",
+    "observation.py": "516aee86ca84550839ecc5217cff3464c896a6a69d338f91f7ccfa16fee73fa9",
+    "model.json": "e6a3a8eff5d499a1764001943c9989bfe5a8ed3da8a5ab457d53012c56f9a378",
+    "actions.json": "171c8550addac9fdb49acb44af36f64b4eb54e34c561eb6f3d4a83e2dcc803a6"
+  },
+  "notebook_blob_sha256": "cec3d03192814962b4f52c888bdfbf32c5ea2cf4dafede32ecdf58481ed05de2",
+  "license": "Apache-2.0 (author states handwritten code is Apache-2.0; Kaggle notebook default)",
+  "captured_at": "2026-09-08",
+  "engine": {
+    "kaggle_environments": "1.32.7",
+    "interpreter_sha256": "bc8a54879ef02c7ea64b8b333d6a976f0ea65c4949149d01f463f23bccee653e"
+  },
+  "lineage": "Four complete 719-turn tapes emitted by the author's own native C policy (hybrid_shopforge_3day_frontier_state_router_r5, ABI 2), routed by a two-stage decision tree at turns 144 and 648. The shipped observation.py is that native entrypoint; the compiled agent.so is not distributed, so only its observation packing is exercised here.",
+  "adaptation_notes": "Extracted verbatim from the base64 tar.gz the single notebook cell writes; no local edits. Team rating 2713.9, rank 44 of 8177 on 2026-09-08.",
+  "base_selection_candidate": false,
+  "evaluation_opponent": true,
+  "usage": "benchmark opponent only",
+  "retrieved_at": "2026-09-08"
+}

@@ -33,3 +33,11 @@ public replays are fair use for building and informing a submission (forum topic
 | `kaitofukami_v48` | `fast_route_early_floor` | `v48` | [kaitofukami/40-40-early-floor-39-46-top-10-v48-fast-routes](https://www.kaggle.com/code/kaitofukami/40-40-early-floor-39-46-top-10-v48-fast-routes) | `dadee25a9840313218384208c53b2c4752f82c3209cc654632e0b96c65e2664a` |
 | `boatlee_v16` | `premium_market_lead` | `V16-RC5` | [boatlee/v16-rc5-high-score-8c-4s-premium-market-lead](https://www.kaggle.com/code/boatlee/v16-rc5-high-score-8c-4s-premium-market-lead) | `f029fa0cb66a9eb509afbe44e3f59b800332d0419db91607183410e4089c4d19` |
 | `boatlee_v21` | `public_state_route_portfolio` | `V21-R1` | [boatlee/v21-r1-public-state-route-portfolio](https://www.kaggle.com/code/boatlee/v21-r1-public-state-route-portfolio) | `c6f96a8521dc9aa369b6f27e5b36b9d481e5c1688f50c8ca215c3bb53f1f9eb8` |
+| `yhay_router_0908` | `native_solver_tape_router` | `0908` | [yhay81/shop-router-0908](https://www.kaggle.com/code/yhay81/shop-router-0908) | `66585d1a5dbfe11c946a3c400278592f860342bc4a8f5e5f87f2a9293348984b` |
+
+`yhay_router_0908` is a bundle, not a single file: `main.py` plus `observation.py`,
+`model.json` and `actions.json`, extracted verbatim from the base64 `tar.gz` the
+notebook writes. Per-file hashes are in its manifest, together with the SHA-256 of the
+notebook blob itself. Its four tapes are the output of the author's own native policy,
+not a harvest of someone else's replay, which is what `docs/YHAY_ROUTER_FINDING.md`
+measures.

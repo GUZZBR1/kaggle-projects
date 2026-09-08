@@ -35,6 +35,8 @@ atualizar somente o hash não valida a mudança.
   episódios do topo da liga, medir as fitas na nossa arena e emitir um portfólio roteado.
 - `docs/`: revisão do projeto, evidências da issue #3 e `LADDER_META.md`, que mede o formato
   do campo público e substitui a direção proposta em `TAPE_ROUTING_FINDING.md`.
+  `CHASSIS_FINDING.md` mede o chassis reativo sobre fitas idênticas e
+  `YHAY_ROUTER_FINDING.md` mede o eixo maior que os dois: a procedência da fita.
 
 Os nomes `crop`, `animal` e `diversified` são variantes do planner **atual**.
 Para comparar versões, use os arquivos congelados como adversários: do contrário,
