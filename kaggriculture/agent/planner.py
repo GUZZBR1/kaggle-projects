@@ -1,7 +1,7 @@
 from .economy import (ANIMALS, CROPS, crop_context, fertilizer_value, price,
                       score_crops)
 from .params import DEFAULTS
-from .market import projected_shed, sale_orders
+from .market import projected_shed, sale_orders, schedule_market_orders
 from .routing import distance, move_towards, nearest_shed, shed_tiles
 from .state import State
 
@@ -163,14 +163,20 @@ def policy(observation, configuration=None, parameters=None):
     cash = s.me['money']
     reserve_wheat = len(animals) * 2 if s.days_left > 1 else 0
     keep_fertilizer = fertilize_targets if p['fertilize'] and s.days_left > 1 else 0
-    orders = sale_orders(s, p, projected_shed(s, unit_actions), reserve_wheat,
-                         keep_fertilizer)
     limit = s.config.get('maxMarketOrdersPerTurn', 10)
+    sales = sale_orders(s, p, projected_shed(s, unit_actions), reserve_wheat,
+                        keep_fertilizer, max_orders=limit)
+    essential_orders = []
+    optional_orders = []
+    reserve_slots = p['market_slot_reservation']
     effective_reserve = 0 if risk == 'behind' else p['cash_reserve']
-    def buy(order, cost):
+    def buy(order, cost, essential=False):
         nonlocal cash
-        if len(orders) < limit and cost <= max(0, cash - effective_reserve):
-            orders.append(order)
+        accepted = len(essential_orders) + len(optional_orders)
+        slots_available = (accepted < limit if reserve_slots else
+                           len(sales) + accepted < limit)
+        if slots_available and cost <= max(0, cash - effective_reserve):
+            (essential_orders if essential else optional_orders).append(order)
             cash -= cost
             return True
         return False
@@ -182,7 +188,7 @@ def policy(observation, configuration=None, parameters=None):
         for n in range(desired_hands):
             cost = a * s.config.get('farmHandCostMult', 1)
             if n >= s.me['hires_today']:
-                buy(['HIRE'], cost)
+                buy(['HIRE'], cost, essential=True)
             a, b = b, a + b
     if risk != 'ahead':
         # Buy seed for the mix we actually planned; otherwise the planner commits
@@ -193,7 +199,8 @@ def policy(observation, configuration=None, parameters=None):
         for crop, count in sorted(wanted.items(), key=lambda kv: -kv[1]):
             count = min(count, budget)
             needed = max(0, count - seeds.get(crop, 0))
-            if needed and buy(['BUY_SEED', crop, needed], needed * CROPS[crop][0]):
+            if needed and buy(['BUY_SEED', crop, needed], needed * CROPS[crop][0],
+                              essential=True):
                 budget -= count
     if fertilize_targets:
         stock = s.private['shed'].get('FERTILIZER', 0) + sum(
@@ -203,7 +210,7 @@ def policy(observation, configuration=None, parameters=None):
             inv = observation['market']['inventory']['FERTILIZER']
             cost = sum(price('FERTILIZER', inv - k - 1, s.config.get('marketParams'))
                        for k in range(count))
-            buy(['BUY_PRODUCT', 'FERTILIZER', count], cost)
+            buy(['BUY_PRODUCT', 'FERTILIZER', count], cost, essential=True)
     supply_animals = sum(i.get(animal_type, 0) for i in inventories) + s.private['shed'].get(animal_type, 0)
     if len(animals) + supply_animals < want_animals:
         buy(['BUY_ANIMAL', animal_type, 1], animal_cost)
@@ -212,10 +219,12 @@ def policy(observation, configuration=None, parameters=None):
         count = reserve_wheat - wheat_total
         inv = observation['market']['inventory']['WHEAT']
         cost = sum(price('WHEAT', inv - k - 1, s.config.get('marketParams')) for k in range(count))
-        buy(['BUY_PRODUCT', 'WHEAT', count], cost)
+        buy(['BUY_PRODUCT', 'WHEAT', count], cost, essential=True)
     quadrants = len(s.me['unlocked_quadrants'])
     occupied = sum(t is not None for _, _, t in tiles)
     if (quadrants < p['max_quadrants'] and s.day >= p['expand_day'] and s.days_left > 10
             and occupied >= len(tiles) * .75):
         buy(['BUY_LAND'], (1000, 2000, 4000)[quadrants - 1])
-    return {'farmer': unit_actions[0], 'hands': unit_actions[1:], 'market': orders[:limit]}
+    orders = schedule_market_orders(sales, essential_orders, optional_orders,
+                                    limit, reserve=reserve_slots)
+    return {'farmer': unit_actions[0], 'hands': unit_actions[1:], 'market': orders}

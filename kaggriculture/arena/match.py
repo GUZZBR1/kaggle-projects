@@ -15,6 +15,15 @@ from .telemetry import EconomicTelemetry
 
 @contextmanager
 def deadline(seconds):
+    if not hasattr(signal, 'SIGALRM') or not hasattr(signal, 'setitimer'):
+        # Windows has no SIGALRM/setitimer. We cannot safely pre-empt Python
+        # code in-process there, but we can still reject callbacks that return
+        # after the configured deadline instead of failing every match at step 0.
+        started = time.perf_counter()
+        yield
+        if time.perf_counter() - started > seconds:
+            raise TimeoutError('Local callback deadline exceeded')
+        return
     def expired(signum, frame):
         raise TimeoutError('Local callback deadline exceeded')
     previous = signal.signal(signal.SIGALRM, expired)

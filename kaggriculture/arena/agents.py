@@ -11,6 +11,15 @@ VARIANTS = {
     'crop': {'only_crop': 'CARROT', 'adaptive': False, 'max_quadrants': 1},
     'animal': {'animal_target': 6, 'animal_type': 'GOOSE', 'max_hands': 9},
     'diversified': {'opponent_weight': 1.2, 'max_hands': 10, 'max_quadrants': 3},
+    # Issue #25: a conservative opening profile for the selected frozen base.
+    'liquidity_first': {
+        'cash_reserve': 1200,
+        'expand_day': 9,
+        'max_hands': 7,
+        'plant_until_hour': 16,
+        'sale_floor_fraction': 0.9,
+        'sale_recovery_fraction': 0.99,
+    },
 }
 
 
@@ -65,6 +74,25 @@ def tampering(before, after):
 
 
 def load_agent(name, seed=0, strict=True):
+    if name.startswith('xliq::'):
+        from agent.xliq import wrap_agent
+        return wrap_agent(load_agent(name.split('::', 1)[1], seed, strict))
+    if name.startswith('clock::'):
+        base = load_agent(name.split('::', 1)[1], seed, strict)
+        def canonical_clock_agent(observation, configuration=None):
+            day, hour = observation.get('day'), observation.get('hour')
+            turns = (configuration or {}).get('turnsPerDay', 24)
+            if (type(day) is not int or type(hour) is not int or type(turns) is not int
+                    or day < 0 or turns <= 0 or not 0 <= hour < turns):
+                raise ValueError('Malformed day/hour clock')
+            derived = day * turns + hour
+            supplied = observation.get('step')
+            if supplied is not None and (type(supplied) is not int or supplied != derived):
+                raise ValueError('step disagrees with canonical day/hour clock')
+            normalized = dict(observation)
+            normalized['step'] = derived
+            return invoke(base, normalized, configuration or {})
+        return canonical_clock_agent
     if name == 'champion':
         return load_agent(str(ROOT / 'versions/v000/main.py'), seed, strict)
     if name in ('starter', 'pass'):
@@ -130,6 +158,16 @@ def invoke(function, observation, configuration):
 
 
 def agent_hash(name):
+    if name.startswith('xliq::'):
+        digest = hashlib.sha256()
+        digest.update(agent_hash(name.split('::', 1)[1]).encode())
+        digest.update((ROOT / 'agent' / 'xliq.py').read_bytes())
+        return digest.hexdigest()
+    if name.startswith('clock::'):
+        digest = hashlib.sha256()
+        digest.update(agent_hash(name.split('::', 1)[1]).encode())
+        digest.update(b'canonical-day-hour-adapter-v1')
+        return digest.hexdigest()
     if name == 'champion':
         return agent_hash(str(ROOT / 'versions/v000/main.py'))
     path = Path(name)

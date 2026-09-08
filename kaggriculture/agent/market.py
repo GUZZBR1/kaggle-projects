@@ -4,8 +4,10 @@ import math
 from .economy import CURVES, daily_demand, price, sale_value
 
 
-def sale_orders(state, params, shed, reserve_wheat=0, reserve_fertilizer=0):
-    limit = state.config.get('maxMarketOrdersPerTurn', 10)
+def sale_orders(state, params, shed, reserve_wheat=0, reserve_fertilizer=0,
+                max_orders=None):
+    limit = (state.config.get('maxMarketOrdersPerTurn', 10)
+             if max_orders is None else max(0, int(max_orders)))
     overrides = state.config.get('marketParams')
     # Hold back stock a unit is already walking to the shed for. Without this the
     # fertilizer is sold before the unit arrives and the FERTILIZE no-ops.
@@ -62,6 +64,25 @@ def sale_orders(state, params, shed, reserve_wheat=0, reserve_fertilizer=0):
                    key=lambda item: (-counts[item] if storage_pressure else
                        -sale_value(item, counts[item], state.obs['market']['inventory'][item], overrides), item))
     return [['SELL', item, counts[item]] for item in items[:limit]]
+
+
+def schedule_market_orders(sales, essential, optional, limit, reserve=True):
+    """Fit accepted orders while preserving the engine's sale-before-buy order.
+
+    ``essential`` is deliberately supplied by the planner: an operation name is
+    not universally urgent. When reservation is enabled, only accepted,
+    context-justified operations consume reserved positions. The least valuable
+    sale candidates are displaced because ``sale_orders`` already ranks them.
+    """
+    limit = max(0, int(limit))
+    if not limit:
+        return []
+    if not reserve:
+        return [*sales, *essential, *optional][:limit]
+    essential = essential[:limit]
+    kept_sales = sales[:limit - len(essential)]
+    remaining = limit - len(kept_sales) - len(essential)
+    return [*kept_sales, *essential, *optional[:remaining]]
 
 
 def projected_shed(state, actions):

@@ -22,4 +22,6 @@ DEFAULTS = {
     'continuity_completion': 1.0,  # >1 favours finishing the job underfoot.
     'planned_feedback': False,  # Issue #7: re-score crops as plantings commit.
     'fertilize': True,  # Issue #6: emit FERTILIZE when it pays for itself.
+    # Issue #26: reserve list positions only for planner-accepted essentials.
+    'market_slot_reservation': True,
 }

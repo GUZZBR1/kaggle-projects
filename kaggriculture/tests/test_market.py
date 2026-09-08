@@ -1,7 +1,7 @@
 import pytest
 
 from agent.economy import price, sale_value
-from agent.market import projected_shed, sale_orders
+from agent.market import projected_shed, sale_orders, schedule_market_orders
 from agent.params import DEFAULTS
 from agent.state import State
 from arena.engine import make_environment, official
@@ -38,6 +38,14 @@ def test_capacity_pressure_overrides_holding():
     s.private['inventories'][0]['MELON'] = 30
     orders = sale_orders(s, DEFAULTS, s.private['shed'])
     assert sum(o[2] for o in orders) >= 50
+
+
+def test_scheduler_reserves_space_for_essential_orders():
+    sales = [['SELL', 'MELON', 4]]
+    essential = [['HIRE'], ['BUY_SEED', 'CARROT', 2]]
+    optional = [['BUY_LAND']]
+    orders = schedule_market_orders(sales, essential, optional, limit=2, reserve=True)
+    assert orders == essential
 
 
 def test_custom_capacity_order_limit_and_feed_reserve():

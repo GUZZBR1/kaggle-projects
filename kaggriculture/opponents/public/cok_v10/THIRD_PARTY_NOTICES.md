@@ -132,3 +132,11 @@ license text as `LICENSE-APACHE-2.0.txt`, both at the archive root beside
 This notice preserves the provenance and license scope of attributed
 third-party portions. It does not relicense public episode data or claim
 ownership of the attributed source artifacts.
+
+## Local pin reconciliation
+
+The upstream pre-normalization snapshot for this file was recorded with SHA-256
+`56831f3c43c9727d90016b7a7a8d4eb51d1a4c08c1120d58f061d9176e8bc109`.
+The byte-for-byte local pinned file in this workspace hashes to
+`1c7335f698692f1c7bac34913a9ededc0f736dfb2b51346a4fa59098ab471d01`, which
+is the value now recorded in the manifest.
