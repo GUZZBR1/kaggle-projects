@@ -33,7 +33,7 @@ def check_spec(spec):
 def run_pair(baseline, candidate, opponents, seeds, output, *, workers=4, backend='fast',
              split='dev', min_blocks=100, strong_only=False, ratings=None, families=None,
              mirrors=(), cut=STRONG_CUT, max_age_days=MAX_RATING_AGE_DAYS,
-             registry_path=REGISTRY):
+             registry_path=REGISTRY, incumbent=None):
     started = time.perf_counter()
     seeds, opponents = list(seeds), list(opponents)
     if (workers < 1 or backend not in ('fast', 'official') or min_blocks < 2
@@ -89,7 +89,10 @@ def run_pair(baseline, candidate, opponents, seeds, output, *, workers=4, backen
         comparison['execution'] = dict(wall_seconds=time.perf_counter() - started,
                                        leg_wall_seconds=timings, split=split,
                                        strong_only=strong_only, plan_sha256=digest(plan))
-        gate = decide(comparison)
+        # The gate refuses to read a comparison as a release decision unless the
+        # baseline leg is the declared incumbent, so the declaration is checked here
+        # against the hash the batch actually froze rather than after the fact.
+        gate = decide(comparison, incumbent)
         (target / 'comparison.json').write_text(json.dumps(comparison, indent=2) + '\n')
         (target / 'gate.json').write_text(json.dumps(gate, indent=2) + '\n')
         (target / 'report.md').write_text(gate['verdict'] + '\n\n' +
@@ -116,11 +119,21 @@ def main():
     parser.add_argument('--cut', type=float, default=STRONG_CUT)
     parser.add_argument('--max-rating-age-days', dest='max_age_days', type=int, default=MAX_RATING_AGE_DAYS)
     parser.add_argument('--mirrors', default='')
+    parser.add_argument('--incumbent-id', dest='incumbent_id',
+                        help='id of the agent holding our active submission slot; without it '
+                             'the run is a measurement and cannot authorize a release')
+    parser.add_argument('--displaces', help='which active submission a release would destroy')
     parser.add_argument('--output', required=True)
     args = vars(parser.parse_args())
     args['seeds'] = parse_seeds(args['seeds'])
     args['opponents'] = args['opponents'].split(',')
     args['mirrors'] = [name for name in args['mirrors'].split(',') if name]
+    incumbent_id, displaces = args.pop('incumbent_id'), args.pop('displaces')
+    # The hash is not taken from the operator: it is the baseline this run will freeze,
+    # so a declaration naming the wrong agent is caught by check_spec, not by trust.
+    args['incumbent'] = (None if not incumbent_id else
+                         {'id': incumbent_id, 'hash': check_spec(args['baseline']),
+                          'displaces': displaces or ''})
     comparison, gate = run_pair(**args)
     print(json.dumps(dict(**gate, wall_seconds=comparison['execution']['wall_seconds']), indent=2))
 

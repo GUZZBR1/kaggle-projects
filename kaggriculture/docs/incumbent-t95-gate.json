@@ -1,0 +1,33 @@
+{
+  "verdict": "NO SUBMIT",
+  "policy_version": 2,
+  "reasons": [
+    "Independent validation provenance is missing; development/seen/diagnostic runs cannot authorize a release.",
+    "Fewer than 100 paired seed blocks; insufficient release evidence."
+  ],
+  "candidate_hash": "fd478f8cc3ecfcc212c44f5e51fc2fa3c0fe223a009a6a01651f31666bcef9e3",
+  "baseline_hash": "76254cf98142ec312ec677a73b678294f5ff574295640c74b319683fa6b00c4b",
+  "incumbent": {
+    "id": "thomas_t95",
+    "hash": "76254cf98142ec312ec677a73b678294f5ff574295640c74b319683fa6b00c4b",
+    "displaces": "slot A (thomas_t95 verbatim, rated 2359.8)"
+  },
+  "comparison_role": "incumbent",
+  "delta_over_baseline": {
+    "strong": {
+      "delta_win": 0.5,
+      "ci95": [
+        0.3,
+        0.65
+      ]
+    },
+    "all": {
+      "delta_win": 0.24285714285714285,
+      "ci95": [
+        0.16428571428571428,
+        0.3142857142857143
+      ]
+    }
+  },
+  "note": "Local competitive gate only. Artifact preflight and docs/FINAL_SUBMISSION_POLICY.md must also be satisfied."
+}
