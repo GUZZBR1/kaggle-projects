@@ -44,6 +44,17 @@ def tailscale_ip():
     return values[0].strip() if values else None
 
 
+def tailscale_dns_name():
+    executable = shutil.which('tailscale')
+    if not executable:
+        return None
+    try:
+        status = json.loads(command_output([executable, 'status', '--json']))
+    except json.JSONDecodeError:
+        return None
+    return status.get('Self', {}).get('DNSName', '').rstrip('.') or None
+
+
 def route_ip():
     output = command_output(['ip', '-4', 'route', 'get', '1.1.1.1'])
     fields = output.split()
@@ -191,13 +202,15 @@ def configure(role, args):
     if role == 'worker':
         host, port = normalize_head(args.head, args.port)
         config.update(head_host=host, port=port)
+    else:
+        config['advertised_head'] = tailscale_dns_name() or address
     write_config(config)
     install_service(restart=True)
     print(json.dumps(status_data(config), indent=2))
     if role == 'head':
         print('\nNo PC B, execute uma vez:')
         print(f'  python3 scripts/ray_cluster.py configure-worker '
-              f'--head {address}:{args.port}')
+              f'--head {config["advertised_head"]}:{args.port}')
 
 
 def ray_command(config):
@@ -239,6 +252,7 @@ def status_data(config=None):
         host = config['head_host']
     return {'configured': True, 'role': config['role'], 'config': str(CONFIG),
             'service': service_state(), 'head': f'{host}:{config["port"]}',
+            'peer_head': f'{config.get("advertised_head", host)}:{config["port"]}',
             'head_reachable': bool(host and tcp_reachable(host, config['port']))}
 
 

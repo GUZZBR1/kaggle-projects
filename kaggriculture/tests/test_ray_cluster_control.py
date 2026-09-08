@@ -70,6 +70,8 @@ def test_configure_persists_role_then_enables_service(tmp_path, monkeypatch):
     enabled = []
     monkeypatch.setattr(ray_cluster, 'CONFIG', config)
     monkeypatch.setattr(ray_cluster, 'node_ip', lambda requested: '100.64.0.10')
+    monkeypatch.setattr(ray_cluster, 'tailscale_dns_name',
+                        lambda: 'pc-a.example.ts.net')
     monkeypatch.setattr(ray_cluster, 'install_service',
                         lambda **options: enabled.append(options))
     monkeypatch.setattr(ray_cluster, 'status_data', lambda value: {'role': value['role']})
@@ -78,6 +80,7 @@ def test_configure_persists_role_then_enables_service(tmp_path, monkeypatch):
     ray_cluster.configure('head', args)
 
     assert ray_cluster.read_config()['role'] == 'head'
+    assert ray_cluster.read_config()['advertised_head'] == 'pc-a.example.ts.net'
     assert enabled == [{'restart': True}]
 
 

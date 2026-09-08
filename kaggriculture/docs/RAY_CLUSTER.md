@@ -32,7 +32,8 @@ python3 scripts/ray_cluster.py configure-head
 ```
 
 Ele instala a dependência distribuída se necessário, cria o serviço, inicia o head sem
-dashboard e imprime o comando exato do PC B. No PC B, cole esse comando uma vez:
+dashboard e imprime o comando exato do PC B. Quando Tailscale oferece MagicDNS, o comando
+usa esse nome estável em vez de prender o worker ao IP atual. No PC B, cole-o uma vez:
 
 ```bash
 python3 scripts/ray_cluster.py configure-worker --head IP_OU_MAGIC_DNS_DO_PC_A:6379
