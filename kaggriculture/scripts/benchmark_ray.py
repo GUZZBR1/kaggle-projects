@@ -58,9 +58,11 @@ def load_verification(path, *, candidate, opponent, environments, current_git):
         raise SystemExit('Ray verification does not cover 200 seeds in both seats')
     verified_commit = proof.get('driver_git', {}).get('git_commit')
     current_commit = current_git.get('git_commit')
+    # git_provenance serializes the SQLite-friendly clean flag as integer zero.
+    # JSON booleans from older proof fixtures remain valid because False == 0.
     if (not verified_commit or not current_commit or verified_commit != current_commit
-            or proof.get('driver_git', {}).get('git_dirty') is not False
-            or current_git.get('git_dirty') is not False):
+            or proof.get('driver_git', {}).get('git_dirty') != 0
+            or current_git.get('git_dirty') != 0):
         raise SystemExit('Ray verification git commit does not match this benchmark')
     verified_nodes = {item.get('hostname'): item for item in proof.get('nodes', [])}
     current_nodes = {item.get('hostname'): item for item in environments}

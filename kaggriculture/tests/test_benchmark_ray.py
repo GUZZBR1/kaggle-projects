@@ -57,6 +57,16 @@ def test_benchmark_binds_the_exact_verification_artifact(tmp_path):
     assert len(evidence['sha256']) == 64
 
 
+def test_benchmark_accepts_integer_clean_flags_from_git_provenance(tmp_path):
+    value = proof()
+    value['driver_git']['git_dirty'] = 0
+    evidence = load(
+        write(tmp_path, value),
+        current_git={'git_commit': 'abc123', 'git_dirty': 0},
+    )
+    assert evidence['git_commit'] == 'abc123'
+
+
 @pytest.mark.parametrize('mutation, message', [
     (lambda value: value.update(money_binary64_exact=False), 'release gate'),
     (lambda value: value.update(candidate='other.py'), 'benchmark agents'),
