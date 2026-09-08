@@ -27,9 +27,14 @@ atualizar somente o hash não valida a mudança.
 - `eval/`: métricas, intervalos por blocos de seeds e comparação pareada.
 - `submission/`: geração de Python independente e teste pelo loader real do Kaggle.
 - `versions/`: artefatos imutáveis; `champion` aponta para `v000`, `challenger` usa o código atual.
+  `v003` não é gerado por `submission/build.py`: é um portfólio de fitas roteado, construído
+  por `experiments/tape_portfolio.py`, com a proveniência das fitas no seu manifesto.
 - `opponents/frozen/`: snapshots anteriores à correção de venda, com parâmetros e hashes.
-- `opponents/public/`: adversário externo fixado por commit, com licença preservada.
-- `docs/`: revisão do projeto e evidências da correção da issue #3.
+- `opponents/public/`: adversários externos fixados por commit ou por notebook público, com licença preservada.
+- `experiments/episode_tapes.py`, `tape_screen.py`, `tape_portfolio.py`: ler o dump diário de
+  episódios do topo da liga, medir as fitas na nossa arena e emitir um portfólio roteado.
+- `docs/`: revisão do projeto, evidências da issue #3 e `LADDER_META.md`, que mede o formato
+  do campo público e substitui a direção proposta em `TAPE_ROUTING_FINDING.md`.
 
 Os nomes `crop`, `animal` e `diversified` são variantes do planner **atual**.
 Para comparar versões, use os arquivos congelados como adversários: do contrário,

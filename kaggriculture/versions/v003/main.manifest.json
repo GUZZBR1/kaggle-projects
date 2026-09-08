@@ -1,0 +1,98 @@
+{
+  "version": "v003",
+  "kind": "tape_portfolio",
+  "sha256": "15bb94ab21dfb3f49b9a7afb64700850baf4e3f0fb5307383a741b175850e24b",
+  "builder": "experiments/tape_portfolio.py",
+  "tapes": [
+    {
+      "index": 0,
+      "sha256": "685b875e7bb74427522b5c9d3ab5eb01d5ef2a5164e35d9635898c5cada3a453",
+      "role": "opening and default",
+      "origin": "opponents/public/thomas_t95/main.py SCHEDULES[3]"
+    },
+    {
+      "index": 1,
+      "sha256": "c3407d83ef00b3f41092819f7a75c4623580f7a7b67e4a4c222d188ae4db6ebf",
+      "role": "yarn-store branch",
+      "origin": "opponents/public/thomas_t95/main.py SCHEDULES[1]"
+    }
+  ],
+  "rules": {
+    "0": [
+      [
+        -1,
+        0,
+        0,
+        -1
+      ]
+    ],
+    "1": [
+      [
+        7,
+        0.5,
+        1,
+        0
+      ]
+    ]
+  },
+  "rule_description": "At turn 72, take tape 1 when the town has opened a yarn store, otherwise stay on tape 0. No other block branches.",
+  "fitted_on": {
+    "seeds": [
+      1000,
+      1001,
+      1002,
+      1003,
+      1004,
+      1005,
+      1006,
+      1007
+    ],
+    "opponents": [
+      "thomas95",
+      "kaito48"
+    ],
+    "seats": [
+      0,
+      1
+    ],
+    "split": "dev"
+  },
+  "held_out": {
+    "seeds": [
+      1010,
+      1011,
+      1012,
+      1013,
+      1014,
+      1015,
+      1016,
+      1017,
+      1018,
+      1019,
+      1020,
+      1021,
+      1022,
+      1023,
+      1024,
+      1025,
+      1026,
+      1027,
+      1028,
+      1029
+    ],
+    "opponents": [
+      "thomas95",
+      "kaito48",
+      "cok10",
+      "boatlee21"
+    ],
+    "score": 0.756,
+    "worst_family": 0.25,
+    "note": "opening tape alone scores 0.675 with worst family 0.100"
+  },
+  "provenance": "The two action tapes are extracted from the public Kaggle notebook thomastschinkel/kaggriculture-95-5-win-rate-via-replay-routing, which is pinned in opponents/public/thomas_t95. The hosts have stated that public notebooks and public replays are fair use for building a submission (forum topics #737788 and #738837). The routing rule is this project's own, fitted by exact rollout search and measured on held-out seeds.",
+  "engine": {
+    "kaggle_environments": "1.32.7",
+    "interpreter_sha256": "bc8a54879ef02c7ea64b8b333d6a976f0ea65c4949149d01f463f23bccee653e"
+  }
+}
