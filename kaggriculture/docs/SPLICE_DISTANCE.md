@@ -1,59 +1,65 @@
-# Emendar blocos: a distância de junção prevê a perda
+# Emendar blocos: a distância diz *se* a junção é grátis, não *quanto* custa
 
-O passo que faltava do método público — comparar blocos na mesma fronteira em vez
-de agentes inteiros — precisa de uma forma de saber se um bloco *cabe* onde vai
-ser colado. Este documento mede se a nossa pontuação de estado de chegada serve.
+`experiments/tape_splice.py` pontua o estado que um prefixo entrega ao bloco
+seguinte. Este documento diz o que essa pontuação prevê e o que ela não prevê.
 
-## O problema
+## Retratação do primeiro resultado
 
-Um bloco não é portátil sozinho. Ele assume uma fazenda: peões contratados,
-tiles plantados, mercadoria no galpão, o farmer numa posição. Colado depois de um
-prefixo que deixa outra fazenda, suas ações endereçam coisas que não existem.
+A primeira medição reportou **correlação −0,938** entre distância e perda, em 36
+emendas, e concluiu que a distância serviria como filtro de busca por ordenação.
 
-`experiments/tape_splice.py` mede isso. `fingerprint` registra o que o bloco
-seguinte depende (dinheiro, posição do farmer, quantidade de peões, quadrantes,
-tiles por tipo, galpão, sementes, carga nas mãos) e `join_distance` compara dois
-mundos, com pesos que dizem o que um bloco **não consegue** recuperar dentro de
-si: peões e quadrantes pesam mais que caixa e galpão.
+Isso estava errado por confundimento. As 36 emendas agrupavam três cortes com
+escalas de perda muito diferentes: o corte 432 tinha distância alta *e* perda
+alta, o 144 tinha as duas baixas. A correlação media majoritariamente o efeito do
+**corte**, não o da distância. Era uma seed, um adversário, um assento e quatro
+fitas do mesmo doador.
 
-## A validação
+## A medição maior
 
-Quatro fitas do `thomas_t95`, todas as emendas cruzadas em três fronteiras
-(144, 288, 432), contra o `kaitofukami_v48`, seed 1075. Para cada emenda,
-comparamos o dinheiro final com o da fita do sufixo tocada inteira — a perda é o
-custo da junção.
+Oito fitas de **duas procedências** (4 do `thomas_t95`, 4 do `yhay_router_0908`),
+todas as 56 emendas cruzadas em dois cortes, 3 seeds, dois assentos, 720
+partidas, zero falhas. Correlação dentro de cada corte:
 
-| corte | distância típica | perda típica |
-|---:|---:|---:|
-| 144 | 0,000 | ±1 moeda |
-| 288 | 0,002 – 0,026 | −166 a −13.804 |
-| 432 | 0,022 – 0,095 | −4.404 a −26.081 |
+| grupo | corte | n | correlação |
+|---|---:|---:|---:|
+| procedências diferentes | 144 | 192 | +0,109 |
+| procedências diferentes | 288 | 192 | −0,088 |
+| mesmo doador | 288 | 144 | −0,300 |
+| todos | 144 | 336 | −0,299 |
 
-**Correlação distância × perda: −0,938** em 36 emendas.
+**A ordenação por distância não sobrevive.** Entre procedências diferentes, que é
+o caso que interessa para montar biblioteca, ela não prevê nada.
 
-A distância prevê a perda com força alta. É isso que torna uma busca viável: dá
-para filtrar candidatos pela pontuação e só jogar os que sobrevivem, em vez de
-rodar uma partida por combinação.
+## O que sobrevive, e é o que serve
 
-## O que os números dizem além da correlação
+A pergunta útil não é "quanto custa" e sim "custa alguma coisa":
 
-**No turno 144 várias emendas custam uma moeda.** A distância dá exatamente
-0,000: nesse ponto essas fitas deixam a fazenda em estado idêntico, então os
-blocos são livremente intercambiáveis. É a definição operacional de
-"continuação compatível" — e explica por que os roteadores públicos decidem em
-144: é onde trocar de plano ainda é gratuito.
+| corte | distância | n | perda mediana | fração com \|perda\| ≤ 50 |
+|---:|---|---:|---:|---:|
+| 144 | **= 0** | 108 | **0** | **100%** |
+| 144 | > 0 | 228 | −377 | 16% |
+| 288 | **= 0** | 36 | **0** | **100%** |
+| 288 | > 0 | 300 | −4.585 | 1% |
 
-**Quanto mais tarde o corte, mais caro.** No 432 até a melhor emenda perde 4.400
-moedas. Uma fazenda diverge com o tempo, e um bloco tardio depende de uma
-história que o prefixo não viveu. Isso limita onde uma biblioteca de blocos pode
-ser montada — e é coerente com o roteador do `yhay`, cuja segunda decisão no
-passo 648 é liquidação terminal, não troca de plano.
+**Distância exatamente zero prevê junção gratuita em 144 de 144 casos**, nas duas
+procedências e nos dois cortes. Distância positiva quase nunca é gratuita —
+1% no corte 288.
 
-## Limites desta medição
+Ou seja: a pontuação é um **classificador de intercambiabilidade**, não um
+estimador de custo. Isso é o suficiente para o que ela precisa fazer. Para montar
+uma biblioteca de blocos o que se quer é justamente o conjunto de blocos que se
+substituem sem custo — o grafo de compatibilidade — e não uma estimativa de quão
+ruim é uma emenda ruim.
 
-Uma seed, um adversário, um assento, quatro fitas do mesmo doador. A correlação é
-forte mas medida num regime estreito: fitas de doadores diferentes divergem mais
-cedo e podem ter junções piores do que a distância sugere. Antes de usar isso
-como filtro numa busca de verdade, vale repetir em várias seeds e com fitas de
-procedências distintas — inclusive as do `yhay_router_0908`, que agora é o teto
-medido do campo.
+## Como usar
+
+Trate `distance == 0` como "intercambiável" e qualquer coisa acima disso como
+"precisa ser jogado para saber". Não ordene candidatos pela distância: entre
+duas emendas caras, a maior distância não é a pior.
+
+## Limites que continuam de pé
+
+Duas procedências, dois cortes, um adversário (`kaitofukami_v48`), 3 seeds. O
+limiar zero é exato e não tem tolerância ajustada — vale checar se uma tolerância
+pequena (por exemplo `< 0,005`) mantém os 100% e amplia a cobertura, porque hoje
+só 43% das emendas no corte 144 e 11% no 288 caem no conjunto gratuito.

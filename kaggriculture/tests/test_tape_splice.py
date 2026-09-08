@@ -97,3 +97,19 @@ def test_states_at_reads_a_lab_replay(tmp_path):
     states = states_at(path, 0, [72, 144, 999])
     assert sorted(states) == [72, 144], 'a cut the replay does not reach is skipped'
     assert states[144]['money'] == 144.0
+
+
+def test_zero_distance_is_the_only_claim_the_tool_makes():
+    """Measured over 720 games and two donors: distance 0 means a free join, and
+    distance above 0 says only "play it to find out". Ranking by distance does
+    not survive — see docs/SPLICE_DISTANCE.md — so nothing here should tempt a
+    caller into ordering candidates by it."""
+    same = fingerprint(observation(), 0)
+    assert join_distance(same, same)['distance'] == 0.0
+
+    near = fingerprint(observation(money=1010.0), 0)
+    far = fingerprint(observation(money=1010.0, shed={'WOOL': 1}), 0)
+    # Both are non-zero, which is the whole verdict; their order carries no
+    # measured meaning, so the test asserts only what was actually established.
+    assert join_distance(same, near)['distance'] > 0
+    assert join_distance(same, far)['distance'] > 0
