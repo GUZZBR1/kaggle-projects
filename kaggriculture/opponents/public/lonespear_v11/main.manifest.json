@@ -17,5 +17,7 @@
   "adaptation_notes": "Imported verbatim from the pinned upstream commit; upstream names this artifact v11, so the local directory and manifest use v11 as well.",
   "base_selection_candidate": true,
   "evaluation_opponent": true,
-  "usage": "benchmark opponent only"
+  "usage": "benchmark opponent only",
+  "ladder_rating": null,
+  "ladder_rating_note": "pinned from GitHub (lonespear); the username does not appear on the public leaderboard, so not even an upper bound exists"
 }

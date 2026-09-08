@@ -17,5 +17,12 @@
   "adaptation_notes": "Imported verbatim from the pinned upstream commit; no local edits or replay reconstruction.",
   "base_selection_candidate": true,
   "evaluation_opponent": true,
-  "usage": "benchmark opponent only"
+  "usage": "benchmark opponent only",
+  "ladder_rating": {
+    "rating": 940.0,
+    "observed_at": "2026-09-08",
+    "kind": "author_upper_bound",
+    "source": "author team 'Touhidul Alam Seyam' (seyamalam), rank 3525 of 8177, public leaderboard snapshot kaggriculture-publicleaderboard-2026-09-08T13:56:14.csv",
+    "note": "the pinned artifact is the GitHub repository, not a notebook; the author team rating bounds it from above and is below the cut, so weak"
+  }
 }

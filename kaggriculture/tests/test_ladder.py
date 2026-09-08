@@ -9,11 +9,16 @@ from eval.ladder import (carried_by, cohort, concentrated_regression, delta_win,
                          leave_one_out, opponent_id, score, tally)
 
 
-RATINGS = {'top': {'rating': 2700., 'observed_at': '2026-09-08'},
-           'mid': {'rating': 2350., 'observed_at': '2026-09-08'},
-           'low': {'rating': 900., 'observed_at': '2026-09-08'},
-           'stale': {'rating': 2900., 'observed_at': '2026-08-01'},
-           'blank': {'rating': None, 'observed_at': '2026-09-08'}}
+RATINGS = {'top': {'rating': 2700., 'observed_at': '2026-09-08', 'kind': 'author_current'},
+           'mid': {'rating': 2350., 'observed_at': '2026-09-08', 'kind': 'direct'},
+           'low': {'rating': 900., 'observed_at': '2026-09-08', 'kind': 'direct'},
+           'stale': {'rating': 2900., 'observed_at': '2026-08-01', 'kind': 'direct'},
+           'blank': {'rating': None, 'observed_at': '2026-09-08', 'kind': 'direct'},
+           'bound_high': {'rating': 2900., 'observed_at': '2026-09-08',
+                          'kind': 'author_upper_bound'},
+           'bound_low': {'rating': 900., 'observed_at': '2026-09-08',
+                         'kind': 'author_upper_bound'},
+           'kindless': {'rating': 2900., 'observed_at': '2026-09-08'}}
 TODAY = __import__('datetime').date(2026, 9, 8)
 
 
@@ -37,7 +42,10 @@ def test_opponent_id_is_idempotent():
 
 @pytest.mark.parametrize('name,expected', [
     ('top', 'strong'), ('mid', 'strong'), ('low', 'weak'),
-    ('stale', 'unknown'), ('blank', 'unknown'), ('never_measured', 'unknown')])
+    ('stale', 'unknown'), ('blank', 'unknown'), ('never_measured', 'unknown'),
+    # An upper bound is one-sided evidence: below the cut it proves the artifact is weak,
+    # above it proves nothing at all. A rating with no kind says nothing either.
+    ('bound_high', 'unknown'), ('bound_low', 'weak'), ('kindless', 'unknown')])
 def test_an_unrated_or_stale_opponent_is_never_strong(name, expected):
     """Defaulting an unmeasured opponent into the primary metric would decide the thing
     the primary metric exists to measure."""

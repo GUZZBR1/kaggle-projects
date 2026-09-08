@@ -62,8 +62,25 @@ def load_ratings(path=RATINGS):
     return table
 
 
+KINDS = ('direct', 'author_current', 'author_upper_bound')
+
+
 def cohort(name, ratings, cut=STRONG_CUT, max_age_days=MAX_RATING_AGE_DAYS, today=None):
-    """`strong`, `weak`, or `unknown` for one opponent. Unknown is never strong."""
+    """`strong`, `weak`, or `unknown` for one opponent. Unknown is never strong.
+
+    `kind` says what the number is evidence of, and the three kinds do not license the same
+    conclusion. `direct` is our own submission of the byte-identical artifact. `author_current`
+    is the author team's rating while the pinned artifact is their newest published one: still
+    an upper bound, because a team's active agent may be better than anything it published,
+    but the closest attributable observation and the only reason the strong cohort is not a
+    single mirror match. `author_upper_bound` is that same rating for an artifact the author
+    has since superseded, and a bound is only one-sided evidence: below the cut it proves the
+    artifact is weak, at or above the cut it proves nothing and the opponent stays unknown.
+
+    The bias is measured, not assumed. `thomas_t95` is the author's newest published notebook
+    and their team stands at 2519.6 while our own submission of that exact file rates 2359.8,
+    so the proxy overstated the artifact by about 160 points. See `docs/RATINGS_REFRESH.md`.
+    """
     entry = ratings.get(opponent_id(name))
     if not entry or entry.get('rating') is None:
         return 'unknown'
@@ -76,7 +93,12 @@ def cohort(name, ratings, cut=STRONG_CUT, max_age_days=MAX_RATING_AGE_DAYS, toda
         return 'unknown'
     if max_age_days is not None and ((today or date.today()) - seen).days > max_age_days:
         return 'unknown'
-    return 'strong' if float(entry['rating']) >= cut else 'weak'
+    kind = entry.get('kind')
+    if kind not in KINDS:
+        return 'unknown'
+    if float(entry['rating']) < cut:
+        return 'weak'
+    return 'unknown' if kind == 'author_upper_bound' else 'strong'
 
 
 def tally(rows):

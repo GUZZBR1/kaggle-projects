@@ -18,5 +18,7 @@
   "adaptation_notes": "Local pinned file hash is the byte-for-byte artifact in this workspace; the upstream pre-normalization hash is preserved separately for provenance. See THIRD_PARTY_NOTICES.md.",
   "base_selection_candidate": true,
   "evaluation_opponent": true,
-  "usage": "benchmark opponent only"
+  "usage": "benchmark opponent only",
+  "ladder_rating": null,
+  "ladder_rating_note": "pinned from GitHub (COK-ZhangZiliang); no kaggriculture leaderboard team could be attributed to that account, so not even an upper bound exists"
 }

@@ -19,5 +19,12 @@
   "base_selection_candidate": false,
   "evaluation_opponent": true,
   "usage": "benchmark opponent only",
-  "retrieved_at": "2026-09-07"
+  "retrieved_at": "2026-09-07",
+  "ladder_rating": {
+    "rating": 1997.2,
+    "observed_at": "2026-09-08",
+    "kind": "author_upper_bound",
+    "source": "author team 'boatlee' (boatlee), rank 1063 of 8177, public leaderboard snapshot kaggriculture-publicleaderboard-2026-09-08T13:56:14.csv",
+    "note": "superseded by the same author's V29-R1; the bound is below the cut, which is enough to classify the artifact as weak"
+  }
 }
