@@ -36,7 +36,13 @@ def deadline(seconds):
 
 
 def snapshot(farm, private, index):
-    pos = farm['farmer'] if index == 0 else farm['hands'][index - 1]
+    # An agent may submit more hand actions than it has hands: the interpreter
+    # resolves the position to None and silently no-ops. Mirroring that here is
+    # what keeps the audit from crashing on a game the official engine plays.
+    hands = farm['hands']
+    if index and (index > len(hands) or index >= len(private['inventories'])):
+        return None
+    pos = farm['farmer'] if index == 0 else hands[index - 1]
     tile = farm['tiles'][pos[1]][pos[0]]
     return json.dumps([pos, tile, private['inventories'][index], private['seeds'], private['shed']], sort_keys=True)
 

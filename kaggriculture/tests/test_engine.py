@@ -52,3 +52,24 @@ def test_observations_are_private_and_detached():
     obs[0]['farms'][0]['money'] = -5
     assert env.state[0].observation.private['shed'].get('WHEAT', 0) == 0
     assert obs[1]['farms'][0]['money'] == 3000
+
+
+def test_more_hand_actions_than_hands_is_played_not_crashed(tmp_path):
+    """The interpreter resolves an absent hand to no position and no-ops silently.
+
+    A recorded tape from a game with twelve hands, replayed by an agent that has
+    not hired them yet, submits exactly that. The audit has to mirror the engine
+    here or the arena refuses a game the official engine plays without complaint.
+    """
+    agent = tmp_path / 'overreaching.py'
+    agent.write_text(
+        'def agent(observation, configuration=None):\n'
+        "    return {'farmer': ['PASS'],\n"
+        "            'hands': [['NORTH'] for _ in range(12)],\n"
+        "            'market': []}\n")
+
+    result = run_match(str(agent), 'starter', 11, 0)
+
+    assert not result['failures'] and result['steps'] == 719
+    assert result['audit']['unit_actions'] > 719, 'the extra hand actions reached the audit'
+    assert result['audit']['no_effect_actions'] > 0, 'and were counted as the no-ops they are'
