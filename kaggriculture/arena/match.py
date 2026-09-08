@@ -109,7 +109,12 @@ def observations(state):
 
 
 def run_match(candidate, opponent, seed, seat=0, backend='fast', configuration=None, replay=None,
-              telemetry_enabled=True):
+              telemetry_enabled=True, replay_steps=None):
+    if replay_steps is not None:
+        replay_steps = list(replay_steps)
+        if (not replay or not replay_steps or len(set(replay_steps)) != len(replay_steps)
+                or any(type(step) is not int or step < 0 for step in replay_steps)):
+            raise ValueError('Snapshot steps require a replay path and unique nonnegative integers')
     start = time.perf_counter()
     module = official()
     reference = make_environment(seed, configuration)
@@ -117,6 +122,8 @@ def run_match(candidate, opponent, seed, seat=0, backend='fast', configuration=N
         configuration=copy.deepcopy(reference.configuration), info=copy.deepcopy(reference.info), done=False,
         state=copy.deepcopy(reference.state))
     cfg = dict(env.configuration)
+    if replay_steps is not None and max(replay_steps) >= cfg['episodeSteps']:
+        raise ValueError('Snapshot step is outside the episode')
     names = [candidate, opponent] if seat == 0 else [opponent, candidate]
     # A bundle that mutates arena-visible state at import is refused here, so a
     # corrupted game never becomes evidence. Audit patching happens afterwards.
@@ -124,6 +131,8 @@ def run_match(candidate, opponent, seed, seat=0, backend='fast', configuration=N
     timings, failures = [[], []], [[], []]
     audit = Audit(module)
     transcript = []
+    if replay_steps is not None and 0 in replay_steps:
+        transcript.append({'step': 0, 'actions': [], 'observations': observations(env.state)})
     module._apply_unit_action = audit.apply
     module._commit_unit = audit.commit
     module._drop_inventories_to_shed = audit.drop
@@ -169,7 +178,7 @@ def run_match(candidate, opponent, seed, seat=0, backend='fast', configuration=N
             if telemetry:
                 telemetry.finish_turn(env.state, before_audit, audit)
             steps += 1
-            if replay:
+            if replay and (replay_steps is None or steps in replay_steps):
                 transcript.append({'step': steps, 'actions': actions,
                                    'observations': observations(env.state)})
         money = [float(f['money']) for f in env.state[0].observation.farms]
@@ -204,7 +213,10 @@ def run_match(candidate, opponent, seed, seat=0, backend='fast', configuration=N
     if replay:
         path = Path(replay)
         path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(json.dumps({'format': 'kaggriculture-lab-v2', 'result': result, 'turns': transcript}))
+        payload = {'format': 'kaggriculture-lab-v2', 'result': result, 'turns': transcript}
+        if replay_steps is not None:
+            payload.update(format='kaggriculture-lab-snapshots-v1', requested_steps=sorted(replay_steps))
+        path.write_text(json.dumps(payload))
     return result
 
 

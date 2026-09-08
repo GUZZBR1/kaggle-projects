@@ -131,3 +131,12 @@ bootstrap descreve os seeds e adversários testados; não estima a posição no 
 O build também gera `.tar.gz` com `main.py` na raiz e um manifesto com hashes.
 Recusa sobrescrever um artefato diferente. O preflight joga uma temporada completa
 pelo loader oficial. Nenhum desses comandos envia uma submissão ao Kaggle.
+
+## Solver de blocos e política final
+
+[BLOCK_SOLVER.md](docs/BLOCK_SOLVER.md) descreve a primeira busca local de blocos,
+seu comando e o resultado negativo inicial. É uma entrega parcial da #39.
+[FINAL_SUBMISSION_POLICY.md](docs/FINAL_SUBMISSION_POLICY.md) confirma as regras
+com respostas diretas dos hosts: episódios de toda a competição podem contar,
+desde que ambos os agentes continuem ativos. A #37 não depende mais de relato
+indireto nem da interpretação de avaliação somente após o prazo.

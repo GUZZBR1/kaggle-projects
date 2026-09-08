@@ -1,0 +1,347 @@
+{
+  "plan": {
+    "schema_version": 1,
+    "kind": "market_block_local_search",
+    "split": "dev",
+    "created_at": "2026-09-08T14:45:18.721464+00:00",
+    "source": {
+      "source": "/tmp/kaggriculture-block-solver/kaggriculture/opponents/public/yhay_router_0908/actions.json",
+      "source_sha256": "171c8550addac9fdb49acb44af36f64b4eb54e34c561eb6f3d4a83e2dcc803a6",
+      "tape_index": 0,
+      "initial_tape_sha256": "2c413946a556e6fb93d939d31db64ec39fddba53b45ac3873ad687451889beb5",
+      "source_url": "https://www.kaggle.com/code/yhay81/shop-router-0908",
+      "license": "Apache-2.0 (author states handwritten code is Apache-2.0; Kaggle notebook default)"
+    },
+    "start": 648,
+    "end": 719,
+    "days": 3,
+    "proposals": 4,
+    "rounds": 1,
+    "seeds": [
+      1000,
+      1001,
+      1002,
+      1003
+    ],
+    "check_seeds": [
+      1008,
+      1009,
+      1010,
+      1011
+    ],
+    "search_seed": 771,
+    "opponents": [
+      "clock::opponents/public/thomas_t95/main.py",
+      "clock::opponents/public/aberatozer_v23/main.py"
+    ],
+    "opponent_hashes": {
+      "clock::opponents/public/thomas_t95/main.py": "76254cf98142ec312ec677a73b678294f5ff574295640c74b319683fa6b00c4b",
+      "clock::opponents/public/aberatozer_v23/main.py": "aff02bb9b2c07ca922f2d1a96f13fa63c31769bc6ba9623f0be881590765bdcc"
+    },
+    "environment": {
+      "version": "1.32.7",
+      "interpreter_sha256": "bc8a54879ef02c7ea64b8b333d6a976f0ea65c4949149d01f463f23bccee653e",
+      "specification_sha256": "a82c89c1a2315b93f39775d8e025471a01b738647c9772658368ee6b1b6f4867"
+    },
+    "registry": {
+      "search": {
+        "registry_schema": 1,
+        "registry_revision": 2,
+        "registry_sha256": "911be9bb20b421dc66ac6bf77a1a25d993e0de327c98f3a42876e2c744b2c8b9",
+        "split": "dev",
+        "competitive": true
+      },
+      "check": {
+        "registry_schema": 1,
+        "registry_revision": 2,
+        "registry_sha256": "911be9bb20b421dc66ac6bf77a1a25d993e0de327c98f3a42876e2c744b2c8b9",
+        "split": "dev",
+        "competitive": true
+      }
+    },
+    "objective": [
+      "worst_opponent_win_score",
+      "overall_win_score"
+    ]
+  },
+  "evaluated_mutations": 4,
+  "accepted_mutations": [],
+  "initial_fitness": [
+    0.75,
+    0.75
+  ],
+  "selected_fitness": [
+    0.75,
+    0.75
+  ],
+  "selected_tape_sha256": "2c413946a556e6fb93d939d31db64ec39fddba53b45ac3873ad687451889beb5",
+  "check": {
+    "bootstrap": {
+      "method": "percentile",
+      "unit": "seed",
+      "samples": 10000,
+      "seed": 771
+    },
+    "games_per_leg": 16,
+    "seed_blocks": 4,
+    "strong": {
+      "games": 0,
+      "delta_win": null,
+      "ci95": [
+        null,
+        null
+      ]
+    },
+    "all": {
+      "games": 16,
+      "delta_win": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "delta_margin_diagnostic": 0.0
+    },
+    "per_opponent": {
+      "aberatozer_v23": {
+        "cohort": "unknown",
+        "games": 8,
+        "delta_win": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "delta_margin_diagnostic": 0.0
+      },
+      "thomas_t95": {
+        "cohort": "unknown",
+        "games": 8,
+        "delta_win": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "delta_margin_diagnostic": 0.0
+      }
+    },
+    "baseline": {
+      "primary": {
+        "metric": "win_rate_strong",
+        "games": 0,
+        "note": "no opponent has a current rating at or above the cut"
+      },
+      "secondary": {
+        "metric": "win_rate_all",
+        "games": 16,
+        "wins": 16,
+        "ties": 0,
+        "losses": 0,
+        "win_rate": 1.0,
+        "win_rate_ci95": [
+          1.0,
+          1.0
+        ],
+        "mean_margin_diagnostic": 6686.75
+      },
+      "cohorts": {
+        "thomas_t95": "unknown",
+        "aberatozer_v23": "unknown"
+      },
+      "per_opponent": {
+        "aberatozer_v23": {
+          "cohort": "unknown",
+          "games": 8,
+          "wins": 8,
+          "ties": 0,
+          "losses": 0,
+          "win_rate": 1.0,
+          "win_rate_ci95": [
+            1.0,
+            1.0
+          ],
+          "mean_margin_diagnostic": 6713.0
+        },
+        "thomas_t95": {
+          "cohort": "unknown",
+          "games": 8,
+          "wins": 8,
+          "ties": 0,
+          "losses": 0,
+          "win_rate": 1.0,
+          "win_rate_ci95": [
+            1.0,
+            1.0
+          ],
+          "mean_margin_diagnostic": 6660.5
+        }
+      }
+    },
+    "candidate": {
+      "primary": {
+        "metric": "win_rate_strong",
+        "games": 0,
+        "note": "no opponent has a current rating at or above the cut"
+      },
+      "secondary": {
+        "metric": "win_rate_all",
+        "games": 16,
+        "wins": 16,
+        "ties": 0,
+        "losses": 0,
+        "win_rate": 1.0,
+        "win_rate_ci95": [
+          1.0,
+          1.0
+        ],
+        "mean_margin_diagnostic": 6686.75
+      },
+      "cohorts": {
+        "thomas_t95": "unknown",
+        "aberatozer_v23": "unknown"
+      },
+      "per_opponent": {
+        "aberatozer_v23": {
+          "cohort": "unknown",
+          "games": 8,
+          "wins": 8,
+          "ties": 0,
+          "losses": 0,
+          "win_rate": 1.0,
+          "win_rate_ci95": [
+            1.0,
+            1.0
+          ],
+          "mean_margin_diagnostic": 6713.0
+        },
+        "thomas_t95": {
+          "cohort": "unknown",
+          "games": 8,
+          "wins": 8,
+          "ties": 0,
+          "losses": 0,
+          "win_rate": 1.0,
+          "win_rate_ci95": [
+            1.0,
+            1.0
+          ],
+          "mean_margin_diagnostic": 6660.5
+        }
+      }
+    }
+  },
+  "wall_seconds": 55.30790534600055,
+  "release_status": "not_validated",
+  "selection_history": [
+    {
+      "round": 0,
+      "mutation": {
+        "kind": "block_order",
+        "turn": 648,
+        "slot": null,
+        "value": 1
+      },
+      "tape_sha256": "94612a7602d9764ee41a326d3d619275a6f3c1a8024a86dd24f2ffff2e1d7f45",
+      "artifact_hash": "9d44a71436ac4c81c059533402420c08b7d5789a413cda91f99528e479564d0b",
+      "fitness": [
+        0.75,
+        0.75
+      ],
+      "delta_from_initial": {
+        "games": 16,
+        "delta_win": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "delta_margin_diagnostic": -138.625
+      }
+    },
+    {
+      "round": 0,
+      "mutation": {
+        "kind": "block_order",
+        "turn": 648,
+        "slot": null,
+        "value": -1
+      },
+      "tape_sha256": "7873e8a5c794a6a306a98d6b9f13497b7e29fe33bca13d1e7a6799bc75b8ee0f",
+      "artifact_hash": "ee5efe67c09d8650b2a40817dd41067db962ce9fb3fa765604daa5e34100d586",
+      "fitness": [
+        0.75,
+        0.75
+      ],
+      "delta_from_initial": {
+        "games": 16,
+        "delta_win": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "delta_margin_diagnostic": -72.75
+      }
+    },
+    {
+      "round": 0,
+      "mutation": {
+        "kind": "block_order",
+        "turn": 648,
+        "slot": null,
+        "value": 0
+      },
+      "tape_sha256": "0d87b804932c28da35d20e4c2f8d9af7ed65590c3bb185f5ebeb33952cf9bd5f",
+      "artifact_hash": "7fc90997000aa2a7405935caf76b77daa97c1b9939cbd1b9a979d814c1ac1dec",
+      "fitness": [
+        0.75,
+        0.75
+      ],
+      "delta_from_initial": {
+        "games": 16,
+        "delta_win": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "delta_margin_diagnostic": -151.375
+      }
+    },
+    {
+      "round": 0,
+      "mutation": {
+        "kind": "quantity",
+        "turn": 714,
+        "slot": 2,
+        "value": 500
+      },
+      "tape_sha256": "97ae600a6aa4bdc7b42458d28f3cdd5a450b69050c3b4e85b1c2768317b78059",
+      "artifact_hash": "1e5412f4752394c6f108d3a66b58661f53df14aae429899d1f5a3ab249865b73",
+      "fitness": [
+        0.75,
+        0.75
+      ],
+      "delta_from_initial": {
+        "games": 16,
+        "delta_win": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "delta_margin_diagnostic": 0.0
+      }
+    }
+  ],
+  "game_count": 112,
+  "evidence_files": {
+    "baseline-check/matches.jsonl": "305c1abf40fc78a8c84def4a80bd2a084e81097097e4df428f972a6a69f2d5a7",
+    "baseline-search/matches.jsonl": "56f674a5fb98f0aae445be31299516437153f7b3dc23efbff63d1702699b832d",
+    "candidate-check/matches.jsonl": "2db9c4abbed3a9dec01bb802d2c40b8fc7956f488bc072e06f9e49b6c42594ce",
+    "round-0-proposal-0/matches.jsonl": "09d9ebd1b97360835b12a1743e6ee79ad2f6c5fa5abf6213e486d45afb62582c",
+    "round-0-proposal-1/matches.jsonl": "4a7fd9e62d90c6a32ce0e9b42c82e45f179bd775ce253fe424793cc309f05820",
+    "round-0-proposal-2/matches.jsonl": "ba5276bcbcd5e27e20ab911046ddfe7c3c608a23a679aca7ce4891179d2df6bd",
+    "round-0-proposal-3/matches.jsonl": "11bcc9fd642abfd11fe0b73d729a4404a87ac2a46d6c2947155c8e8f40998233"
+  },
+  "limitations": [
+    "Small development-only search; no measured improvement",
+    "Fixed tape 0, not the full yhay router or v004 incumbent",
+    "Earlier two-seed pilot inspected 1000:1004; disjoint check here 1008:1012",
+    "Interrupted terminal-02 search had no complete report and is not counted"
+  ]
+}
