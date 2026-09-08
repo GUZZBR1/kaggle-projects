@@ -1,0 +1,3497 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-09-08",
+  "experiments": {
+    "swap-144-01": {
+      "plan": {
+        "kind": "swap_block_local_search",
+        "mutation_space": "swap",
+        "split": "dev",
+        "start": 144,
+        "end": 288,
+        "days": 6,
+        "proposals": 3,
+        "rounds": 1,
+        "seeds": [
+          1054,
+          1055,
+          1056,
+          1057
+        ],
+        "check_seeds": [
+          1058,
+          1059,
+          1060,
+          1061
+        ],
+        "opponents": [
+          "clock::opponents/public/thomas_t95/main.py",
+          "clock::opponents/public/aberatozer_d5e3/main.py"
+        ],
+        "opponent_hashes": {
+          "clock::opponents/public/thomas_t95/main.py": "76254cf98142ec312ec677a73b678294f5ff574295640c74b319683fa6b00c4b",
+          "clock::opponents/public/aberatozer_d5e3/main.py": "e0a3f8d4ce19b39e32a3db73329d1fc4c89a8e1c9f10dd041608a3f00e60129c"
+        },
+        "donors": 3,
+        "registry": {
+          "search": {
+            "registry_schema": 1,
+            "registry_revision": 2,
+            "registry_sha256": "911be9bb20b421dc66ac6bf77a1a25d993e0de327c98f3a42876e2c744b2c8b9",
+            "split": "dev",
+            "competitive": true
+          },
+          "check": {
+            "registry_schema": 1,
+            "registry_revision": 2,
+            "registry_sha256": "911be9bb20b421dc66ac6bf77a1a25d993e0de327c98f3a42876e2c744b2c8b9",
+            "split": "dev",
+            "competitive": true
+          }
+        },
+        "environment": {
+          "version": "1.32.7",
+          "interpreter_sha256": "bc8a54879ef02c7ea64b8b333d6a976f0ea65c4949149d01f463f23bccee653e",
+          "specification_sha256": "a82c89c1a2315b93f39775d8e025471a01b738647c9772658368ee6b1b6f4867"
+        },
+        "generator_sha256": "1dab24669763c458cc8dc7bebdc213b3ffc56c34c00c9473fbfc05c6c06d5320",
+        "swap_mutations_sha256": "e229fd1db4a15f786770ab187131a96734c5e1abb1a03339e387fe770baafe1a",
+        "source": {
+          "source": "/mnt/d/Projects/kaggle-projects/kaggriculture/opponents/public/yhay_router_0908/actions.json",
+          "source_sha256": "171c8550addac9fdb49acb44af36f64b4eb54e34c561eb6f3d4a83e2dcc803a6",
+          "tape_index": 0,
+          "initial_tape_sha256": "2c413946a556e6fb93d939d31db64ec39fddba53b45ac3873ad687451889beb5",
+          "source_url": "https://www.kaggle.com/code/yhay81/shop-router-0908",
+          "license": "Apache-2.0 (author states handwritten code is Apache-2.0; Kaggle notebook default)"
+        }
+      },
+      "history": [
+        {
+          "round": 0,
+          "mutation": {
+            "kind": "block_swap",
+            "donor": 0,
+            "turns_changed": 118
+          },
+          "tape_sha256": "1a739fbd21d0c6ebe20126f590d4e3fd0331ed81cc46684afe977447563f930b",
+          "artifact_hash": "367fab46530db55cb377436943447290eefd6125315b7828a7733d23ab0fb7c0",
+          "fitness": [
+            0.0,
+            0.0625
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": -0.5625,
+            "ci95": [
+              -1.0,
+              -0.125
+            ],
+            "delta_margin_diagnostic": -17962.9375
+          },
+          "ineffective_unit_actions": 2010
+        }
+      ],
+      "accepted": [],
+      "initial_fitness": [
+        0.625,
+        0.625
+      ],
+      "selected_fitness": [
+        0.625,
+        0.625
+      ],
+      "check": {
+        "games": 16,
+        "delta_win": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "delta_margin_diagnostic": 0.0
+      },
+      "wall_seconds": 33.63916582500133,
+      "release_status": "not_validated",
+      "evidence_sha256": {
+        "main.manifest.json": "4bc9cb652dbbf3c09e444c0a99c1779b869efaa316d9ec727a0f2390c73b8e98",
+        "plan.json": "4d071c6bb0e89920294fd344008b26b45a323cf90795fc48b0823ec9dd42e5fb",
+        "report.json": "53b5c12d3409db42c598b0d83921b255b133d634c16b1d0f5bbb02fb4b49dcd3",
+        "selection.json": "228d80d428ef4f6af80eca398b021bbb3883bd6a544babea6e0442a912e79042",
+        "tapes.json": "2f990b028f14194474ad4a47b94817617ddc0a5ddd34e3ad9398bdc0a66d06e8"
+      }
+    },
+    "swap-288-01": {
+      "plan": {
+        "kind": "swap_block_local_search",
+        "mutation_space": "swap",
+        "split": "dev",
+        "start": 288,
+        "end": 432,
+        "days": 6,
+        "proposals": 3,
+        "rounds": 1,
+        "seeds": [
+          1062,
+          1063,
+          1064,
+          1065
+        ],
+        "check_seeds": [
+          1066,
+          1067,
+          1068,
+          1069
+        ],
+        "opponents": [
+          "clock::opponents/public/thomas_t95/main.py",
+          "clock::opponents/public/aberatozer_d5e3/main.py"
+        ],
+        "opponent_hashes": {
+          "clock::opponents/public/thomas_t95/main.py": "76254cf98142ec312ec677a73b678294f5ff574295640c74b319683fa6b00c4b",
+          "clock::opponents/public/aberatozer_d5e3/main.py": "e0a3f8d4ce19b39e32a3db73329d1fc4c89a8e1c9f10dd041608a3f00e60129c"
+        },
+        "donors": 3,
+        "registry": {
+          "search": {
+            "registry_schema": 1,
+            "registry_revision": 2,
+            "registry_sha256": "911be9bb20b421dc66ac6bf77a1a25d993e0de327c98f3a42876e2c744b2c8b9",
+            "split": "dev",
+            "competitive": true
+          },
+          "check": {
+            "registry_schema": 1,
+            "registry_revision": 2,
+            "registry_sha256": "911be9bb20b421dc66ac6bf77a1a25d993e0de327c98f3a42876e2c744b2c8b9",
+            "split": "dev",
+            "competitive": true
+          }
+        },
+        "environment": {
+          "version": "1.32.7",
+          "interpreter_sha256": "bc8a54879ef02c7ea64b8b333d6a976f0ea65c4949149d01f463f23bccee653e",
+          "specification_sha256": "a82c89c1a2315b93f39775d8e025471a01b738647c9772658368ee6b1b6f4867"
+        },
+        "generator_sha256": "1dab24669763c458cc8dc7bebdc213b3ffc56c34c00c9473fbfc05c6c06d5320",
+        "swap_mutations_sha256": "e229fd1db4a15f786770ab187131a96734c5e1abb1a03339e387fe770baafe1a",
+        "source": {
+          "source": "/mnt/d/Projects/kaggle-projects/kaggriculture/opponents/public/yhay_router_0908/actions.json",
+          "source_sha256": "171c8550addac9fdb49acb44af36f64b4eb54e34c561eb6f3d4a83e2dcc803a6",
+          "tape_index": 0,
+          "initial_tape_sha256": "2c413946a556e6fb93d939d31db64ec39fddba53b45ac3873ad687451889beb5",
+          "source_url": "https://www.kaggle.com/code/yhay81/shop-router-0908",
+          "license": "Apache-2.0 (author states handwritten code is Apache-2.0; Kaggle notebook default)"
+        }
+      },
+      "history": [
+        {
+          "round": 0,
+          "mutation": {
+            "kind": "block_swap",
+            "donor": 0,
+            "turns_changed": 98
+          },
+          "tape_sha256": "48b490bde6c938e32cb59c408cc1c4e1f8f91ef66a46b49aabeb19f6f81a6154",
+          "artifact_hash": "514b90f06159178aeafd26f95df0941a5313a4c409cbd39b911167385a276eec",
+          "fitness": [
+            0.25,
+            0.3125
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "delta_margin_diagnostic": -476.3125
+          },
+          "ineffective_unit_actions": 216
+        }
+      ],
+      "accepted": [],
+      "initial_fitness": [
+        0.25,
+        0.3125
+      ],
+      "selected_fitness": [
+        0.25,
+        0.3125
+      ],
+      "check": {
+        "games": 16,
+        "delta_win": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "delta_margin_diagnostic": 0.0
+      },
+      "wall_seconds": 34.425440979000996,
+      "release_status": "not_validated",
+      "evidence_sha256": {
+        "main.manifest.json": "5da35e6f7661fe0adaf1255f8ae7ed1fa81497e3ccf3c1d8c4005bab7ba1eab6",
+        "plan.json": "be06b211cccb6252a66856656409a229aebe544b10e91c78a27c6c2bd34f860c",
+        "report.json": "fa8963a62c8d1d76080fe8edbf85f9aa97851ce13b1e4728ed72bc035109b8d3",
+        "selection.json": "28876d2a2f0556629739159237ef9f9c0b10292c19b1c9d04e6f1d053949cdf8",
+        "tapes.json": "2f990b028f14194474ad4a47b94817617ddc0a5ddd34e3ad9398bdc0a66d06e8"
+      }
+    },
+    "swap-432-01": {
+      "plan": {
+        "kind": "swap_block_local_search",
+        "mutation_space": "swap",
+        "split": "dev",
+        "start": 432,
+        "end": 576,
+        "days": 6,
+        "proposals": 3,
+        "rounds": 1,
+        "seeds": [
+          1090,
+          1091,
+          1092,
+          1093
+        ],
+        "check_seeds": [
+          1094,
+          1095,
+          1096,
+          1097
+        ],
+        "opponents": [
+          "clock::opponents/public/thomas_t95/main.py",
+          "clock::opponents/public/aberatozer_d5e3/main.py"
+        ],
+        "opponent_hashes": {
+          "clock::opponents/public/thomas_t95/main.py": "76254cf98142ec312ec677a73b678294f5ff574295640c74b319683fa6b00c4b",
+          "clock::opponents/public/aberatozer_d5e3/main.py": "e0a3f8d4ce19b39e32a3db73329d1fc4c89a8e1c9f10dd041608a3f00e60129c"
+        },
+        "donors": 3,
+        "registry": {
+          "search": {
+            "registry_schema": 1,
+            "registry_revision": 2,
+            "registry_sha256": "911be9bb20b421dc66ac6bf77a1a25d993e0de327c98f3a42876e2c744b2c8b9",
+            "split": "dev",
+            "competitive": true
+          },
+          "check": {
+            "registry_schema": 1,
+            "registry_revision": 2,
+            "registry_sha256": "911be9bb20b421dc66ac6bf77a1a25d993e0de327c98f3a42876e2c744b2c8b9",
+            "split": "dev",
+            "competitive": true
+          }
+        },
+        "environment": {
+          "version": "1.32.7",
+          "interpreter_sha256": "bc8a54879ef02c7ea64b8b333d6a976f0ea65c4949149d01f463f23bccee653e",
+          "specification_sha256": "a82c89c1a2315b93f39775d8e025471a01b738647c9772658368ee6b1b6f4867"
+        },
+        "generator_sha256": "cebb0d759c61905f2215d3f979a12b63827adc90867110a9d1efe982e463812e",
+        "swap_mutations_sha256": "e229fd1db4a15f786770ab187131a96734c5e1abb1a03339e387fe770baafe1a",
+        "source": {
+          "source": "/mnt/d/Projects/kaggle-projects/kaggriculture/opponents/public/yhay_router_0908/actions.json",
+          "source_sha256": "171c8550addac9fdb49acb44af36f64b4eb54e34c561eb6f3d4a83e2dcc803a6",
+          "tape_index": 0,
+          "initial_tape_sha256": "2c413946a556e6fb93d939d31db64ec39fddba53b45ac3873ad687451889beb5",
+          "source_url": "https://www.kaggle.com/code/yhay81/shop-router-0908",
+          "license": "Apache-2.0 (author states handwritten code is Apache-2.0; Kaggle notebook default)"
+        }
+      },
+      "history": [
+        {
+          "round": 0,
+          "mutation": {
+            "kind": "block_swap",
+            "donor": 0,
+            "turns_changed": 121
+          },
+          "tape_sha256": "41df3d0d09805f96a0f0f37e9c2a9de0c1a5f45a085b145233b9e349f3c648c0",
+          "artifact_hash": "1d92c74eccbe01bfcbac5142d4de0e385fdfbb019d2ffe0d5c67554bec43f308",
+          "fitness": [
+            0.75,
+            0.75
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "delta_margin_diagnostic": -903.5
+          },
+          "ineffective_unit_actions": 208
+        }
+      ],
+      "accepted": [],
+      "initial_fitness": [
+        0.75,
+        0.75
+      ],
+      "selected_fitness": [
+        0.75,
+        0.75
+      ],
+      "check": {
+        "games": 16,
+        "delta_win": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "delta_margin_diagnostic": 0.0
+      },
+      "wall_seconds": 32.702473683999415,
+      "release_status": "not_validated",
+      "evidence_sha256": {
+        "main.manifest.json": "6e8efb1007f07a769d4874e844df5ce877f1bbdbde30a3458d2832dff489f827",
+        "plan.json": "8989474b676c84b98427b42f9632af861389f8ba3cc0f48cf04b18f9f85e51b7",
+        "report.json": "ed47cb5db86764d86f8fc4a9f5478b495adb360a1cb1794f5b6daad33c5d9b61",
+        "selection.json": "bea92e1b09df455535bf3af736f1ba075c7730dca68fb1bc187ef5dc232fb2aa",
+        "tapes.json": "2f990b028f14194474ad4a47b94817617ddc0a5ddd34e3ad9398bdc0a66d06e8"
+      }
+    },
+    "swap-576-01": {
+      "plan": {
+        "kind": "swap_block_local_search",
+        "mutation_space": "swap",
+        "split": "dev",
+        "start": 576,
+        "end": 719,
+        "days": 6,
+        "proposals": 3,
+        "rounds": 1,
+        "seeds": [
+          1010,
+          1011,
+          1012,
+          1013
+        ],
+        "check_seeds": [
+          1014,
+          1015,
+          1016,
+          1017
+        ],
+        "opponents": [
+          "clock::opponents/public/thomas_t95/main.py",
+          "clock::opponents/public/aberatozer_d5e3/main.py"
+        ],
+        "opponent_hashes": {
+          "clock::opponents/public/thomas_t95/main.py": "76254cf98142ec312ec677a73b678294f5ff574295640c74b319683fa6b00c4b",
+          "clock::opponents/public/aberatozer_d5e3/main.py": "e0a3f8d4ce19b39e32a3db73329d1fc4c89a8e1c9f10dd041608a3f00e60129c"
+        },
+        "donors": 3,
+        "registry": {
+          "search": {
+            "registry_schema": 1,
+            "registry_revision": 2,
+            "registry_sha256": "911be9bb20b421dc66ac6bf77a1a25d993e0de327c98f3a42876e2c744b2c8b9",
+            "split": "dev",
+            "competitive": true
+          },
+          "check": {
+            "registry_schema": 1,
+            "registry_revision": 2,
+            "registry_sha256": "911be9bb20b421dc66ac6bf77a1a25d993e0de327c98f3a42876e2c744b2c8b9",
+            "split": "dev",
+            "competitive": true
+          }
+        },
+        "environment": {
+          "version": "1.32.7",
+          "interpreter_sha256": "bc8a54879ef02c7ea64b8b333d6a976f0ea65c4949149d01f463f23bccee653e",
+          "specification_sha256": "a82c89c1a2315b93f39775d8e025471a01b738647c9772658368ee6b1b6f4867"
+        },
+        "generator_sha256": "cebb0d759c61905f2215d3f979a12b63827adc90867110a9d1efe982e463812e",
+        "swap_mutations_sha256": "e229fd1db4a15f786770ab187131a96734c5e1abb1a03339e387fe770baafe1a",
+        "source": {
+          "source": "/mnt/d/Projects/kaggle-projects/kaggriculture/opponents/public/yhay_router_0908/actions.json",
+          "source_sha256": "171c8550addac9fdb49acb44af36f64b4eb54e34c561eb6f3d4a83e2dcc803a6",
+          "tape_index": 0,
+          "initial_tape_sha256": "2c413946a556e6fb93d939d31db64ec39fddba53b45ac3873ad687451889beb5",
+          "source_url": "https://www.kaggle.com/code/yhay81/shop-router-0908",
+          "license": "Apache-2.0 (author states handwritten code is Apache-2.0; Kaggle notebook default)"
+        }
+      },
+      "history": [
+        {
+          "round": 0,
+          "mutation": {
+            "kind": "block_swap",
+            "donor": 0,
+            "turns_changed": 140
+          },
+          "tape_sha256": "194c18aa29613aecf3d6a7374649f488f612871a118b46b5384858460de22b39",
+          "artifact_hash": "0cbe652d7a0745785cdf817c785aa07d36232de482ebdb258cffc1efbc522683",
+          "fitness": [
+            0.5,
+            0.5
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": -0.25,
+            "ci95": [
+              -0.75,
+              0.0
+            ],
+            "delta_margin_diagnostic": -2270.375
+          },
+          "ineffective_unit_actions": 416
+        },
+        {
+          "round": 0,
+          "mutation": {
+            "kind": "block_swap",
+            "donor": 1,
+            "turns_changed": 21
+          },
+          "tape_sha256": "d44a2b71bda9a3852c7cc03a56e07c9c52f3d3845ce497b49582d35b088392d9",
+          "artifact_hash": "9f101b5f925573f41c965a730f400ef2412302a7913affd500a53a4b5d0b9f85",
+          "fitness": [
+            0.75,
+            0.75
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "delta_margin_diagnostic": -120.625
+          },
+          "ineffective_unit_actions": 128
+        },
+        {
+          "round": 0,
+          "mutation": {
+            "kind": "block_swap",
+            "donor": 2,
+            "turns_changed": 2
+          },
+          "tape_sha256": "ae5266ed3a5f7bebca746636c1fd7976a21d414bcfe0cde0d88a46082d8b48ad",
+          "artifact_hash": "c987e0468de97ed09bc78b322d8ebb2708e645c0435ca73d18789ca299350ba4",
+          "fitness": [
+            0.75,
+            0.75
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "delta_margin_diagnostic": -97.125
+          },
+          "ineffective_unit_actions": 128
+        }
+      ],
+      "accepted": [],
+      "initial_fitness": [
+        0.75,
+        0.75
+      ],
+      "selected_fitness": [
+        0.75,
+        0.75
+      ],
+      "check": {
+        "games": 16,
+        "delta_win": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "delta_margin_diagnostic": 0.0
+      },
+      "wall_seconds": 49.96382034399903,
+      "release_status": "not_validated",
+      "evidence_sha256": {
+        "main.manifest.json": "082f6e625056e813d5b0ea786581a629c3801b0aac64550ba2a2c44d3574b067",
+        "plan.json": "d1ef0b0e93fa2e73fff7e91948eead73b78c91f56058c12a166cfd89a29b5cc7",
+        "report.json": "7a2ae4772ef26241f51113007eb86d2b34dccc056353d08e6ac1ad2b8d640a97",
+        "selection.json": "c173bfdb17042b3eb2cdbdbe022206421d35e88cb523c0c662a537c89e6b79a4",
+        "tapes.json": "2f990b028f14194474ad4a47b94817617ddc0a5ddd34e3ad9398bdc0a66d06e8"
+      }
+    },
+    "swap-648-01": {
+      "plan": {
+        "kind": "swap_block_local_search",
+        "mutation_space": "swap",
+        "split": "dev",
+        "start": 648,
+        "end": 719,
+        "days": 3,
+        "proposals": 3,
+        "rounds": 1,
+        "seeds": [
+          1018,
+          1019,
+          1020,
+          1021
+        ],
+        "check_seeds": [
+          1022,
+          1023,
+          1024,
+          1025
+        ],
+        "opponents": [
+          "clock::opponents/public/thomas_t95/main.py",
+          "clock::opponents/public/aberatozer_d5e3/main.py"
+        ],
+        "opponent_hashes": {
+          "clock::opponents/public/thomas_t95/main.py": "76254cf98142ec312ec677a73b678294f5ff574295640c74b319683fa6b00c4b",
+          "clock::opponents/public/aberatozer_d5e3/main.py": "e0a3f8d4ce19b39e32a3db73329d1fc4c89a8e1c9f10dd041608a3f00e60129c"
+        },
+        "donors": 3,
+        "registry": {
+          "search": {
+            "registry_schema": 1,
+            "registry_revision": 2,
+            "registry_sha256": "911be9bb20b421dc66ac6bf77a1a25d993e0de327c98f3a42876e2c744b2c8b9",
+            "split": "dev",
+            "competitive": true
+          },
+          "check": {
+            "registry_schema": 1,
+            "registry_revision": 2,
+            "registry_sha256": "911be9bb20b421dc66ac6bf77a1a25d993e0de327c98f3a42876e2c744b2c8b9",
+            "split": "dev",
+            "competitive": true
+          }
+        },
+        "environment": {
+          "version": "1.32.7",
+          "interpreter_sha256": "bc8a54879ef02c7ea64b8b333d6a976f0ea65c4949149d01f463f23bccee653e",
+          "specification_sha256": "a82c89c1a2315b93f39775d8e025471a01b738647c9772658368ee6b1b6f4867"
+        },
+        "generator_sha256": "cebb0d759c61905f2215d3f979a12b63827adc90867110a9d1efe982e463812e",
+        "swap_mutations_sha256": "e229fd1db4a15f786770ab187131a96734c5e1abb1a03339e387fe770baafe1a",
+        "source": {
+          "source": "/mnt/d/Projects/kaggle-projects/kaggriculture/opponents/public/yhay_router_0908/actions.json",
+          "source_sha256": "171c8550addac9fdb49acb44af36f64b4eb54e34c561eb6f3d4a83e2dcc803a6",
+          "tape_index": 0,
+          "initial_tape_sha256": "2c413946a556e6fb93d939d31db64ec39fddba53b45ac3873ad687451889beb5",
+          "source_url": "https://www.kaggle.com/code/yhay81/shop-router-0908",
+          "license": "Apache-2.0 (author states handwritten code is Apache-2.0; Kaggle notebook default)"
+        }
+      },
+      "history": [
+        {
+          "round": 0,
+          "mutation": {
+            "kind": "block_swap",
+            "donor": 0,
+            "turns_changed": 68
+          },
+          "tape_sha256": "d9df8dfa8fd2ad816122885b281ff2192a170bb9e18a7a45309160df079b9b2d",
+          "artifact_hash": "ba44e460c7b5211b046cf3cf970775e16dcddae8602e3ec7414333652953d696",
+          "fitness": [
+            0.75,
+            0.75
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "delta_margin_diagnostic": -2045.125
+          },
+          "ineffective_unit_actions": 352
+        },
+        {
+          "round": 0,
+          "mutation": {
+            "kind": "block_swap",
+            "donor": 1,
+            "turns_changed": 21
+          },
+          "tape_sha256": "d44a2b71bda9a3852c7cc03a56e07c9c52f3d3845ce497b49582d35b088392d9",
+          "artifact_hash": "9f101b5f925573f41c965a730f400ef2412302a7913affd500a53a4b5d0b9f85",
+          "fitness": [
+            0.75,
+            0.75
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "delta_margin_diagnostic": -526.125
+          },
+          "ineffective_unit_actions": 128
+        },
+        {
+          "round": 0,
+          "mutation": {
+            "kind": "block_swap",
+            "donor": 2,
+            "turns_changed": 2
+          },
+          "tape_sha256": "ae5266ed3a5f7bebca746636c1fd7976a21d414bcfe0cde0d88a46082d8b48ad",
+          "artifact_hash": "c987e0468de97ed09bc78b322d8ebb2708e645c0435ca73d18789ca299350ba4",
+          "fitness": [
+            0.75,
+            0.75
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "delta_margin_diagnostic": -319.875
+          },
+          "ineffective_unit_actions": 128
+        }
+      ],
+      "accepted": [],
+      "initial_fitness": [
+        0.75,
+        0.75
+      ],
+      "selected_fitness": [
+        0.75,
+        0.75
+      ],
+      "check": {
+        "games": 16,
+        "delta_win": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "delta_margin_diagnostic": 0.0
+      },
+      "wall_seconds": 51.46217370299928,
+      "release_status": "not_validated",
+      "evidence_sha256": {
+        "main.manifest.json": "3de7d1ecee538e52cb50f707c9d3fad26e0588ee4bab0752008b3b3e80b7d91c",
+        "plan.json": "3f1cec6ec550b81beb5048cf56b5a83af58069fb34cc4c34a7763095cbb4d94a",
+        "report.json": "0debe99ce007608598c6df6175a6d412717da896882547c8f322571c28b4eeff",
+        "selection.json": "b25f227920309d22d6c8039a8a65798b64ce0e7759f3516ed1a71c96740dd9e9",
+        "tapes.json": "2f990b028f14194474ad4a47b94817617ddc0a5ddd34e3ad9398bdc0a66d06e8"
+      }
+    },
+    "suffix-144-01": {
+      "plan": {
+        "kind": "swap_block_local_search",
+        "mutation_space": "swap",
+        "split": "dev",
+        "start": 144,
+        "end": 719,
+        "days": "full",
+        "proposals": 3,
+        "rounds": 1,
+        "seeds": [
+          1054,
+          1055,
+          1056,
+          1057
+        ],
+        "check_seeds": [
+          1058,
+          1059,
+          1060,
+          1061
+        ],
+        "opponents": [
+          "clock::opponents/public/thomas_t95/main.py",
+          "clock::opponents/public/aberatozer_d5e3/main.py"
+        ],
+        "opponent_hashes": {
+          "clock::opponents/public/thomas_t95/main.py": "76254cf98142ec312ec677a73b678294f5ff574295640c74b319683fa6b00c4b",
+          "clock::opponents/public/aberatozer_d5e3/main.py": "e0a3f8d4ce19b39e32a3db73329d1fc4c89a8e1c9f10dd041608a3f00e60129c"
+        },
+        "donors": 3,
+        "registry": {
+          "search": {
+            "registry_schema": 1,
+            "registry_revision": 2,
+            "registry_sha256": "911be9bb20b421dc66ac6bf77a1a25d993e0de327c98f3a42876e2c744b2c8b9",
+            "split": "dev",
+            "competitive": true
+          },
+          "check": {
+            "registry_schema": 1,
+            "registry_revision": 2,
+            "registry_sha256": "911be9bb20b421dc66ac6bf77a1a25d993e0de327c98f3a42876e2c744b2c8b9",
+            "split": "dev",
+            "competitive": true
+          }
+        },
+        "environment": {
+          "version": "1.32.7",
+          "interpreter_sha256": "bc8a54879ef02c7ea64b8b333d6a976f0ea65c4949149d01f463f23bccee653e",
+          "specification_sha256": "a82c89c1a2315b93f39775d8e025471a01b738647c9772658368ee6b1b6f4867"
+        },
+        "generator_sha256": "cebb0d759c61905f2215d3f979a12b63827adc90867110a9d1efe982e463812e",
+        "swap_mutations_sha256": "e229fd1db4a15f786770ab187131a96734c5e1abb1a03339e387fe770baafe1a",
+        "source": {
+          "source": "/mnt/d/Projects/kaggle-projects/kaggriculture/opponents/public/yhay_router_0908/actions.json",
+          "source_sha256": "171c8550addac9fdb49acb44af36f64b4eb54e34c561eb6f3d4a83e2dcc803a6",
+          "tape_index": 0,
+          "initial_tape_sha256": "2c413946a556e6fb93d939d31db64ec39fddba53b45ac3873ad687451889beb5",
+          "source_url": "https://www.kaggle.com/code/yhay81/shop-router-0908",
+          "license": "Apache-2.0 (author states handwritten code is Apache-2.0; Kaggle notebook default)"
+        }
+      },
+      "history": [
+        {
+          "round": 0,
+          "mutation": {
+            "kind": "block_swap",
+            "donor": 0,
+            "turns_changed": 477
+          },
+          "tape_sha256": "291af96e4f62a5dee66bab2d74b6f2fbeebc918faf77cc36ec7bf9e59e42b919",
+          "artifact_hash": "6e0ec63aae55e4786ea786eebb0289fe8bda95e0fa0dc97e8b08bb3fa5248d27",
+          "fitness": [
+            0.0,
+            0.0625
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": -0.5625,
+            "ci95": [
+              -1.0,
+              -0.125
+            ],
+            "delta_margin_diagnostic": -6340.0
+          },
+          "ineffective_unit_actions": 1994
+        },
+        {
+          "round": 0,
+          "mutation": {
+            "kind": "block_swap",
+            "donor": 1,
+            "turns_changed": 21
+          },
+          "tape_sha256": "d44a2b71bda9a3852c7cc03a56e07c9c52f3d3845ce497b49582d35b088392d9",
+          "artifact_hash": "9f101b5f925573f41c965a730f400ef2412302a7913affd500a53a4b5d0b9f85",
+          "fitness": [
+            0.625,
+            0.625
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "delta_margin_diagnostic": -220.4375
+          },
+          "ineffective_unit_actions": 192
+        },
+        {
+          "round": 0,
+          "mutation": {
+            "kind": "block_swap",
+            "donor": 2,
+            "turns_changed": 2
+          },
+          "tape_sha256": "ae5266ed3a5f7bebca746636c1fd7976a21d414bcfe0cde0d88a46082d8b48ad",
+          "artifact_hash": "c987e0468de97ed09bc78b322d8ebb2708e645c0435ca73d18789ca299350ba4",
+          "fitness": [
+            0.625,
+            0.625
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "delta_margin_diagnostic": 24.375
+          },
+          "ineffective_unit_actions": 192
+        }
+      ],
+      "accepted": [],
+      "initial_fitness": [
+        0.625,
+        0.625
+      ],
+      "selected_fitness": [
+        0.625,
+        0.625
+      ],
+      "check": {
+        "games": 16,
+        "delta_win": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "delta_margin_diagnostic": 0.0
+      },
+      "wall_seconds": 51.28060932399967,
+      "release_status": "not_validated",
+      "evidence_sha256": {
+        "main.manifest.json": "dae5c047bd2e2051db980e307764cbbf99b3824deb8e96a2c76b4cd0ccb4b976",
+        "plan.json": "d5c538838f31ffd17e90c7802c8385bf01b7a7f57e2ba374bb25530b3a0cd862",
+        "report.json": "01b4cb6d60a5d2150f4afe6a33b3bbcc21bde5261bd3e1d604c0267174839cf9",
+        "selection.json": "74f2948a9f3d3816d31dfdca989647411a3b6df38625f299ee4416296af73f14",
+        "tapes.json": "2f990b028f14194474ad4a47b94817617ddc0a5ddd34e3ad9398bdc0a66d06e8"
+      }
+    },
+    "suffix-288-01": {
+      "plan": {
+        "kind": "swap_block_local_search",
+        "mutation_space": "swap",
+        "split": "dev",
+        "start": 288,
+        "end": 719,
+        "days": "full",
+        "proposals": 3,
+        "rounds": 1,
+        "seeds": [
+          1062,
+          1063,
+          1064,
+          1065
+        ],
+        "check_seeds": [
+          1066,
+          1067,
+          1068,
+          1069
+        ],
+        "opponents": [
+          "clock::opponents/public/thomas_t95/main.py",
+          "clock::opponents/public/aberatozer_d5e3/main.py"
+        ],
+        "opponent_hashes": {
+          "clock::opponents/public/thomas_t95/main.py": "76254cf98142ec312ec677a73b678294f5ff574295640c74b319683fa6b00c4b",
+          "clock::opponents/public/aberatozer_d5e3/main.py": "e0a3f8d4ce19b39e32a3db73329d1fc4c89a8e1c9f10dd041608a3f00e60129c"
+        },
+        "donors": 3,
+        "registry": {
+          "search": {
+            "registry_schema": 1,
+            "registry_revision": 2,
+            "registry_sha256": "911be9bb20b421dc66ac6bf77a1a25d993e0de327c98f3a42876e2c744b2c8b9",
+            "split": "dev",
+            "competitive": true
+          },
+          "check": {
+            "registry_schema": 1,
+            "registry_revision": 2,
+            "registry_sha256": "911be9bb20b421dc66ac6bf77a1a25d993e0de327c98f3a42876e2c744b2c8b9",
+            "split": "dev",
+            "competitive": true
+          }
+        },
+        "environment": {
+          "version": "1.32.7",
+          "interpreter_sha256": "bc8a54879ef02c7ea64b8b333d6a976f0ea65c4949149d01f463f23bccee653e",
+          "specification_sha256": "a82c89c1a2315b93f39775d8e025471a01b738647c9772658368ee6b1b6f4867"
+        },
+        "generator_sha256": "cebb0d759c61905f2215d3f979a12b63827adc90867110a9d1efe982e463812e",
+        "swap_mutations_sha256": "e229fd1db4a15f786770ab187131a96734c5e1abb1a03339e387fe770baafe1a",
+        "source": {
+          "source": "/mnt/d/Projects/kaggle-projects/kaggriculture/opponents/public/yhay_router_0908/actions.json",
+          "source_sha256": "171c8550addac9fdb49acb44af36f64b4eb54e34c561eb6f3d4a83e2dcc803a6",
+          "tape_index": 0,
+          "initial_tape_sha256": "2c413946a556e6fb93d939d31db64ec39fddba53b45ac3873ad687451889beb5",
+          "source_url": "https://www.kaggle.com/code/yhay81/shop-router-0908",
+          "license": "Apache-2.0 (author states handwritten code is Apache-2.0; Kaggle notebook default)"
+        }
+      },
+      "history": [
+        {
+          "round": 0,
+          "mutation": {
+            "kind": "block_swap",
+            "donor": 0,
+            "turns_changed": 359
+          },
+          "tape_sha256": "7e17a622746950b27876a6fb4b922d2139c93b213299fd00f0fcefcf6988ea4e",
+          "artifact_hash": "85723a1b63a457c49dd9a1e11f0643ee57d3868361f48fdf27757265ca397c80",
+          "fitness": [
+            0.25,
+            0.3125
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "delta_margin_diagnostic": -3718.1875
+          },
+          "ineffective_unit_actions": 586
+        },
+        {
+          "round": 0,
+          "mutation": {
+            "kind": "block_swap",
+            "donor": 1,
+            "turns_changed": 21
+          },
+          "tape_sha256": "d44a2b71bda9a3852c7cc03a56e07c9c52f3d3845ce497b49582d35b088392d9",
+          "artifact_hash": "9f101b5f925573f41c965a730f400ef2412302a7913affd500a53a4b5d0b9f85",
+          "fitness": [
+            0.25,
+            0.3125
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "delta_margin_diagnostic": -440.125
+          },
+          "ineffective_unit_actions": 212
+        },
+        {
+          "round": 0,
+          "mutation": {
+            "kind": "block_swap",
+            "donor": 2,
+            "turns_changed": 2
+          },
+          "tape_sha256": "ae5266ed3a5f7bebca746636c1fd7976a21d414bcfe0cde0d88a46082d8b48ad",
+          "artifact_hash": "c987e0468de97ed09bc78b322d8ebb2708e645c0435ca73d18789ca299350ba4",
+          "fitness": [
+            0.25,
+            0.3125
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "delta_margin_diagnostic": -219.0625
+          },
+          "ineffective_unit_actions": 212
+        }
+      ],
+      "accepted": [],
+      "initial_fitness": [
+        0.25,
+        0.3125
+      ],
+      "selected_fitness": [
+        0.25,
+        0.3125
+      ],
+      "check": {
+        "games": 16,
+        "delta_win": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "delta_margin_diagnostic": 0.0
+      },
+      "wall_seconds": 50.76461679299973,
+      "release_status": "not_validated",
+      "evidence_sha256": {
+        "main.manifest.json": "e9660348c1a7c9177c39401f28e0ac951c3d67d58e7232838e30d5fad5094fd9",
+        "plan.json": "0eac9136214c58f9f048fbf84fc3d02465224b4ab0f978705eecc4238e0a936c",
+        "report.json": "404d60076a1c2762ad1cb897ca26814d0baa228d5e188a9655de6b424dd7e7de",
+        "selection.json": "c8040adc490ccc416dfe2dd882cb4856c44f5288b80a7832daf89be0b42c280f",
+        "tapes.json": "2f990b028f14194474ad4a47b94817617ddc0a5ddd34e3ad9398bdc0a66d06e8"
+      }
+    },
+    "suffix-432-01": {
+      "plan": {
+        "kind": "swap_block_local_search",
+        "mutation_space": "swap",
+        "split": "dev",
+        "start": 432,
+        "end": 719,
+        "days": "full",
+        "proposals": 3,
+        "rounds": 1,
+        "seeds": [
+          1090,
+          1091,
+          1092,
+          1093
+        ],
+        "check_seeds": [
+          1094,
+          1095,
+          1096,
+          1097
+        ],
+        "opponents": [
+          "clock::opponents/public/thomas_t95/main.py",
+          "clock::opponents/public/aberatozer_d5e3/main.py"
+        ],
+        "opponent_hashes": {
+          "clock::opponents/public/thomas_t95/main.py": "76254cf98142ec312ec677a73b678294f5ff574295640c74b319683fa6b00c4b",
+          "clock::opponents/public/aberatozer_d5e3/main.py": "e0a3f8d4ce19b39e32a3db73329d1fc4c89a8e1c9f10dd041608a3f00e60129c"
+        },
+        "donors": 3,
+        "registry": {
+          "search": {
+            "registry_schema": 1,
+            "registry_revision": 2,
+            "registry_sha256": "911be9bb20b421dc66ac6bf77a1a25d993e0de327c98f3a42876e2c744b2c8b9",
+            "split": "dev",
+            "competitive": true
+          },
+          "check": {
+            "registry_schema": 1,
+            "registry_revision": 2,
+            "registry_sha256": "911be9bb20b421dc66ac6bf77a1a25d993e0de327c98f3a42876e2c744b2c8b9",
+            "split": "dev",
+            "competitive": true
+          }
+        },
+        "environment": {
+          "version": "1.32.7",
+          "interpreter_sha256": "bc8a54879ef02c7ea64b8b333d6a976f0ea65c4949149d01f463f23bccee653e",
+          "specification_sha256": "a82c89c1a2315b93f39775d8e025471a01b738647c9772658368ee6b1b6f4867"
+        },
+        "generator_sha256": "cebb0d759c61905f2215d3f979a12b63827adc90867110a9d1efe982e463812e",
+        "swap_mutations_sha256": "e229fd1db4a15f786770ab187131a96734c5e1abb1a03339e387fe770baafe1a",
+        "source": {
+          "source": "/mnt/d/Projects/kaggle-projects/kaggriculture/opponents/public/yhay_router_0908/actions.json",
+          "source_sha256": "171c8550addac9fdb49acb44af36f64b4eb54e34c561eb6f3d4a83e2dcc803a6",
+          "tape_index": 0,
+          "initial_tape_sha256": "2c413946a556e6fb93d939d31db64ec39fddba53b45ac3873ad687451889beb5",
+          "source_url": "https://www.kaggle.com/code/yhay81/shop-router-0908",
+          "license": "Apache-2.0 (author states handwritten code is Apache-2.0; Kaggle notebook default)"
+        }
+      },
+      "history": [
+        {
+          "round": 0,
+          "mutation": {
+            "kind": "block_swap",
+            "donor": 0,
+            "turns_changed": 261
+          },
+          "tape_sha256": "44952c5b724b944d18639bf0ba5b655b888b66753e86c2df12ecdebe04c7b7b9",
+          "artifact_hash": "bfd0c7a93983a75361c1bf90ec71423732737f8c6ebbdc882c0651bc348d3cf3",
+          "fitness": [
+            0.5,
+            0.625
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": -0.125,
+            "ci95": [
+              -0.375,
+              0.0
+            ],
+            "delta_margin_diagnostic": -3722.875
+          },
+          "ineffective_unit_actions": 496
+        },
+        {
+          "round": 0,
+          "mutation": {
+            "kind": "block_swap",
+            "donor": 1,
+            "turns_changed": 21
+          },
+          "tape_sha256": "d44a2b71bda9a3852c7cc03a56e07c9c52f3d3845ce497b49582d35b088392d9",
+          "artifact_hash": "9f101b5f925573f41c965a730f400ef2412302a7913affd500a53a4b5d0b9f85",
+          "fitness": [
+            0.75,
+            0.75
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "delta_margin_diagnostic": -367.125
+          },
+          "ineffective_unit_actions": 128
+        },
+        {
+          "round": 0,
+          "mutation": {
+            "kind": "block_swap",
+            "donor": 2,
+            "turns_changed": 2
+          },
+          "tape_sha256": "ae5266ed3a5f7bebca746636c1fd7976a21d414bcfe0cde0d88a46082d8b48ad",
+          "artifact_hash": "c987e0468de97ed09bc78b322d8ebb2708e645c0435ca73d18789ca299350ba4",
+          "fitness": [
+            0.75,
+            0.75
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "delta_margin_diagnostic": -185.875
+          },
+          "ineffective_unit_actions": 128
+        }
+      ],
+      "accepted": [],
+      "initial_fitness": [
+        0.75,
+        0.75
+      ],
+      "selected_fitness": [
+        0.75,
+        0.75
+      ],
+      "check": {
+        "games": 16,
+        "delta_win": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "delta_margin_diagnostic": 0.0
+      },
+      "wall_seconds": 58.54872414000056,
+      "release_status": "not_validated",
+      "evidence_sha256": {
+        "main.manifest.json": "4526aacfc6a7a37c105c82b2daf2b868746b555d8af225f3e8ad0c6ea6fd80dc",
+        "plan.json": "d632a305429e4ba3f699deb266fb1cbeeef1825a44aae392d53c9dea67d7280b",
+        "report.json": "3b958296b48a5b95332bf426ebf64f5abaeb5a768ea00dfc3e7188ef3dc6f704",
+        "selection.json": "47a5d69eac33aa356bf7771823acb26cb307f2fdafb4052feab537d80f99d52c",
+        "tapes.json": "2f990b028f14194474ad4a47b94817617ddc0a5ddd34e3ad9398bdc0a66d06e8"
+      }
+    },
+    "suffix-648-01": {
+      "plan": {
+        "kind": "swap_block_local_search",
+        "mutation_space": "swap",
+        "split": "dev",
+        "start": 648,
+        "end": 719,
+        "days": "full",
+        "proposals": 3,
+        "rounds": 1,
+        "seeds": [
+          1018,
+          1019,
+          1020,
+          1021
+        ],
+        "check_seeds": [
+          1022,
+          1023,
+          1024,
+          1025
+        ],
+        "opponents": [
+          "clock::opponents/public/thomas_t95/main.py",
+          "clock::opponents/public/aberatozer_d5e3/main.py"
+        ],
+        "opponent_hashes": {
+          "clock::opponents/public/thomas_t95/main.py": "76254cf98142ec312ec677a73b678294f5ff574295640c74b319683fa6b00c4b",
+          "clock::opponents/public/aberatozer_d5e3/main.py": "e0a3f8d4ce19b39e32a3db73329d1fc4c89a8e1c9f10dd041608a3f00e60129c"
+        },
+        "donors": 3,
+        "registry": {
+          "search": {
+            "registry_schema": 1,
+            "registry_revision": 2,
+            "registry_sha256": "911be9bb20b421dc66ac6bf77a1a25d993e0de327c98f3a42876e2c744b2c8b9",
+            "split": "dev",
+            "competitive": true
+          },
+          "check": {
+            "registry_schema": 1,
+            "registry_revision": 2,
+            "registry_sha256": "911be9bb20b421dc66ac6bf77a1a25d993e0de327c98f3a42876e2c744b2c8b9",
+            "split": "dev",
+            "competitive": true
+          }
+        },
+        "environment": {
+          "version": "1.32.7",
+          "interpreter_sha256": "bc8a54879ef02c7ea64b8b333d6a976f0ea65c4949149d01f463f23bccee653e",
+          "specification_sha256": "a82c89c1a2315b93f39775d8e025471a01b738647c9772658368ee6b1b6f4867"
+        },
+        "generator_sha256": "cebb0d759c61905f2215d3f979a12b63827adc90867110a9d1efe982e463812e",
+        "swap_mutations_sha256": "e229fd1db4a15f786770ab187131a96734c5e1abb1a03339e387fe770baafe1a",
+        "source": {
+          "source": "/mnt/d/Projects/kaggle-projects/kaggriculture/opponents/public/yhay_router_0908/actions.json",
+          "source_sha256": "171c8550addac9fdb49acb44af36f64b4eb54e34c561eb6f3d4a83e2dcc803a6",
+          "tape_index": 0,
+          "initial_tape_sha256": "2c413946a556e6fb93d939d31db64ec39fddba53b45ac3873ad687451889beb5",
+          "source_url": "https://www.kaggle.com/code/yhay81/shop-router-0908",
+          "license": "Apache-2.0 (author states handwritten code is Apache-2.0; Kaggle notebook default)"
+        }
+      },
+      "history": [
+        {
+          "round": 0,
+          "mutation": {
+            "kind": "block_swap",
+            "donor": 0,
+            "turns_changed": 68
+          },
+          "tape_sha256": "d9df8dfa8fd2ad816122885b281ff2192a170bb9e18a7a45309160df079b9b2d",
+          "artifact_hash": "ba44e460c7b5211b046cf3cf970775e16dcddae8602e3ec7414333652953d696",
+          "fitness": [
+            0.75,
+            0.75
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "delta_margin_diagnostic": -2045.125
+          },
+          "ineffective_unit_actions": 352
+        },
+        {
+          "round": 0,
+          "mutation": {
+            "kind": "block_swap",
+            "donor": 1,
+            "turns_changed": 21
+          },
+          "tape_sha256": "d44a2b71bda9a3852c7cc03a56e07c9c52f3d3845ce497b49582d35b088392d9",
+          "artifact_hash": "9f101b5f925573f41c965a730f400ef2412302a7913affd500a53a4b5d0b9f85",
+          "fitness": [
+            0.75,
+            0.75
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "delta_margin_diagnostic": -526.125
+          },
+          "ineffective_unit_actions": 128
+        },
+        {
+          "round": 0,
+          "mutation": {
+            "kind": "block_swap",
+            "donor": 2,
+            "turns_changed": 2
+          },
+          "tape_sha256": "ae5266ed3a5f7bebca746636c1fd7976a21d414bcfe0cde0d88a46082d8b48ad",
+          "artifact_hash": "c987e0468de97ed09bc78b322d8ebb2708e645c0435ca73d18789ca299350ba4",
+          "fitness": [
+            0.75,
+            0.75
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "delta_margin_diagnostic": -319.875
+          },
+          "ineffective_unit_actions": 128
+        }
+      ],
+      "accepted": [],
+      "initial_fitness": [
+        0.75,
+        0.75
+      ],
+      "selected_fitness": [
+        0.75,
+        0.75
+      ],
+      "check": {
+        "games": 16,
+        "delta_win": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "delta_margin_diagnostic": 0.0
+      },
+      "wall_seconds": 59.64205807899998,
+      "release_status": "not_validated",
+      "evidence_sha256": {
+        "main.manifest.json": "e052959130d293040b91ddc1521f2e0eb25fe5728a8e2f46e550eeef2d3613a9",
+        "plan.json": "b4f076209b4b7fb577b83e3b61ccd5dc69852176dc4a64e3dbe6ca0af5f78dbc",
+        "report.json": "db201f2de98192e93c32b2237074a37e2f5f370f17748f5e36cee5353afb6969",
+        "selection.json": "b25f227920309d22d6c8039a8a65798b64ce0e7759f3516ed1a71c96740dd9e9",
+        "tapes.json": "2f990b028f14194474ad4a47b94817617ddc0a5ddd34e3ad9398bdc0a66d06e8"
+      }
+    }
+  },
+  "route_audit": {
+    "games": 128,
+    "seeds": "1054:1070",
+    "opponents": [
+      "thomas_t95",
+      "aberatozer_d5e3"
+    ],
+    "rows": [
+      {
+        "seed": 1054,
+        "seat": 0,
+        "opponent": "aberatozer_d5e3",
+        "yarn": true,
+        "shops": [
+          "YARN_STORE",
+          "ICE_CREAM_SHOP"
+        ],
+        "tape0": 0.0,
+        "tape1": 0.0
+      },
+      {
+        "seed": 1054,
+        "seat": 0,
+        "opponent": "thomas_t95",
+        "yarn": true,
+        "shops": [
+          "YARN_STORE",
+          "ICE_CREAM_SHOP"
+        ],
+        "tape0": 0.0,
+        "tape1": 0.0
+      },
+      {
+        "seed": 1054,
+        "seat": 1,
+        "opponent": "aberatozer_d5e3",
+        "yarn": true,
+        "shops": [
+          "YARN_STORE",
+          "ICE_CREAM_SHOP"
+        ],
+        "tape0": 0.0,
+        "tape1": 0.0
+      },
+      {
+        "seed": 1054,
+        "seat": 1,
+        "opponent": "thomas_t95",
+        "yarn": true,
+        "shops": [
+          "YARN_STORE",
+          "ICE_CREAM_SHOP"
+        ],
+        "tape0": 0.0,
+        "tape1": 0.0
+      },
+      {
+        "seed": 1055,
+        "seat": 0,
+        "opponent": "aberatozer_d5e3",
+        "yarn": false,
+        "shops": [
+          "BRUNCH_SPOT",
+          "BAKERY"
+        ],
+        "tape0": 1.0,
+        "tape1": 1.0
+      },
+      {
+        "seed": 1055,
+        "seat": 0,
+        "opponent": "thomas_t95",
+        "yarn": false,
+        "shops": [
+          "BRUNCH_SPOT",
+          "BAKERY"
+        ],
+        "tape0": 1.0,
+        "tape1": 0.0
+      },
+      {
+        "seed": 1055,
+        "seat": 1,
+        "opponent": "aberatozer_d5e3",
+        "yarn": false,
+        "shops": [
+          "BRUNCH_SPOT",
+          "BAKERY"
+        ],
+        "tape0": 0.0,
+        "tape1": 0.0
+      },
+      {
+        "seed": 1055,
+        "seat": 1,
+        "opponent": "thomas_t95",
+        "yarn": false,
+        "shops": [
+          "BRUNCH_SPOT",
+          "BAKERY"
+        ],
+        "tape0": 0.0,
+        "tape1": 0.0
+      },
+      {
+        "seed": 1056,
+        "seat": 0,
+        "opponent": "aberatozer_d5e3",
+        "yarn": false,
+        "shops": [
+          "ICE_CREAM_SHOP",
+          "FARMERS_MARKET"
+        ],
+        "tape0": 1.0,
+        "tape1": 0.0
+      },
+      {
+        "seed": 1056,
+        "seat": 0,
+        "opponent": "thomas_t95",
+        "yarn": false,
+        "shops": [
+          "ICE_CREAM_SHOP",
+          "FARMERS_MARKET"
+        ],
+        "tape0": 1.0,
+        "tape1": 0.0
+      },
+      {
+        "seed": 1056,
+        "seat": 1,
+        "opponent": "aberatozer_d5e3",
+        "yarn": false,
+        "shops": [
+          "ICE_CREAM_SHOP",
+          "FARMERS_MARKET"
+        ],
+        "tape0": 1.0,
+        "tape1": 0.0
+      },
+      {
+        "seed": 1056,
+        "seat": 1,
+        "opponent": "thomas_t95",
+        "yarn": false,
+        "shops": [
+          "ICE_CREAM_SHOP",
+          "FARMERS_MARKET"
+        ],
+        "tape0": 1.0,
+        "tape1": 0.0
+      },
+      {
+        "seed": 1057,
+        "seat": 0,
+        "opponent": "aberatozer_d5e3",
+        "yarn": false,
+        "shops": [
+          "BAKERY",
+          "PET_CAFE"
+        ],
+        "tape0": 1.0,
+        "tape1": 0.0
+      },
+      {
+        "seed": 1057,
+        "seat": 0,
+        "opponent": "thomas_t95",
+        "yarn": false,
+        "shops": [
+          "BAKERY",
+          "PET_CAFE"
+        ],
+        "tape0": 1.0,
+        "tape1": 0.0
+      },
+      {
+        "seed": 1057,
+        "seat": 1,
+        "opponent": "aberatozer_d5e3",
+        "yarn": false,
+        "shops": [
+          "BAKERY",
+          "PET_CAFE"
+        ],
+        "tape0": 1.0,
+        "tape1": 0.0
+      },
+      {
+        "seed": 1057,
+        "seat": 1,
+        "opponent": "thomas_t95",
+        "yarn": false,
+        "shops": [
+          "BAKERY",
+          "PET_CAFE"
+        ],
+        "tape0": 1.0,
+        "tape1": 0.0
+      },
+      {
+        "seed": 1058,
+        "seat": 0,
+        "opponent": "aberatozer_d5e3",
+        "yarn": true,
+        "shops": [
+          "YARN_STORE",
+          "PET_CAFE"
+        ],
+        "tape0": 0.0,
+        "tape1": 0.0
+      },
+      {
+        "seed": 1058,
+        "seat": 0,
+        "opponent": "thomas_t95",
+        "yarn": true,
+        "shops": [
+          "YARN_STORE",
+          "PET_CAFE"
+        ],
+        "tape0": 0.0,
+        "tape1": 0.0
+      },
+      {
+        "seed": 1058,
+        "seat": 1,
+        "opponent": "aberatozer_d5e3",
+        "yarn": true,
+        "shops": [
+          "YARN_STORE",
+          "PET_CAFE"
+        ],
+        "tape0": 0.0,
+        "tape1": 0.0
+      },
+      {
+        "seed": 1058,
+        "seat": 1,
+        "opponent": "thomas_t95",
+        "yarn": true,
+        "shops": [
+          "YARN_STORE",
+          "PET_CAFE"
+        ],
+        "tape0": 0.0,
+        "tape1": 0.0
+      },
+      {
+        "seed": 1059,
+        "seat": 0,
+        "opponent": "aberatozer_d5e3",
+        "yarn": true,
+        "shops": [
+          "FARMERS_MARKET",
+          "YARN_STORE"
+        ],
+        "tape0": 0.0,
+        "tape1": 0.0
+      },
+      {
+        "seed": 1059,
+        "seat": 0,
+        "opponent": "thomas_t95",
+        "yarn": true,
+        "shops": [
+          "FARMERS_MARKET",
+          "YARN_STORE"
+        ],
+        "tape0": 0.0,
+        "tape1": 1.0
+      },
+      {
+        "seed": 1059,
+        "seat": 1,
+        "opponent": "aberatozer_d5e3",
+        "yarn": true,
+        "shops": [
+          "FARMERS_MARKET",
+          "YARN_STORE"
+        ],
+        "tape0": 0.0,
+        "tape1": 0.0
+      },
+      {
+        "seed": 1059,
+        "seat": 1,
+        "opponent": "thomas_t95",
+        "yarn": true,
+        "shops": [
+          "FARMERS_MARKET",
+          "YARN_STORE"
+        ],
+        "tape0": 0.0,
+        "tape1": 1.0
+      },
+      {
+        "seed": 1060,
+        "seat": 0,
+        "opponent": "aberatozer_d5e3",
+        "yarn": false,
+        "shops": [
+          "PIZZA_SHOP",
+          "PET_CAFE"
+        ],
+        "tape0": 1.0,
+        "tape1": 0.0
+      },
+      {
+        "seed": 1060,
+        "seat": 0,
+        "opponent": "thomas_t95",
+        "yarn": false,
+        "shops": [
+          "PIZZA_SHOP",
+          "PET_CAFE"
+        ],
+        "tape0": 1.0,
+        "tape1": 0.0
+      },
+      {
+        "seed": 1060,
+        "seat": 1,
+        "opponent": "aberatozer_d5e3",
+        "yarn": false,
+        "shops": [
+          "PIZZA_SHOP",
+          "PET_CAFE"
+        ],
+        "tape0": 1.0,
+        "tape1": 0.0
+      },
+      {
+        "seed": 1060,
+        "seat": 1,
+        "opponent": "thomas_t95",
+        "yarn": false,
+        "shops": [
+          "PIZZA_SHOP",
+          "PET_CAFE"
+        ],
+        "tape0": 1.0,
+        "tape1": 0.0
+      },
+      {
+        "seed": 1061,
+        "seat": 0,
+        "opponent": "aberatozer_d5e3",
+        "yarn": false,
+        "shops": [
+          "PIZZA_SHOP",
+          "BRUNCH_SPOT"
+        ],
+        "tape0": 1.0,
+        "tape1": 0.0
+      },
+      {
+        "seed": 1061,
+        "seat": 0,
+        "opponent": "thomas_t95",
+        "yarn": false,
+        "shops": [
+          "PIZZA_SHOP",
+          "BRUNCH_SPOT"
+        ],
+        "tape0": 1.0,
+        "tape1": 0.0
+      },
+      {
+        "seed": 1061,
+        "seat": 1,
+        "opponent": "aberatozer_d5e3",
+        "yarn": false,
+        "shops": [
+          "PIZZA_SHOP",
+          "BRUNCH_SPOT"
+        ],
+        "tape0": 1.0,
+        "tape1": 0.0
+      },
+      {
+        "seed": 1061,
+        "seat": 1,
+        "opponent": "thomas_t95",
+        "yarn": false,
+        "shops": [
+          "PIZZA_SHOP",
+          "BRUNCH_SPOT"
+        ],
+        "tape0": 1.0,
+        "tape1": 0.0
+      },
+      {
+        "seed": 1062,
+        "seat": 0,
+        "opponent": "aberatozer_d5e3",
+        "yarn": false,
+        "shops": [
+          "PIZZA_SHOP",
+          "FARMERS_MARKET"
+        ],
+        "tape0": 1.0,
+        "tape1": 1.0
+      },
+      {
+        "seed": 1062,
+        "seat": 0,
+        "opponent": "thomas_t95",
+        "yarn": false,
+        "shops": [
+          "PIZZA_SHOP",
+          "FARMERS_MARKET"
+        ],
+        "tape0": 1.0,
+        "tape1": 1.0
+      },
+      {
+        "seed": 1062,
+        "seat": 1,
+        "opponent": "aberatozer_d5e3",
+        "yarn": false,
+        "shops": [
+          "PIZZA_SHOP",
+          "FARMERS_MARKET"
+        ],
+        "tape0": 1.0,
+        "tape1": 1.0
+      },
+      {
+        "seed": 1062,
+        "seat": 1,
+        "opponent": "thomas_t95",
+        "yarn": false,
+        "shops": [
+          "PIZZA_SHOP",
+          "FARMERS_MARKET"
+        ],
+        "tape0": 1.0,
+        "tape1": 1.0
+      },
+      {
+        "seed": 1063,
+        "seat": 0,
+        "opponent": "aberatozer_d5e3",
+        "yarn": true,
+        "shops": [
+          "YARN_STORE",
+          "YARN_STORE"
+        ],
+        "tape0": 0.0,
+        "tape1": 0.0
+      },
+      {
+        "seed": 1063,
+        "seat": 0,
+        "opponent": "thomas_t95",
+        "yarn": true,
+        "shops": [
+          "YARN_STORE",
+          "YARN_STORE"
+        ],
+        "tape0": 0.0,
+        "tape1": 0.0
+      },
+      {
+        "seed": 1063,
+        "seat": 1,
+        "opponent": "aberatozer_d5e3",
+        "yarn": true,
+        "shops": [
+          "YARN_STORE",
+          "YARN_STORE"
+        ],
+        "tape0": 0.0,
+        "tape1": 0.0
+      },
+      {
+        "seed": 1063,
+        "seat": 1,
+        "opponent": "thomas_t95",
+        "yarn": true,
+        "shops": [
+          "YARN_STORE",
+          "YARN_STORE"
+        ],
+        "tape0": 0.0,
+        "tape1": 0.0
+      },
+      {
+        "seed": 1064,
+        "seat": 0,
+        "opponent": "aberatozer_d5e3",
+        "yarn": false,
+        "shops": [
+          "PIZZA_SHOP",
+          "PIZZA_SHOP"
+        ],
+        "tape0": 1.0,
+        "tape1": 0.0
+      },
+      {
+        "seed": 1064,
+        "seat": 0,
+        "opponent": "thomas_t95",
+        "yarn": false,
+        "shops": [
+          "PIZZA_SHOP",
+          "PIZZA_SHOP"
+        ],
+        "tape0": 0.0,
+        "tape1": 0.0
+      },
+      {
+        "seed": 1064,
+        "seat": 1,
+        "opponent": "aberatozer_d5e3",
+        "yarn": false,
+        "shops": [
+          "PIZZA_SHOP",
+          "PIZZA_SHOP"
+        ],
+        "tape0": 0.0,
+        "tape1": 0.0
+      },
+      {
+        "seed": 1064,
+        "seat": 1,
+        "opponent": "thomas_t95",
+        "yarn": false,
+        "shops": [
+          "PIZZA_SHOP",
+          "PIZZA_SHOP"
+        ],
+        "tape0": 0.0,
+        "tape1": 0.0
+      },
+      {
+        "seed": 1065,
+        "seat": 0,
+        "opponent": "aberatozer_d5e3",
+        "yarn": false,
+        "shops": [
+          "PET_CAFE",
+          "FARMERS_MARKET"
+        ],
+        "tape0": 0.0,
+        "tape1": 0.0
+      },
+      {
+        "seed": 1065,
+        "seat": 0,
+        "opponent": "thomas_t95",
+        "yarn": false,
+        "shops": [
+          "PET_CAFE",
+          "FARMERS_MARKET"
+        ],
+        "tape0": 0.0,
+        "tape1": 0.0
+      },
+      {
+        "seed": 1065,
+        "seat": 1,
+        "opponent": "aberatozer_d5e3",
+        "yarn": false,
+        "shops": [
+          "PET_CAFE",
+          "FARMERS_MARKET"
+        ],
+        "tape0": 0.0,
+        "tape1": 0.0
+      },
+      {
+        "seed": 1065,
+        "seat": 1,
+        "opponent": "thomas_t95",
+        "yarn": false,
+        "shops": [
+          "PET_CAFE",
+          "FARMERS_MARKET"
+        ],
+        "tape0": 0.0,
+        "tape1": 0.0
+      },
+      {
+        "seed": 1066,
+        "seat": 0,
+        "opponent": "aberatozer_d5e3",
+        "yarn": false,
+        "shops": [
+          "BRUNCH_SPOT",
+          "BRUNCH_SPOT"
+        ],
+        "tape0": 1.0,
+        "tape1": 0.0
+      },
+      {
+        "seed": 1066,
+        "seat": 0,
+        "opponent": "thomas_t95",
+        "yarn": false,
+        "shops": [
+          "BRUNCH_SPOT",
+          "BRUNCH_SPOT"
+        ],
+        "tape0": 1.0,
+        "tape1": 0.0
+      },
+      {
+        "seed": 1066,
+        "seat": 1,
+        "opponent": "aberatozer_d5e3",
+        "yarn": false,
+        "shops": [
+          "BRUNCH_SPOT",
+          "BRUNCH_SPOT"
+        ],
+        "tape0": 1.0,
+        "tape1": 0.0
+      },
+      {
+        "seed": 1066,
+        "seat": 1,
+        "opponent": "thomas_t95",
+        "yarn": false,
+        "shops": [
+          "BRUNCH_SPOT",
+          "BRUNCH_SPOT"
+        ],
+        "tape0": 1.0,
+        "tape1": 0.0
+      },
+      {
+        "seed": 1067,
+        "seat": 0,
+        "opponent": "aberatozer_d5e3",
+        "yarn": false,
+        "shops": [
+          "BAKERY",
+          "BAKERY"
+        ],
+        "tape0": 1.0,
+        "tape1": 0.0
+      },
+      {
+        "seed": 1067,
+        "seat": 0,
+        "opponent": "thomas_t95",
+        "yarn": false,
+        "shops": [
+          "BAKERY",
+          "BAKERY"
+        ],
+        "tape0": 1.0,
+        "tape1": 0.0
+      },
+      {
+        "seed": 1067,
+        "seat": 1,
+        "opponent": "aberatozer_d5e3",
+        "yarn": false,
+        "shops": [
+          "BAKERY",
+          "BAKERY"
+        ],
+        "tape0": 1.0,
+        "tape1": 0.0
+      },
+      {
+        "seed": 1067,
+        "seat": 1,
+        "opponent": "thomas_t95",
+        "yarn": false,
+        "shops": [
+          "BAKERY",
+          "BAKERY"
+        ],
+        "tape0": 1.0,
+        "tape1": 0.0
+      },
+      {
+        "seed": 1068,
+        "seat": 0,
+        "opponent": "aberatozer_d5e3",
+        "yarn": false,
+        "shops": [
+          "FARMERS_MARKET",
+          "BRUNCH_SPOT"
+        ],
+        "tape0": 1.0,
+        "tape1": 0.0
+      },
+      {
+        "seed": 1068,
+        "seat": 0,
+        "opponent": "thomas_t95",
+        "yarn": false,
+        "shops": [
+          "FARMERS_MARKET",
+          "BRUNCH_SPOT"
+        ],
+        "tape0": 1.0,
+        "tape1": 0.0
+      },
+      {
+        "seed": 1068,
+        "seat": 1,
+        "opponent": "aberatozer_d5e3",
+        "yarn": false,
+        "shops": [
+          "FARMERS_MARKET",
+          "BRUNCH_SPOT"
+        ],
+        "tape0": 1.0,
+        "tape1": 0.0
+      },
+      {
+        "seed": 1068,
+        "seat": 1,
+        "opponent": "thomas_t95",
+        "yarn": false,
+        "shops": [
+          "FARMERS_MARKET",
+          "BRUNCH_SPOT"
+        ],
+        "tape0": 1.0,
+        "tape1": 0.0
+      },
+      {
+        "seed": 1069,
+        "seat": 0,
+        "opponent": "aberatozer_d5e3",
+        "yarn": false,
+        "shops": [
+          "ICE_CREAM_SHOP",
+          "FARMERS_MARKET"
+        ],
+        "tape0": 1.0,
+        "tape1": 1.0
+      },
+      {
+        "seed": 1069,
+        "seat": 0,
+        "opponent": "thomas_t95",
+        "yarn": false,
+        "shops": [
+          "ICE_CREAM_SHOP",
+          "FARMERS_MARKET"
+        ],
+        "tape0": 1.0,
+        "tape1": 1.0
+      },
+      {
+        "seed": 1069,
+        "seat": 1,
+        "opponent": "aberatozer_d5e3",
+        "yarn": false,
+        "shops": [
+          "ICE_CREAM_SHOP",
+          "FARMERS_MARKET"
+        ],
+        "tape0": 1.0,
+        "tape1": 1.0
+      },
+      {
+        "seed": 1069,
+        "seat": 1,
+        "opponent": "thomas_t95",
+        "yarn": false,
+        "shops": [
+          "ICE_CREAM_SHOP",
+          "FARMERS_MARKET"
+        ],
+        "tape0": 1.0,
+        "tape1": 1.0
+      }
+    ]
+  },
+  "bare_panel": {
+    "games": 160,
+    "seeds": "1070:1090",
+    "opponents": [
+      "thomas_t95",
+      "aberatozer_d5e3"
+    ],
+    "rows": [
+      {
+        "tape": 0,
+        "opponent": "thomas_t95",
+        "seed": 1070,
+        "seat": 0,
+        "score": 1.0,
+        "margin": 4131.0
+      },
+      {
+        "tape": 0,
+        "opponent": "thomas_t95",
+        "seed": 1070,
+        "seat": 1,
+        "score": 1.0,
+        "margin": 4131.0
+      },
+      {
+        "tape": 0,
+        "opponent": "thomas_t95",
+        "seed": 1071,
+        "seat": 0,
+        "score": 1.0,
+        "margin": 734.0
+      },
+      {
+        "tape": 0,
+        "opponent": "thomas_t95",
+        "seed": 1071,
+        "seat": 1,
+        "score": 1.0,
+        "margin": 734.0
+      },
+      {
+        "tape": 0,
+        "opponent": "thomas_t95",
+        "seed": 1072,
+        "seat": 0,
+        "score": 0.0,
+        "margin": -2766.0
+      },
+      {
+        "tape": 0,
+        "opponent": "thomas_t95",
+        "seed": 1072,
+        "seat": 1,
+        "score": 0.0,
+        "margin": -2766.0
+      },
+      {
+        "tape": 0,
+        "opponent": "thomas_t95",
+        "seed": 1073,
+        "seat": 0,
+        "score": 1.0,
+        "margin": 3071.0
+      },
+      {
+        "tape": 0,
+        "opponent": "thomas_t95",
+        "seed": 1073,
+        "seat": 1,
+        "score": 1.0,
+        "margin": 3071.0
+      },
+      {
+        "tape": 0,
+        "opponent": "thomas_t95",
+        "seed": 1074,
+        "seat": 0,
+        "score": 1.0,
+        "margin": 10242.0
+      },
+      {
+        "tape": 0,
+        "opponent": "thomas_t95",
+        "seed": 1074,
+        "seat": 1,
+        "score": 1.0,
+        "margin": 10242.0
+      },
+      {
+        "tape": 0,
+        "opponent": "thomas_t95",
+        "seed": 1075,
+        "seat": 0,
+        "score": 1.0,
+        "margin": 13324.0
+      },
+      {
+        "tape": 0,
+        "opponent": "thomas_t95",
+        "seed": 1075,
+        "seat": 1,
+        "score": 1.0,
+        "margin": 13324.0
+      },
+      {
+        "tape": 0,
+        "opponent": "thomas_t95",
+        "seed": 1076,
+        "seat": 0,
+        "score": 1.0,
+        "margin": 2694.0
+      },
+      {
+        "tape": 0,
+        "opponent": "thomas_t95",
+        "seed": 1076,
+        "seat": 1,
+        "score": 1.0,
+        "margin": 2694.0
+      },
+      {
+        "tape": 0,
+        "opponent": "thomas_t95",
+        "seed": 1077,
+        "seat": 0,
+        "score": 0.0,
+        "margin": -616.0
+      },
+      {
+        "tape": 0,
+        "opponent": "thomas_t95",
+        "seed": 1077,
+        "seat": 1,
+        "score": 0.0,
+        "margin": -616.0
+      },
+      {
+        "tape": 0,
+        "opponent": "thomas_t95",
+        "seed": 1078,
+        "seat": 0,
+        "score": 0.0,
+        "margin": -4434.0
+      },
+      {
+        "tape": 0,
+        "opponent": "thomas_t95",
+        "seed": 1078,
+        "seat": 1,
+        "score": 0.0,
+        "margin": -3851.0
+      },
+      {
+        "tape": 0,
+        "opponent": "thomas_t95",
+        "seed": 1079,
+        "seat": 0,
+        "score": 1.0,
+        "margin": 3309.0
+      },
+      {
+        "tape": 0,
+        "opponent": "thomas_t95",
+        "seed": 1079,
+        "seat": 1,
+        "score": 1.0,
+        "margin": 3309.0
+      },
+      {
+        "tape": 0,
+        "opponent": "thomas_t95",
+        "seed": 1080,
+        "seat": 0,
+        "score": 0.0,
+        "margin": -3509.0
+      },
+      {
+        "tape": 0,
+        "opponent": "thomas_t95",
+        "seed": 1080,
+        "seat": 1,
+        "score": 0.0,
+        "margin": -3509.0
+      },
+      {
+        "tape": 0,
+        "opponent": "thomas_t95",
+        "seed": 1081,
+        "seat": 0,
+        "score": 1.0,
+        "margin": 3964.0
+      },
+      {
+        "tape": 0,
+        "opponent": "thomas_t95",
+        "seed": 1081,
+        "seat": 1,
+        "score": 1.0,
+        "margin": 3964.0
+      },
+      {
+        "tape": 0,
+        "opponent": "thomas_t95",
+        "seed": 1082,
+        "seat": 0,
+        "score": 0.0,
+        "margin": -4063.0
+      },
+      {
+        "tape": 0,
+        "opponent": "thomas_t95",
+        "seed": 1082,
+        "seat": 1,
+        "score": 0.0,
+        "margin": -4063.0
+      },
+      {
+        "tape": 0,
+        "opponent": "thomas_t95",
+        "seed": 1083,
+        "seat": 0,
+        "score": 1.0,
+        "margin": 5160.0
+      },
+      {
+        "tape": 0,
+        "opponent": "thomas_t95",
+        "seed": 1083,
+        "seat": 1,
+        "score": 1.0,
+        "margin": 5160.0
+      },
+      {
+        "tape": 0,
+        "opponent": "thomas_t95",
+        "seed": 1084,
+        "seat": 0,
+        "score": 1.0,
+        "margin": 9578.0
+      },
+      {
+        "tape": 0,
+        "opponent": "thomas_t95",
+        "seed": 1084,
+        "seat": 1,
+        "score": 1.0,
+        "margin": 9578.0
+      },
+      {
+        "tape": 0,
+        "opponent": "thomas_t95",
+        "seed": 1085,
+        "seat": 0,
+        "score": 0.0,
+        "margin": -15704.0
+      },
+      {
+        "tape": 0,
+        "opponent": "thomas_t95",
+        "seed": 1085,
+        "seat": 1,
+        "score": 0.0,
+        "margin": -15704.0
+      },
+      {
+        "tape": 0,
+        "opponent": "thomas_t95",
+        "seed": 1086,
+        "seat": 0,
+        "score": 0.0,
+        "margin": -6168.0
+      },
+      {
+        "tape": 0,
+        "opponent": "thomas_t95",
+        "seed": 1086,
+        "seat": 1,
+        "score": 0.0,
+        "margin": -6168.0
+      },
+      {
+        "tape": 0,
+        "opponent": "thomas_t95",
+        "seed": 1087,
+        "seat": 0,
+        "score": 0.0,
+        "margin": -3166.0
+      },
+      {
+        "tape": 0,
+        "opponent": "thomas_t95",
+        "seed": 1087,
+        "seat": 1,
+        "score": 0.0,
+        "margin": -3166.0
+      },
+      {
+        "tape": 0,
+        "opponent": "thomas_t95",
+        "seed": 1088,
+        "seat": 0,
+        "score": 1.0,
+        "margin": 7135.0
+      },
+      {
+        "tape": 0,
+        "opponent": "thomas_t95",
+        "seed": 1088,
+        "seat": 1,
+        "score": 1.0,
+        "margin": 5464.0
+      },
+      {
+        "tape": 0,
+        "opponent": "thomas_t95",
+        "seed": 1089,
+        "seat": 0,
+        "score": 1.0,
+        "margin": 6953.0
+      },
+      {
+        "tape": 0,
+        "opponent": "thomas_t95",
+        "seed": 1089,
+        "seat": 1,
+        "score": 1.0,
+        "margin": 6953.0
+      },
+      {
+        "tape": 0,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1070,
+        "seat": 0,
+        "score": 1.0,
+        "margin": 4184.0
+      },
+      {
+        "tape": 0,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1070,
+        "seat": 1,
+        "score": 1.0,
+        "margin": 4184.0
+      },
+      {
+        "tape": 0,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1071,
+        "seat": 0,
+        "score": 1.0,
+        "margin": 1060.0
+      },
+      {
+        "tape": 0,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1071,
+        "seat": 1,
+        "score": 1.0,
+        "margin": 1060.0
+      },
+      {
+        "tape": 0,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1072,
+        "seat": 0,
+        "score": 0.0,
+        "margin": -2202.0
+      },
+      {
+        "tape": 0,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1072,
+        "seat": 1,
+        "score": 0.0,
+        "margin": -2202.0
+      },
+      {
+        "tape": 0,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1073,
+        "seat": 0,
+        "score": 1.0,
+        "margin": 3042.0
+      },
+      {
+        "tape": 0,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1073,
+        "seat": 1,
+        "score": 1.0,
+        "margin": 3042.0
+      },
+      {
+        "tape": 0,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1074,
+        "seat": 0,
+        "score": 1.0,
+        "margin": 10233.0
+      },
+      {
+        "tape": 0,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1074,
+        "seat": 1,
+        "score": 1.0,
+        "margin": 10233.0
+      },
+      {
+        "tape": 0,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1075,
+        "seat": 0,
+        "score": 1.0,
+        "margin": 13305.0
+      },
+      {
+        "tape": 0,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1075,
+        "seat": 1,
+        "score": 1.0,
+        "margin": 13305.0
+      },
+      {
+        "tape": 0,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1076,
+        "seat": 0,
+        "score": 1.0,
+        "margin": 2655.0
+      },
+      {
+        "tape": 0,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1076,
+        "seat": 1,
+        "score": 1.0,
+        "margin": 2655.0
+      },
+      {
+        "tape": 0,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1077,
+        "seat": 0,
+        "score": 0.0,
+        "margin": -95.0
+      },
+      {
+        "tape": 0,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1077,
+        "seat": 1,
+        "score": 0.0,
+        "margin": -95.0
+      },
+      {
+        "tape": 0,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1078,
+        "seat": 0,
+        "score": 0.0,
+        "margin": -4150.0
+      },
+      {
+        "tape": 0,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1078,
+        "seat": 1,
+        "score": 0.0,
+        "margin": -3853.0
+      },
+      {
+        "tape": 0,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1079,
+        "seat": 0,
+        "score": 1.0,
+        "margin": 3309.0
+      },
+      {
+        "tape": 0,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1079,
+        "seat": 1,
+        "score": 1.0,
+        "margin": 3309.0
+      },
+      {
+        "tape": 0,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1080,
+        "seat": 0,
+        "score": 0.0,
+        "margin": -3168.0
+      },
+      {
+        "tape": 0,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1080,
+        "seat": 1,
+        "score": 0.0,
+        "margin": -3168.0
+      },
+      {
+        "tape": 0,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1081,
+        "seat": 0,
+        "score": 1.0,
+        "margin": 3963.0
+      },
+      {
+        "tape": 0,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1081,
+        "seat": 1,
+        "score": 1.0,
+        "margin": 3963.0
+      },
+      {
+        "tape": 0,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1082,
+        "seat": 0,
+        "score": 0.0,
+        "margin": -3740.0
+      },
+      {
+        "tape": 0,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1082,
+        "seat": 1,
+        "score": 0.0,
+        "margin": -3740.0
+      },
+      {
+        "tape": 0,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1083,
+        "seat": 0,
+        "score": 1.0,
+        "margin": 5240.0
+      },
+      {
+        "tape": 0,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1083,
+        "seat": 1,
+        "score": 1.0,
+        "margin": 5240.0
+      },
+      {
+        "tape": 0,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1084,
+        "seat": 0,
+        "score": 1.0,
+        "margin": 9569.0
+      },
+      {
+        "tape": 0,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1084,
+        "seat": 1,
+        "score": 1.0,
+        "margin": 9569.0
+      },
+      {
+        "tape": 0,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1085,
+        "seat": 0,
+        "score": 0.0,
+        "margin": -16307.0
+      },
+      {
+        "tape": 0,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1085,
+        "seat": 1,
+        "score": 0.0,
+        "margin": -16307.0
+      },
+      {
+        "tape": 0,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1086,
+        "seat": 0,
+        "score": 0.0,
+        "margin": -5805.0
+      },
+      {
+        "tape": 0,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1086,
+        "seat": 1,
+        "score": 0.0,
+        "margin": -5805.0
+      },
+      {
+        "tape": 0,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1087,
+        "seat": 0,
+        "score": 0.0,
+        "margin": -2997.0
+      },
+      {
+        "tape": 0,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1087,
+        "seat": 1,
+        "score": 0.0,
+        "margin": -2997.0
+      },
+      {
+        "tape": 0,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1088,
+        "seat": 0,
+        "score": 1.0,
+        "margin": 8165.0
+      },
+      {
+        "tape": 0,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1088,
+        "seat": 1,
+        "score": 1.0,
+        "margin": 5540.0
+      },
+      {
+        "tape": 0,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1089,
+        "seat": 0,
+        "score": 1.0,
+        "margin": 6949.0
+      },
+      {
+        "tape": 0,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1089,
+        "seat": 1,
+        "score": 1.0,
+        "margin": 6949.0
+      },
+      {
+        "tape": 1,
+        "opponent": "thomas_t95",
+        "seed": 1070,
+        "seat": 0,
+        "score": 0.0,
+        "margin": -18573.0
+      },
+      {
+        "tape": 1,
+        "opponent": "thomas_t95",
+        "seed": 1070,
+        "seat": 1,
+        "score": 0.0,
+        "margin": -18573.0
+      },
+      {
+        "tape": 1,
+        "opponent": "thomas_t95",
+        "seed": 1071,
+        "seat": 0,
+        "score": 1.0,
+        "margin": 3500.0
+      },
+      {
+        "tape": 1,
+        "opponent": "thomas_t95",
+        "seed": 1071,
+        "seat": 1,
+        "score": 1.0,
+        "margin": 3500.0
+      },
+      {
+        "tape": 1,
+        "opponent": "thomas_t95",
+        "seed": 1072,
+        "seat": 0,
+        "score": 1.0,
+        "margin": 338.0
+      },
+      {
+        "tape": 1,
+        "opponent": "thomas_t95",
+        "seed": 1072,
+        "seat": 1,
+        "score": 1.0,
+        "margin": 338.0
+      },
+      {
+        "tape": 1,
+        "opponent": "thomas_t95",
+        "seed": 1073,
+        "seat": 0,
+        "score": 0.0,
+        "margin": -7527.0
+      },
+      {
+        "tape": 1,
+        "opponent": "thomas_t95",
+        "seed": 1073,
+        "seat": 1,
+        "score": 0.0,
+        "margin": -7527.0
+      },
+      {
+        "tape": 1,
+        "opponent": "thomas_t95",
+        "seed": 1074,
+        "seat": 0,
+        "score": 1.0,
+        "margin": 22636.0
+      },
+      {
+        "tape": 1,
+        "opponent": "thomas_t95",
+        "seed": 1074,
+        "seat": 1,
+        "score": 1.0,
+        "margin": 22636.0
+      },
+      {
+        "tape": 1,
+        "opponent": "thomas_t95",
+        "seed": 1075,
+        "seat": 0,
+        "score": 1.0,
+        "margin": 2055.0
+      },
+      {
+        "tape": 1,
+        "opponent": "thomas_t95",
+        "seed": 1075,
+        "seat": 1,
+        "score": 1.0,
+        "margin": 2055.0
+      },
+      {
+        "tape": 1,
+        "opponent": "thomas_t95",
+        "seed": 1076,
+        "seat": 0,
+        "score": 1.0,
+        "margin": 15649.0
+      },
+      {
+        "tape": 1,
+        "opponent": "thomas_t95",
+        "seed": 1076,
+        "seat": 1,
+        "score": 1.0,
+        "margin": 15649.0
+      },
+      {
+        "tape": 1,
+        "opponent": "thomas_t95",
+        "seed": 1077,
+        "seat": 0,
+        "score": 0.0,
+        "margin": -2848.0
+      },
+      {
+        "tape": 1,
+        "opponent": "thomas_t95",
+        "seed": 1077,
+        "seat": 1,
+        "score": 0.0,
+        "margin": -2848.0
+      },
+      {
+        "tape": 1,
+        "opponent": "thomas_t95",
+        "seed": 1078,
+        "seat": 0,
+        "score": 0.0,
+        "margin": -5962.0
+      },
+      {
+        "tape": 1,
+        "opponent": "thomas_t95",
+        "seed": 1078,
+        "seat": 1,
+        "score": 0.0,
+        "margin": -5431.0
+      },
+      {
+        "tape": 1,
+        "opponent": "thomas_t95",
+        "seed": 1079,
+        "seat": 0,
+        "score": 0.0,
+        "margin": -16892.0
+      },
+      {
+        "tape": 1,
+        "opponent": "thomas_t95",
+        "seed": 1079,
+        "seat": 1,
+        "score": 0.0,
+        "margin": -16892.0
+      },
+      {
+        "tape": 1,
+        "opponent": "thomas_t95",
+        "seed": 1080,
+        "seat": 0,
+        "score": 0.0,
+        "margin": -284.0
+      },
+      {
+        "tape": 1,
+        "opponent": "thomas_t95",
+        "seed": 1080,
+        "seat": 1,
+        "score": 0.0,
+        "margin": -284.0
+      },
+      {
+        "tape": 1,
+        "opponent": "thomas_t95",
+        "seed": 1081,
+        "seat": 0,
+        "score": 0.0,
+        "margin": -6915.0
+      },
+      {
+        "tape": 1,
+        "opponent": "thomas_t95",
+        "seed": 1081,
+        "seat": 1,
+        "score": 0.0,
+        "margin": -6915.0
+      },
+      {
+        "tape": 1,
+        "opponent": "thomas_t95",
+        "seed": 1082,
+        "seat": 0,
+        "score": 0.0,
+        "margin": -6519.0
+      },
+      {
+        "tape": 1,
+        "opponent": "thomas_t95",
+        "seed": 1082,
+        "seat": 1,
+        "score": 0.0,
+        "margin": -6519.0
+      },
+      {
+        "tape": 1,
+        "opponent": "thomas_t95",
+        "seed": 1083,
+        "seat": 0,
+        "score": 0.0,
+        "margin": -1470.0
+      },
+      {
+        "tape": 1,
+        "opponent": "thomas_t95",
+        "seed": 1083,
+        "seat": 1,
+        "score": 0.0,
+        "margin": -1470.0
+      },
+      {
+        "tape": 1,
+        "opponent": "thomas_t95",
+        "seed": 1084,
+        "seat": 0,
+        "score": 1.0,
+        "margin": 15162.0
+      },
+      {
+        "tape": 1,
+        "opponent": "thomas_t95",
+        "seed": 1084,
+        "seat": 1,
+        "score": 1.0,
+        "margin": 15162.0
+      },
+      {
+        "tape": 1,
+        "opponent": "thomas_t95",
+        "seed": 1085,
+        "seat": 0,
+        "score": 0.0,
+        "margin": -1006.0
+      },
+      {
+        "tape": 1,
+        "opponent": "thomas_t95",
+        "seed": 1085,
+        "seat": 1,
+        "score": 0.0,
+        "margin": -1006.0
+      },
+      {
+        "tape": 1,
+        "opponent": "thomas_t95",
+        "seed": 1086,
+        "seat": 0,
+        "score": 0.0,
+        "margin": -119.0
+      },
+      {
+        "tape": 1,
+        "opponent": "thomas_t95",
+        "seed": 1086,
+        "seat": 1,
+        "score": 0.0,
+        "margin": -119.0
+      },
+      {
+        "tape": 1,
+        "opponent": "thomas_t95",
+        "seed": 1087,
+        "seat": 0,
+        "score": 1.0,
+        "margin": 447.0
+      },
+      {
+        "tape": 1,
+        "opponent": "thomas_t95",
+        "seed": 1087,
+        "seat": 1,
+        "score": 1.0,
+        "margin": 447.0
+      },
+      {
+        "tape": 1,
+        "opponent": "thomas_t95",
+        "seed": 1088,
+        "seat": 0,
+        "score": 0.0,
+        "margin": -12387.0
+      },
+      {
+        "tape": 1,
+        "opponent": "thomas_t95",
+        "seed": 1088,
+        "seat": 1,
+        "score": 0.0,
+        "margin": -14060.0
+      },
+      {
+        "tape": 1,
+        "opponent": "thomas_t95",
+        "seed": 1089,
+        "seat": 0,
+        "score": 0.0,
+        "margin": -4688.0
+      },
+      {
+        "tape": 1,
+        "opponent": "thomas_t95",
+        "seed": 1089,
+        "seat": 1,
+        "score": 0.0,
+        "margin": -4688.0
+      },
+      {
+        "tape": 1,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1070,
+        "seat": 0,
+        "score": 0.0,
+        "margin": -18622.0
+      },
+      {
+        "tape": 1,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1070,
+        "seat": 1,
+        "score": 0.0,
+        "margin": -18622.0
+      },
+      {
+        "tape": 1,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1071,
+        "seat": 0,
+        "score": 1.0,
+        "margin": 3833.0
+      },
+      {
+        "tape": 1,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1071,
+        "seat": 1,
+        "score": 1.0,
+        "margin": 3833.0
+      },
+      {
+        "tape": 1,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1072,
+        "seat": 0,
+        "score": 1.0,
+        "margin": 148.0
+      },
+      {
+        "tape": 1,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1072,
+        "seat": 1,
+        "score": 1.0,
+        "margin": 148.0
+      },
+      {
+        "tape": 1,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1073,
+        "seat": 0,
+        "score": 0.0,
+        "margin": -7555.0
+      },
+      {
+        "tape": 1,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1073,
+        "seat": 1,
+        "score": 0.0,
+        "margin": -7555.0
+      },
+      {
+        "tape": 1,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1074,
+        "seat": 0,
+        "score": 1.0,
+        "margin": 22646.0
+      },
+      {
+        "tape": 1,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1074,
+        "seat": 1,
+        "score": 1.0,
+        "margin": 22646.0
+      },
+      {
+        "tape": 1,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1075,
+        "seat": 0,
+        "score": 1.0,
+        "margin": 2035.0
+      },
+      {
+        "tape": 1,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1075,
+        "seat": 1,
+        "score": 1.0,
+        "margin": 2035.0
+      },
+      {
+        "tape": 1,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1076,
+        "seat": 0,
+        "score": 1.0,
+        "margin": 15603.0
+      },
+      {
+        "tape": 1,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1076,
+        "seat": 1,
+        "score": 1.0,
+        "margin": 15603.0
+      },
+      {
+        "tape": 1,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1077,
+        "seat": 0,
+        "score": 0.0,
+        "margin": -2720.0
+      },
+      {
+        "tape": 1,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1077,
+        "seat": 1,
+        "score": 0.0,
+        "margin": -2720.0
+      },
+      {
+        "tape": 1,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1078,
+        "seat": 0,
+        "score": 0.0,
+        "margin": -6313.0
+      },
+      {
+        "tape": 1,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1078,
+        "seat": 1,
+        "score": 0.0,
+        "margin": -6064.0
+      },
+      {
+        "tape": 1,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1079,
+        "seat": 0,
+        "score": 0.0,
+        "margin": -16875.0
+      },
+      {
+        "tape": 1,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1079,
+        "seat": 1,
+        "score": 0.0,
+        "margin": -16875.0
+      },
+      {
+        "tape": 1,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1080,
+        "seat": 0,
+        "score": 0.0,
+        "margin": -626.0
+      },
+      {
+        "tape": 1,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1080,
+        "seat": 1,
+        "score": 0.0,
+        "margin": -626.0
+      },
+      {
+        "tape": 1,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1081,
+        "seat": 0,
+        "score": 0.0,
+        "margin": -6895.0
+      },
+      {
+        "tape": 1,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1081,
+        "seat": 1,
+        "score": 0.0,
+        "margin": -6895.0
+      },
+      {
+        "tape": 1,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1082,
+        "seat": 0,
+        "score": 0.0,
+        "margin": -6860.0
+      },
+      {
+        "tape": 1,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1082,
+        "seat": 1,
+        "score": 0.0,
+        "margin": -6860.0
+      },
+      {
+        "tape": 1,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1083,
+        "seat": 0,
+        "score": 0.0,
+        "margin": -1689.0
+      },
+      {
+        "tape": 1,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1083,
+        "seat": 1,
+        "score": 0.0,
+        "margin": -1689.0
+      },
+      {
+        "tape": 1,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1084,
+        "seat": 0,
+        "score": 1.0,
+        "margin": 15172.0
+      },
+      {
+        "tape": 1,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1084,
+        "seat": 1,
+        "score": 1.0,
+        "margin": 15172.0
+      },
+      {
+        "tape": 1,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1085,
+        "seat": 0,
+        "score": 0.0,
+        "margin": -2325.0
+      },
+      {
+        "tape": 1,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1085,
+        "seat": 1,
+        "score": 0.0,
+        "margin": -2325.0
+      },
+      {
+        "tape": 1,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1086,
+        "seat": 0,
+        "score": 0.0,
+        "margin": -159.0
+      },
+      {
+        "tape": 1,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1086,
+        "seat": 1,
+        "score": 0.0,
+        "margin": -159.0
+      },
+      {
+        "tape": 1,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1087,
+        "seat": 0,
+        "score": 1.0,
+        "margin": 300.0
+      },
+      {
+        "tape": 1,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1087,
+        "seat": 1,
+        "score": 1.0,
+        "margin": 300.0
+      },
+      {
+        "tape": 1,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1088,
+        "seat": 0,
+        "score": 0.0,
+        "margin": -8721.0
+      },
+      {
+        "tape": 1,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1088,
+        "seat": 1,
+        "score": 0.0,
+        "margin": -14060.0
+      },
+      {
+        "tape": 1,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1089,
+        "seat": 0,
+        "score": 0.0,
+        "margin": -4669.0
+      },
+      {
+        "tape": 1,
+        "opponent": "aberatozer_d5e3",
+        "seed": 1089,
+        "seat": 1,
+        "score": 0.0,
+        "margin": -4669.0
+      }
+    ]
+  },
+  "panel_shops_at_144": {
+    "1070": [
+      "YARN_STORE",
+      "FARMERS_MARKET"
+    ],
+    "1071": [
+      "YARN_STORE",
+      "PET_CAFE"
+    ],
+    "1072": [
+      "BRUNCH_SPOT",
+      "BAKERY"
+    ],
+    "1073": [
+      "PET_CAFE",
+      "YARN_STORE"
+    ],
+    "1074": [
+      "BAKERY",
+      "BRUNCH_SPOT"
+    ],
+    "1075": [
+      "FARMERS_MARKET",
+      "SMOOTHIE_SHOP"
+    ],
+    "1076": [
+      "ICE_CREAM_SHOP",
+      "SMOOTHIE_SHOP"
+    ],
+    "1077": [
+      "SMOOTHIE_SHOP",
+      "PIZZA_SHOP"
+    ],
+    "1078": [
+      "BRUNCH_SPOT",
+      "FARMERS_MARKET"
+    ],
+    "1079": [
+      "PET_CAFE",
+      "PIZZA_SHOP"
+    ],
+    "1080": [
+      "BAKERY",
+      "BAKERY"
+    ],
+    "1081": [
+      "YARN_STORE",
+      "PIZZA_SHOP"
+    ],
+    "1082": [
+      "BRUNCH_SPOT",
+      "YARN_STORE"
+    ],
+    "1083": [
+      "BAKERY",
+      "SMOOTHIE_SHOP"
+    ],
+    "1084": [
+      "BAKERY",
+      "PET_CAFE"
+    ],
+    "1085": [
+      "YARN_STORE",
+      "SMOOTHIE_SHOP"
+    ],
+    "1086": [
+      "BAKERY",
+      "SMOOTHIE_SHOP"
+    ],
+    "1087": [
+      "SMOOTHIE_SHOP",
+      "YARN_STORE"
+    ],
+    "1088": [
+      "FARMERS_MARKET",
+      "BAKERY"
+    ],
+    "1089": [
+      "YARN_STORE",
+      "BRUNCH_SPOT"
+    ]
+  }
+}

@@ -27,6 +27,7 @@ from experiments.tape_agent import build
 from experiments.tape_harvest import tape_digest
 from experiments.production_mutations import production_mutations
 from experiments.opportunity_mutations import opportunities, opportunity_mutations
+from experiments.swap_mutations import swap_mutations
 
 TURNS = 719
 BLOCK = 72
@@ -34,10 +35,18 @@ NO_ORDER = ['SELL', 'WHEAT', 0]
 
 
 def block_end(start, days=3):
+    """`days` is 3 or 6, or 'full' to commit from the boundary to the end of the season.
+
+    The 'full' span is not a block: it is what a router does when it selects a tape at a
+    boundary and stays on it. Keeping it in the same tool is what makes the two comparable
+    on the same frontier, seeds and seats.
+    """
     if type(start) is not int or start < 0 or start >= TURNS or start % BLOCK:
         raise ValueError('Start must be a three-day boundary in [0, 719)')
+    if days == 'full':
+        return TURNS
     if days not in (3, 6):
-        raise ValueError('Blocks must span three or six days (the terminal block is truncated)')
+        raise ValueError("Blocks must span three or six days, or 'full' to the season end")
     return min(TURNS, start + days * 24)
 
 
@@ -221,7 +230,7 @@ def probe(actions, directory, opponent, seed, seat, start, end, provenance):
 def search(source, output, *, tape_index=0, start=648, days=3, proposals=4, rounds=2,
            opponents, seeds, check_seeds, workers=4, search_seed=771, mutation_space='market'):
     started = time.perf_counter()
-    if mutation_space not in ('market', 'production', 'opportunity'):
+    if mutation_space not in ('market', 'production', 'opportunity', 'swap'):
         raise ValueError('Unknown mutation space')
     end = block_end(start, days)
     seeds, check_seeds, opponents = list(seeds), list(check_seeds), list(opponents)
@@ -266,7 +275,10 @@ def search(source, output, *, tape_index=0, start=648, days=3, proposals=4, roun
                 production_mutations_sha256=hashlib.sha256(
                     Path(__file__).with_name('production_mutations.py').read_bytes()).hexdigest(),
                 opportunity_mutations_sha256=hashlib.sha256(
-                    Path(__file__).with_name('opportunity_mutations.py').read_bytes()).hexdigest())
+                    Path(__file__).with_name('opportunity_mutations.py').read_bytes()).hexdigest(),
+                swap_mutations_sha256=hashlib.sha256(
+                    Path(__file__).with_name('swap_mutations.py').read_bytes()).hexdigest(),
+                donors=len(library) - 1)
     (output / 'plan.json').write_text(json.dumps(plan, indent=2) + '\n')
     rng = random.Random(search_seed)
     history, visited = [], {tape_digest(initial)}
@@ -278,8 +290,14 @@ def search(source, output, *, tape_index=0, start=648, days=3, proposals=4, roun
         accepted = []
         for generation in range(rounds):
             generator = {'market': mutations, 'production': production_mutations,
-                         'opportunity': opportunity_mutations}[mutation_space]
+                         'opportunity': opportunity_mutations,
+                         'swap': swap_mutations}[mutation_space]
             extra = {}
+            if mutation_space == 'swap':
+                # Same library, so same provenance: the donors are the author's own
+                # alternative plans for this block, not a join across economies.
+                extra['donors'] = [tape['actions'] if isinstance(tape, dict) else tape
+                                   for index, tape in enumerate(library) if index != tape_index]
             if mutation_space == 'opportunity':
                 # Two contexts, and only what both admit is proposed. The incumbent changes
                 # between rounds, so its trajectory is observed again each round.
@@ -348,12 +366,13 @@ def search(source, output, *, tape_index=0, start=648, days=3, proposals=4, roun
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--mutation-space', choices=('market', 'production', 'opportunity'),
-                        default='market')
+    parser.add_argument('--mutation-space',
+                        choices=('market', 'production', 'opportunity', 'swap'), default='market')
     parser.add_argument('--source', required=True, help='JSON list of tapes or a tapes envelope')
     parser.add_argument('--tape-index', type=int, default=0)
     parser.add_argument('--start', type=int, default=648)
-    parser.add_argument('--days', type=int, choices=(3, 6), default=3)
+    parser.add_argument('--days', default='3', choices=('3', '6', 'full'),
+                        help="block span in days, or 'full' to commit to the season end")
     parser.add_argument('--proposals', type=int, default=4)
     parser.add_argument('--rounds', type=int, default=2)
     parser.add_argument('--search-seed', type=int, default=771)
@@ -364,6 +383,7 @@ def main():
     parser.add_argument('--output', required=True)
     args = vars(parser.parse_args())
     args['opponents'] = args['opponents'].split(',')
+    args['days'] = args['days'] if args['days'] == 'full' else int(args['days'])
     args['seeds'] = parse_seeds(args['seeds'])
     args['check_seeds'] = parse_seeds(args['check_seeds'])
     report = search(**args)

@@ -257,3 +257,11 @@ def test_iterating_on_a_previous_run_keeps_the_upstream_credit(tmp_path, monkeyp
     provenance = json.loads((output / 'plan.json').read_text())['source']
     assert provenance['source_url'] == 'https://example.invalid/notebook'
     assert provenance['license'] == 'Apache-2.0'
+
+
+def test_a_full_span_commits_to_the_season_end():
+    """What a router does at a boundary: select and stay, rather than return to the base."""
+    assert block_end(144, 'full') == 719
+    assert block_end(648, 'full') == 719
+    with pytest.raises(ValueError, match='three or six days'):
+        block_end(144, 4)

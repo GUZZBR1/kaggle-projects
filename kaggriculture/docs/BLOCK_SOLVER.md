@@ -148,3 +148,10 @@ viram 7–28 oportunidades compartilhadas.
 Nenhuma das 41 propostas melhorou o placar, e uma única `FEED` legal custou 0,25 de vitória
 e 4 483 moedas. O que isso decide para a #39 está em
 [OPPORTUNITY_SEARCH.md](OPPORTUNITY_SEARCH.md).
+
+## Etapa 4: troca de bloco e compromisso de sufixo
+
+`--mutation-space swap` troca o bloco inteiro pelo mesmo bloco de outra fita da mesma
+biblioteca, e `--days full` troca o sufixo inteiro, que é o que um roteador faz ao escolher
+uma fita numa fronteira. 21 doadores em nove buscas, zero aceitos, e a auditoria da regra do
+turno 144 explica por quê. Resultado e consequências em [BLOCK_SWAP.md](BLOCK_SWAP.md).
