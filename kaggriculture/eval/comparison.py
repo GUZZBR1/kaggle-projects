@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 
 from .ladder import (ROOT, STRONG_CUT, MAX_RATING_AGE_DAYS, delta_win, delta_interval,
-                     leave_one_out, carried_by, load_ratings, opponent_id, _paired)
+                     leave_one_out, carried_by, load_ratings, concentrated_regression, _paired)
 
 
 def digest(value):
@@ -46,6 +46,7 @@ def build_comparison(baseline, candidate, *, ratings=None, families=None, mirror
     result.update(schema_version=1, evidence_validated=True, evaluation_split=split,
                   leave_one_out=leave_one_out(baseline, candidate, ratings, **options),
                   leave_family_out=dropped, mirrors=sorted(mirrors), families=families)
+    result['concentrated_regression'] = concentrated_regression(result)
     result['carried_by'] = carried_by(result['leave_one_out'])
     result['carried_by_family'] = carried_by(dropped)
     result['snapshot'] = {

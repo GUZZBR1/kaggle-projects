@@ -1,0 +1,554 @@
+{
+  "bootstrap": {
+    "method": "percentile",
+    "unit": "seed",
+    "samples": 10000,
+    "seed": 771
+  },
+  "games_per_leg": 350,
+  "seed_blocks": 25,
+  "strong": {
+    "games": 100,
+    "delta_win": 0.25,
+    "ci95": [
+      0.19,
+      0.31
+    ],
+    "delta_margin_diagnostic": 1889.64
+  },
+  "all": {
+    "games": 350,
+    "delta_win": 0.08,
+    "ci95": [
+      0.045714285714285714,
+      0.11428571428571428
+    ],
+    "delta_margin_diagnostic": 1121.037142857143
+  },
+  "per_opponent": {
+    "aberatozer_v23": {
+      "cohort": "unknown",
+      "games": 50,
+      "delta_win": 0.04,
+      "ci95": [
+        -0.08,
+        0.16
+      ],
+      "delta_margin_diagnostic": 1679.54
+    },
+    "boatlee_v21": {
+      "cohort": "weak",
+      "games": 50,
+      "delta_win": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "delta_margin_diagnostic": 201.56
+    },
+    "cok_v10": {
+      "cohort": "unknown",
+      "games": 50,
+      "delta_win": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "delta_margin_diagnostic": 123.42
+    },
+    "kaitofukami_v48": {
+      "cohort": "unknown",
+      "games": 50,
+      "delta_win": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "delta_margin_diagnostic": 252.6
+    },
+    "thomas_t93": {
+      "cohort": "unknown",
+      "games": 50,
+      "delta_win": 0.02,
+      "ci95": [
+        0.0,
+        0.06
+      ],
+      "delta_margin_diagnostic": 1810.86
+    },
+    "thomas_t95": {
+      "cohort": "strong",
+      "games": 50,
+      "delta_win": 0.04,
+      "ci95": [
+        -0.08,
+        0.16
+      ],
+      "delta_margin_diagnostic": 1720.4
+    },
+    "yhay_router_0908": {
+      "cohort": "strong",
+      "games": 50,
+      "delta_win": 0.46,
+      "ci95": [
+        0.4,
+        0.5
+      ],
+      "delta_margin_diagnostic": 2058.88
+    }
+  },
+  "baseline": {
+    "primary": {
+      "metric": "win_rate_strong",
+      "games": 100,
+      "wins": 40,
+      "ties": 40,
+      "losses": 20,
+      "win_rate": 0.6,
+      "win_rate_ci95": [
+        0.51,
+        0.69
+      ],
+      "mean_margin_diagnostic": 1864.79
+    },
+    "secondary": {
+      "metric": "win_rate_all",
+      "games": 350,
+      "wins": 263,
+      "ties": 40,
+      "losses": 47,
+      "win_rate": 0.8085714285714286,
+      "win_rate_ci95": [
+        0.74,
+        0.8714285714285714
+      ],
+      "mean_margin_diagnostic": 11048.877142857144
+    },
+    "cohorts": {
+      "thomas_t95": "strong",
+      "thomas_t93": "unknown",
+      "kaitofukami_v48": "unknown",
+      "cok_v10": "unknown",
+      "boatlee_v21": "weak",
+      "yhay_router_0908": "strong",
+      "aberatozer_v23": "unknown"
+    },
+    "per_opponent": {
+      "aberatozer_v23": {
+        "cohort": "unknown",
+        "games": 50,
+        "wins": 34,
+        "ties": 0,
+        "losses": 16,
+        "win_rate": 0.68,
+        "win_rate_ci95": [
+          0.5,
+          0.86
+        ],
+        "mean_margin_diagnostic": 2640.2
+      },
+      "boatlee_v21": {
+        "cohort": "weak",
+        "games": 50,
+        "wins": 50,
+        "ties": 0,
+        "losses": 0,
+        "win_rate": 1.0,
+        "win_rate_ci95": [
+          1.0,
+          1.0
+        ],
+        "mean_margin_diagnostic": 23823.24
+      },
+      "cok_v10": {
+        "cohort": "unknown",
+        "games": 50,
+        "wins": 50,
+        "ties": 0,
+        "losses": 0,
+        "win_rate": 1.0,
+        "win_rate_ci95": [
+          1.0,
+          1.0
+        ],
+        "mean_margin_diagnostic": 27078.36
+      },
+      "kaitofukami_v48": {
+        "cohort": "unknown",
+        "games": 50,
+        "wins": 47,
+        "ties": 0,
+        "losses": 3,
+        "win_rate": 0.94,
+        "win_rate_ci95": [
+          0.84,
+          1.0
+        ],
+        "mean_margin_diagnostic": 15327.9
+      },
+      "thomas_t93": {
+        "cohort": "unknown",
+        "games": 50,
+        "wins": 42,
+        "ties": 0,
+        "losses": 8,
+        "win_rate": 0.84,
+        "win_rate_ci95": [
+          0.7,
+          0.96
+        ],
+        "mean_margin_diagnostic": 4742.86
+      },
+      "thomas_t95": {
+        "cohort": "strong",
+        "games": 50,
+        "wins": 35,
+        "ties": 0,
+        "losses": 15,
+        "win_rate": 0.7,
+        "win_rate_ci95": [
+          0.52,
+          0.88
+        ],
+        "mean_margin_diagnostic": 3729.58
+      },
+      "yhay_router_0908": {
+        "cohort": "strong",
+        "games": 50,
+        "wins": 5,
+        "ties": 40,
+        "losses": 5,
+        "win_rate": 0.5,
+        "win_rate_ci95": [
+          0.5,
+          0.5
+        ],
+        "mean_margin_diagnostic": 0.0
+      }
+    }
+  },
+  "candidate": {
+    "primary": {
+      "metric": "win_rate_strong",
+      "games": 100,
+      "wins": 85,
+      "ties": 0,
+      "losses": 15,
+      "win_rate": 0.85,
+      "win_rate_ci95": [
+        0.76,
+        0.94
+      ],
+      "mean_margin_diagnostic": 3754.43
+    },
+    "secondary": {
+      "metric": "win_rate_all",
+      "games": 350,
+      "wins": 311,
+      "ties": 0,
+      "losses": 39,
+      "win_rate": 0.8885714285714286,
+      "win_rate_ci95": [
+        0.8228571428571427,
+        0.9485714285714286
+      ],
+      "mean_margin_diagnostic": 12169.914285714285
+    },
+    "cohorts": {
+      "thomas_t95": "strong",
+      "thomas_t93": "unknown",
+      "kaitofukami_v48": "unknown",
+      "cok_v10": "unknown",
+      "boatlee_v21": "weak",
+      "yhay_router_0908": "strong",
+      "aberatozer_v23": "unknown"
+    },
+    "per_opponent": {
+      "aberatozer_v23": {
+        "cohort": "unknown",
+        "games": 50,
+        "wins": 36,
+        "ties": 0,
+        "losses": 14,
+        "win_rate": 0.72,
+        "win_rate_ci95": [
+          0.54,
+          0.88
+        ],
+        "mean_margin_diagnostic": 4319.74
+      },
+      "boatlee_v21": {
+        "cohort": "weak",
+        "games": 50,
+        "wins": 50,
+        "ties": 0,
+        "losses": 0,
+        "win_rate": 1.0,
+        "win_rate_ci95": [
+          1.0,
+          1.0
+        ],
+        "mean_margin_diagnostic": 24024.8
+      },
+      "cok_v10": {
+        "cohort": "unknown",
+        "games": 50,
+        "wins": 50,
+        "ties": 0,
+        "losses": 0,
+        "win_rate": 1.0,
+        "win_rate_ci95": [
+          1.0,
+          1.0
+        ],
+        "mean_margin_diagnostic": 27201.78
+      },
+      "kaitofukami_v48": {
+        "cohort": "unknown",
+        "games": 50,
+        "wins": 47,
+        "ties": 0,
+        "losses": 3,
+        "win_rate": 0.94,
+        "win_rate_ci95": [
+          0.84,
+          1.0
+        ],
+        "mean_margin_diagnostic": 15580.5
+      },
+      "thomas_t93": {
+        "cohort": "unknown",
+        "games": 50,
+        "wins": 43,
+        "ties": 0,
+        "losses": 7,
+        "win_rate": 0.86,
+        "win_rate_ci95": [
+          0.72,
+          0.98
+        ],
+        "mean_margin_diagnostic": 6553.72
+      },
+      "thomas_t95": {
+        "cohort": "strong",
+        "games": 50,
+        "wins": 37,
+        "ties": 0,
+        "losses": 13,
+        "win_rate": 0.74,
+        "win_rate_ci95": [
+          0.56,
+          0.9
+        ],
+        "mean_margin_diagnostic": 5449.98
+      },
+      "yhay_router_0908": {
+        "cohort": "strong",
+        "games": 50,
+        "wins": 48,
+        "ties": 0,
+        "losses": 2,
+        "win_rate": 0.96,
+        "win_rate_ci95": [
+          0.9,
+          1.0
+        ],
+        "mean_margin_diagnostic": 2058.88
+      }
+    }
+  },
+  "schema_version": 1,
+  "evidence_validated": true,
+  "evaluation_split": "validation",
+  "leave_one_out": {
+    "thomas_t95": {
+      "games": 50,
+      "delta_win": 0.46,
+      "ci95": [
+        0.4,
+        0.5
+      ]
+    },
+    "yhay_router_0908": {
+      "games": 50,
+      "delta_win": 0.04,
+      "ci95": [
+        -0.08,
+        0.16
+      ]
+    }
+  },
+  "leave_family_out": {
+    "public_state_schedule_portfolio": {
+      "games": 50,
+      "delta_win": 0.46,
+      "ci95": [
+        0.4,
+        0.5
+      ]
+    },
+    "yhay_router_0908": {
+      "games": 50,
+      "delta_win": 0.04,
+      "ci95": [
+        -0.08,
+        0.16
+      ]
+    }
+  },
+  "mirrors": [
+    "yhay_router_0908"
+  ],
+  "families": {
+    "aberatozer_v23": "aberatozer_v23",
+    "boatlee_v21": "public_state_route_portfolio",
+    "cok_v10": "public_adaptive_livestock_routes",
+    "kaitofukami_v48": "fast_route_early_floor",
+    "thomas_t93": "public_state_schedule_portfolio",
+    "thomas_t95": "public_state_schedule_portfolio",
+    "yhay_router_0908": "yhay_router_0908"
+  },
+  "concentrated_regression": [],
+  "carried_by": [
+    "yhay_router_0908"
+  ],
+  "carried_by_family": [
+    "yhay_router_0908"
+  ],
+  "snapshot": {
+    "as_of": "2026-09-08",
+    "cut": 2300.0,
+    "max_rating_age_days": 14,
+    "ratings": {
+      "aberatozer_d5e3": {
+        "rating": 2618.5,
+        "observed_at": "2026-09-08",
+        "kind": "author_current",
+        "source": "author team 'track' (ahmedberatozer), rank 125 of 8177, public leaderboard snapshot kaggriculture-publicleaderboard-2026-09-08T13:56:14.csv",
+        "note": "newest published kaggriculture notebook by this author"
+      },
+      "aberatozer_v23": {
+        "rating": 2618.5,
+        "observed_at": "2026-09-08",
+        "kind": "author_upper_bound",
+        "source": "author team 'track' (ahmedberatozer), rank 125 of 8177, public leaderboard snapshot kaggriculture-publicleaderboard-2026-09-08T13:56:14.csv",
+        "note": "notebook865729c24e, superseded by the same author's notebookd5e3d21fa6 (pinned as aberatozer_d5e3); above the cut, so this bound decides nothing"
+      },
+      "boatlee_v16": {
+        "rating": 1997.2,
+        "observed_at": "2026-09-08",
+        "kind": "author_upper_bound",
+        "source": "author team 'boatlee' (boatlee), rank 1063 of 8177, public leaderboard snapshot kaggriculture-publicleaderboard-2026-09-08T13:56:14.csv",
+        "note": "superseded twice over; the bound is below the cut, so weak"
+      },
+      "boatlee_v21": {
+        "rating": 1997.2,
+        "observed_at": "2026-09-08",
+        "kind": "author_upper_bound",
+        "source": "author team 'boatlee' (boatlee), rank 1063 of 8177, public leaderboard snapshot kaggriculture-publicleaderboard-2026-09-08T13:56:14.csv",
+        "note": "superseded by the same author's V29-R1; the bound is below the cut, which is enough to classify the artifact as weak"
+      },
+      "kaitofukami_v48": {
+        "rating": 2491.9,
+        "observed_at": "2026-09-08",
+        "kind": "author_upper_bound",
+        "source": "author team 'Kaito Fukami' (kaitofukami), rank 363 of 8177, public leaderboard snapshot kaggriculture-publicleaderboard-2026-09-08T13:56:14.csv",
+        "note": "superseded by the same author's v58 notebook; above the cut, so unknown"
+      },
+      "lynnsakurai_v4": {
+        "rating": 2572.7,
+        "observed_at": "2026-09-08",
+        "kind": "author_current",
+        "source": "author team 'Lynxx' (lynnsakurai), rank 216 of 8177, public leaderboard snapshot kaggriculture-publicleaderboard-2026-09-08T13:56:14.csv",
+        "note": "newest published kaggriculture notebook by this author"
+      },
+      "reyhanksatria_v1": {
+        "rating": 2427.3,
+        "observed_at": "2026-09-08",
+        "kind": "author_current",
+        "source": "author team 'Reyhan Ksatria' (reyhanksatria), rank 469 of 8177, public leaderboard snapshot kaggriculture-publicleaderboard-2026-09-08T13:56:14.csv",
+        "note": "newest published kaggriculture notebook by this author"
+      },
+      "seyamalam_v21": {
+        "rating": 940.0,
+        "observed_at": "2026-09-08",
+        "kind": "author_upper_bound",
+        "source": "author team 'Touhidul Alam Seyam' (seyamalam), rank 3525 of 8177, public leaderboard snapshot kaggriculture-publicleaderboard-2026-09-08T13:56:14.csv",
+        "note": "the pinned artifact is the GitHub repository, not a notebook; the author team rating bounds it from above and is below the cut, so weak"
+      },
+      "thomas_t93": {
+        "rating": 2519.6,
+        "observed_at": "2026-09-08",
+        "kind": "author_upper_bound",
+        "source": "author team 'Thomas Tschinkel' (thomastschinkel), rank 302 of 8177, public leaderboard snapshot kaggriculture-publicleaderboard-2026-09-08T13:56:14.csv",
+        "note": "superseded by the same author's 95.5% notebook; above the cut, so this bound decides nothing and the opponent stays out of the strong cohort"
+      },
+      "thomas_t95": {
+        "rating": 2359.8,
+        "observed_at": "2026-09-08",
+        "kind": "direct",
+        "source": "this team's own submission 56089447 of the byte-identical artifact"
+      },
+      "yamakawanin_king_v4e": {
+        "rating": 2648.4,
+        "observed_at": "2026-09-08",
+        "kind": "author_current",
+        "source": "author team '\u9752\u6625\u732a\u5934\u5c11\u5e74\u4e0d\u4f1a\u68a6\u5230kaggle\u91d1\u724c' (yamakawanin), rank 97 of 8177, public leaderboard snapshot kaggriculture-publicleaderboard-2026-09-08T13:56:14.csv",
+        "note": "newest published kaggriculture notebook by this author"
+      },
+      "yhay_router_0908": {
+        "rating": 2712.5,
+        "observed_at": "2026-09-08",
+        "kind": "author_current",
+        "source": "author team 'Yusuke Hayashi' (yhay81), rank 45 of 8177, public leaderboard snapshot kaggriculture-publicleaderboard-2026-09-08T13:56:14.csv",
+        "note": "shop-router-0908 is the author's newest published kaggriculture notebook; the team rating is an upper bound on it, see docs/RATINGS_REFRESH.md"
+      }
+    },
+    "ratings_sha256": "9657124e9588942b62fe02410600eab09ff23878245c1123b82aa0ef74f9f40e",
+    "families": {
+      "aberatozer_v23": "aberatozer_v23",
+      "boatlee_v21": "public_state_route_portfolio",
+      "cok_v10": "public_adaptive_livestock_routes",
+      "kaitofukami_v48": "fast_route_early_floor",
+      "thomas_t93": "public_state_schedule_portfolio",
+      "thomas_t95": "public_state_schedule_portfolio",
+      "yhay_router_0908": "yhay_router_0908"
+    },
+    "families_sha256": "e05067d46a2998391d56e91d32fd295c93733a88db9be665a74ad3b377e6c543",
+    "baseline_hash": "cf4a26acf0bfd77a536885b8918ce55b15345088af4cf683ff9df4c21591764d",
+    "candidate_hash": "fd478f8cc3ecfcc212c44f5e51fc2fa3c0fe223a009a6a01651f31666bcef9e3",
+    "opponent_hashes": {
+      "aberatozer_v23": "aff02bb9b2c07ca922f2d1a96f13fa63c31769bc6ba9623f0be881590765bdcc",
+      "boatlee_v21": "d076d212da823f19b220571931ee219333aa2ffccab6ffaf9170663871629767",
+      "cok_v10": "8bbfcd45849e133b9f657a8d3872bb8582faf639d4e1ea470b0e6638a89382d9",
+      "kaitofukami_v48": "8dd33dd4e7334d95be42674b6694fe576e62fb5d584ce66bc138c926d5b8bff8",
+      "thomas_t93": "3085587328f1df57f8b0ce554c2ab7aac5fb1e023cf16d650fd199d7b0c60bbe",
+      "thomas_t95": "76254cf98142ec312ec677a73b678294f5ff574295640c74b319683fa6b00c4b",
+      "yhay_router_0908": "fca9646b4ceec1e395f28ea2354fccd1a4ee993df5b1453249f6b4b848692c2c"
+    },
+    "environment": {
+      "version": "1.32.7",
+      "interpreter_sha256": "bc8a54879ef02c7ea64b8b333d6a976f0ea65c4949149d01f463f23bccee653e",
+      "specification_sha256": "a82c89c1a2315b93f39775d8e025471a01b738647c9772658368ee6b1b6f4867"
+    },
+    "configuration": {
+      "episodeSteps": 720,
+      "actTimeout": 1,
+      "runTimeout": 1200,
+      "boardSize": 10,
+      "startingMoney": 3000,
+      "maxMarketOrdersPerTurn": 10,
+      "turnsPerDay": 24,
+      "shedCapacity": 100,
+      "weedSpawnChance": 0.005,
+      "townShopUnlockInterval": 3,
+      "townShopSellInterval": 4,
+      "townCenterSellInterval": 24,
+      "farmHandCostMult": 1,
+      "marketParams": {}
+    },
+    "backend": "fast",
+    "baseline_rows_sha256": "2f9d365b0fecc07d39e5b1505fb4d7a20f6f125e48fcda530a23a389236ed8e8",
+    "candidate_rows_sha256": "9a256ecf787b7ce5d5e1b14ac5ccc0ed236db5efa693cd36c01f9658770722e1"
+  }
+}

@@ -134,3 +134,18 @@ são critérios de promoção atuais. A busca interna de um solver pode usar din
 ou valor de estado como aproximação para gerar candidatos; a seleção competitiva
 final deve passar pela avaliação por vitórias. Esta auditoria não altera o solver
 em desenvolvimento na #39.
+
+## Verificação desta entrega
+
+A execução real de smoke usou `pass` e `starter` contra `random`, seeds de
+desenvolvimento `1000:1002`, dois assentos e dois workers: oito partidas em
+6,10 segundos. O relatório foi produzido e recebeu `NO SUBMIT` por não ser
+validação de release. O teste de 100 blocos usa o registro real em arquivo
+temporário e partidas simuladas para verificar consumo único e readmissão;
+não foi executada uma nova liga competitiva de 100 blocos nesta entrega.
+
+O resultado histórico completo com o snapshot dos ratings da #32 está em
+[v004-paired-comparison.json](v004-paired-comparison.json), e o veredito em
+[v004-submit-gate.json](v004-submit-gate.json). Esses relatórios incluem a data
+de referência e permitem inspecionar a classificação usada sem consultar ratings
+que possam ter mudado depois.

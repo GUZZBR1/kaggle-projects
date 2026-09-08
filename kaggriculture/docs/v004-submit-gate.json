@@ -1,0 +1,11 @@
+{
+  "verdict": "NO SUBMIT",
+  "policy_version": 1,
+  "reasons": [
+    "Fewer than 100 paired seed blocks; insufficient release evidence.",
+    "Without mirror / shared-tape opponent yhay_router_0908, a positive strong-cohort effect is not established.",
+    "Without family yhay_router_0908, a positive strong-cohort effect is not established."
+  ],
+  "candidate_hash": "fd478f8cc3ecfcc212c44f5e51fc2fa3c0fe223a009a6a01651f31666bcef9e3",
+  "note": "Local competitive gate only. Artifact preflight and the active-slot policy must also be satisfied."
+}
