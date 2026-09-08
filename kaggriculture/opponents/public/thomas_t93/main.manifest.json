@@ -1,0 +1,23 @@
+{
+  "id": "thomas_t93",
+  "version": "v6day",
+  "family": "public_state_schedule_portfolio",
+  "kernel": "thomastschinkel/kaggriculture-93-8-win-rate-public-state-router",
+  "kernel_id": null,
+  "title": "Kaggriculture: 93.8% Win Rate Public-State Router",
+  "source_url": "https://www.kaggle.com/code/thomastschinkel/kaggriculture-93-8-win-rate-public-state-router",
+  "path": "opponents/public/thomas_t93/main.py",
+  "sha256": "b87a27ed614a33329be85f1b662e51cf4078a019fee937afcebbbbf2f51f8522",
+  "license": "Apache-2.0 (Kaggle notebook default; no separate upstream assertion)",
+  "captured_at": "2026-09-08",
+  "engine": {
+    "kaggle_environments": "1.32.7",
+    "interpreter_sha256": "bc8a54879ef02c7ea64b8b333d6a976f0ea65c4949149d01f463f23bccee653e"
+  },
+  "lineage": "Six-day replay portfolio; tapes extracted from public episodes and routed every 144 turns on a public-state vector.",
+  "adaptation_notes": "Extracted verbatim from the notebook cell that writes main.py; no local edits. See THIRD_PARTY_NOTICES.md.",
+  "base_selection_candidate": false,
+  "evaluation_opponent": true,
+  "usage": "benchmark opponent only",
+  "retrieved_at": "2026-09-07"
+}

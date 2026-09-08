@@ -1,0 +1,23 @@
+{
+  "id": "kaitofukami_v48",
+  "version": "v48",
+  "family": "fast_route_early_floor",
+  "kernel": "kaitofukami/40-40-early-floor-39-46-top-10-v48-fast-routes",
+  "kernel_id": null,
+  "title": "40.40 early floor / 39.46 top-10 (v48 fast routes)",
+  "source_url": "https://www.kaggle.com/code/kaitofukami/40-40-early-floor-39-46-top-10-v48-fast-routes",
+  "path": "opponents/public/kaitofukami_v48/main.py",
+  "sha256": "dadee25a9840313218384208c53b2c4752f82c3209cc654632e0b96c65e2664a",
+  "license": "Apache-2.0 (Kaggle notebook default; no separate upstream assertion)",
+  "captured_at": "2026-09-08",
+  "engine": {
+    "kaggle_environments": "1.32.7",
+    "interpreter_sha256": "bc8a54879ef02c7ea64b8b333d6a976f0ea65c4949149d01f463f23bccee653e"
+  },
+  "lineage": "v44 floor plus two fast-climber continuations, bundled as an embedded package.",
+  "adaptation_notes": "Extracted verbatim from the notebook cell that writes main.py; no local edits. See THIRD_PARTY_NOTICES.md.",
+  "base_selection_candidate": false,
+  "evaluation_opponent": true,
+  "usage": "benchmark opponent only",
+  "retrieved_at": "2026-09-07"
+}

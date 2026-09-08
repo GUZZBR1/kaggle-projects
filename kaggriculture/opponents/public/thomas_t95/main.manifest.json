@@ -1,0 +1,23 @@
+{
+  "id": "thomas_t95",
+  "version": "v5/2",
+  "family": "public_state_schedule_portfolio",
+  "kernel": "thomastschinkel/kaggriculture-95-5-win-rate-via-replay-routing",
+  "kernel_id": null,
+  "title": "Kaggriculture: 95.5% Win Rate via Replay Routing",
+  "source_url": "https://www.kaggle.com/code/thomastschinkel/kaggriculture-95-5-win-rate-via-replay-routing",
+  "path": "opponents/public/thomas_t95/main.py",
+  "sha256": "8241246765098c50223d897739cb32076b71a303284d2e5e1c5f0fb495bb5a97",
+  "license": "Apache-2.0 (Kaggle notebook default; no separate upstream assertion)",
+  "captured_at": "2026-09-08",
+  "engine": {
+    "kaggle_environments": "1.32.7",
+    "interpreter_sha256": "bc8a54879ef02c7ea64b8b333d6a976f0ea65c4949149d01f463f23bccee653e"
+  },
+  "lineage": "Five 719-turn action tapes and one decision tree per 72-turn block, routed on a public-state vector that includes rival tiles and rival money.",
+  "adaptation_notes": "Extracted verbatim from the notebook cell that writes main.py; no local edits. See THIRD_PARTY_NOTICES.md.",
+  "base_selection_candidate": false,
+  "evaluation_opponent": true,
+  "usage": "benchmark opponent only",
+  "retrieved_at": "2026-09-07"
+}

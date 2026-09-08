@@ -1,0 +1,23 @@
+{
+  "id": "boatlee_v21",
+  "version": "V21-R1",
+  "family": "public_state_route_portfolio",
+  "kernel": "boatlee/v21-r1-public-state-route-portfolio",
+  "kernel_id": 131517790,
+  "title": "V21-R1 | Public-State Route Portfolio",
+  "source_url": "https://www.kaggle.com/code/boatlee/v21-r1-public-state-route-portfolio",
+  "path": "opponents/public/boatlee_v21/main.py",
+  "sha256": "c6f96a8521dc9aa369b6f27e5b36b9d481e5c1688f50c8ca215c3bb53f1f9eb8",
+  "license": "Apache-2.0 (Kaggle notebook default; no separate upstream assertion)",
+  "captured_at": "2026-09-08",
+  "engine": {
+    "kaggle_environments": "1.32.7",
+    "interpreter_sha256": "bc8a54879ef02c7ea64b8b333d6a976f0ea65c4949149d01f463f23bccee653e"
+  },
+  "lineage": "Multiple named route payloads selected from public state at runtime.",
+  "adaptation_notes": "Extracted verbatim from the notebook cell that writes main.py; no local edits. See THIRD_PARTY_NOTICES.md.",
+  "base_selection_candidate": false,
+  "evaluation_opponent": true,
+  "usage": "benchmark opponent only",
+  "retrieved_at": "2026-09-07"
+}
