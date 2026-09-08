@@ -21,15 +21,21 @@ silently degrade the in-process timer to the measure-afterwards fallback. Each m
 in the main thread of its own child, so the timer is armed where it works, and the kill does
 not depend on it either way.
 """
+import hashlib
+import json
 import os
+import socket
 import time
+from pathlib import Path
 
+from .jobs import git_provenance
 from .parallel import matches
 
 # One or two cores left to the machine by default: an evaluation run that makes the host
 # unusable gets interrupted by a human, and an interrupted run is worse than a slower one.
 LEAVE_FREE = 1
 BATCH_SIZE = 32
+TRANSPORT_FIELDS = ('candidate', 'opponent', 'seed', 'seat', 'backend')
 
 
 def worker_budget(cpus_free=LEAVE_FREE, cpus=None):
@@ -54,40 +60,168 @@ def partition(jobs, size=BATCH_SIZE):
     return [jobs[start:start + size] for start in range(0, len(jobs), size)]
 
 
-def run_batch(specs, workers=4, method=None, timeout=-1):
+def _digest(value):
+    return hashlib.sha256(json.dumps(value, sort_keys=True, separators=(',', ':'),
+                                     allow_nan=False).encode()).hexdigest()
+
+
+def host_cpu_times(path=Path('/proc/stat')):
+    """Linux host CPU counters as (total, idle); unavailable platforms return None."""
+    try:
+        fields = path.read_text().splitlines()[0].split()
+        if fields[0] != 'cpu':
+            return None
+        values = [int(value) for value in fields[1:]]
+    except (OSError, ValueError, IndexError):
+        return None
+    return sum(values), values[3] + (values[4] if len(values) > 4 else 0)
+
+
+def host_cpu_utilization(start, finish):
+    if start is None or finish is None or finish[0] <= start[0]:
+        return None
+    return 1 - (finish[1] - start[1]) / (finish[0] - start[0])
+
+
+def percentile(values, fraction):
+    values = sorted(values)
+    if not values:
+        return None
+    position = (len(values) - 1) * fraction
+    low, high = int(position), min(len(values) - 1, int(position) + 1)
+    weight = position - low
+    return values[low] * (1 - weight) + values[high] * weight
+
+
+def transport_job_id(spec):
+    """Use the durable ID when present, or a deterministic smoke-test identity."""
+    return spec.get('job_id') or _digest({field: spec.get(field) for field in TRANSPORT_FIELDS})
+
+
+def make_batch(specs, index=0):
+    specs = [dict(spec) for spec in specs]
+    job_ids = [transport_job_id(spec) for spec in specs]
+    return {'batch_id': _digest({'index': index, 'job_ids': job_ids}),
+            'job_ids': job_ids, 'specs': specs}
+
+
+def adaptive_batch_size(total_jobs, available_slots, *, target_waves=8,
+                        minimum=1, maximum=BATCH_SIZE):
+    """Keep at least ``target_waves`` of work queued per cluster slot."""
+    if total_jobs < 0 or available_slots < 1 or target_waves < 1:
+        raise ValueError('jobs must be nonnegative and slots/target_waves positive')
+    if minimum < 1 or maximum < minimum:
+        raise ValueError('invalid batch-size limits')
+    if total_jobs == 0:
+        return minimum
+    target_batches = target_waves * available_slots
+    size = (total_jobs + target_batches - 1) // target_batches
+    return min(maximum, max(minimum, size))
+
+
+def _check_row(spec, row, job_id, batch_id, hostname, provenance):
+    for field in TRANSPORT_FIELDS:
+        if row.get(field) != spec.get(field):
+            raise ValueError(f'{field} mismatch in batch {batch_id}, job {job_id}')
+    for field in ('candidate_hash', 'opponent_hash'):
+        expected = spec.get(field)
+        if expected is not None and row.get(field) != expected:
+            raise ValueError(f'{field} mismatch in batch {batch_id}, job {job_id}')
+    return {**row, 'job_id': job_id, 'batch_id': batch_id, 'hostname': hostname,
+            'git_commit': provenance.get('git_commit'),
+            'git_dirty': provenance.get('git_dirty')}
+
+
+def run_batch(batch, workers=4, method=None, timeout=-1):
     """Play one batch here, in job order. This is the body a Ray task would wrap."""
-    started = time.monotonic()
+    batch = batch if isinstance(batch, dict) else make_batch(batch)
+    specs, job_ids, batch_id = batch['specs'], batch['job_ids'], batch['batch_id']
+    if len(specs) != len(job_ids):
+        raise ValueError(f'Batch {batch_id} has inconsistent specs and job IDs')
+    started, cpu_started = time.monotonic(), host_cpu_times()
     rows = list(matches(specs, workers=workers, method=method, timeout=timeout))
-    return {'rows': rows, 'host': os.uname().nodename if hasattr(os, 'uname') else '',
-            'pid': os.getpid(), 'wall_seconds': time.monotonic() - started,
-            'games': len(rows)}
+    hostname = socket.gethostname()
+    provenance = git_provenance()
+    source = batch.get('source_git', {})
+    provenance = {key: (provenance.get(key) if provenance.get(key) is not None
+                        else source.get(key)) for key in ('git_commit', 'git_dirty')}
+    if len(rows) != len(specs):
+        raise OSError(f'Batch {batch_id} returned {len(rows)} of {len(specs)} jobs')
+    rows = [_check_row(spec, row, identity, batch_id, hostname, provenance)
+            for spec, row, identity in zip(specs, rows, job_ids)]
+    elapsed, cpu_finished = time.monotonic() - started, host_cpu_times()
+    match_seconds = [row['wall_seconds'] for row in rows if row.get('wall_seconds') is not None]
+    return {'batch_id': batch_id, 'job_ids': job_ids, 'rows': rows,
+            'hostname': hostname, 'pid': os.getpid(),
+            'git_commit': provenance.get('git_commit'),
+            'git_dirty': provenance.get('git_dirty'),
+            'wall_seconds': elapsed, 'games': len(rows),
+            'cpu_utilization': host_cpu_utilization(cpu_started, cpu_finished),
+            'p50_match_seconds': percentile(match_seconds, .5),
+            'p95_match_seconds': percentile(match_seconds, .95)}
 
 
 def _local(batches, workers, method, timeout):
     """Run batches one after another on this host. The default transport."""
-    for specs in batches:
-        yield run_batch(specs, workers=workers, method=method, timeout=timeout)
+    for batch in batches:
+        yield run_batch(batch, workers=workers, method=method, timeout=timeout)
 
 
-def batched_runner(size=BATCH_SIZE, method=None, timeout=-1, map_batches=None, on_batch=None):
+def validate_batch_result(expected, result):
+    """Refuse incomplete, duplicated, substituted, or malformed transport output."""
+    if not isinstance(result, dict):
+        raise ValueError('Batch transport must return a result envelope')
+    batch_id = expected['batch_id']
+    if result.get('batch_id') != batch_id:
+        raise ValueError(f'Unexpected batch result {result.get("batch_id")}; expected {batch_id}')
+    if result.get('job_ids') != expected['job_ids']:
+        raise OSError(f'Batch {batch_id} returned an incomplete or reordered job list')
+    rows = result.get('rows')
+    if not isinstance(rows, list) or result.get('games') != len(expected['job_ids']) \
+            or len(rows) != len(expected['job_ids']):
+        raise OSError(f'Batch {batch_id} is incomplete')
+    if [row.get('job_id') for row in rows] != expected['job_ids']:
+        raise OSError(f'Batch {batch_id} rows do not cover the expected jobs')
+    if not result.get('hostname'):
+        raise ValueError(f'Batch {batch_id} has no worker hostname')
+    if any(row.get('batch_id') != batch_id or row.get('hostname') != result['hostname']
+           for row in rows):
+        raise ValueError(f'Batch {batch_id} row provenance disagrees with its envelope')
+    return result
+
+
+def batched_runner(size=BATCH_SIZE, method=None, timeout=-1, map_batches=None, on_batch=None,
+                   available_slots=None):
     """A `runner(jobs, workers)` for `arena.jobs.execute`, with batching in the middle.
 
-    `map_batches(batches, workers)` yields one envelope per batch, in batch order. The
-    default runs them here; a Ray transport replaces exactly this function and nothing else.
-    Rows are yielded in job order so `execute` -- and every caller that pairs jobs with rows
-    positionally -- keeps working unchanged.
+    `map_batches(batches, workers)` yields one envelope per batch, in any order. The default
+    runs them here; a Ray transport replaces exactly this function and nothing else. Results
+    are buffered only until the next batch in job order is available.
     """
     def runner(jobs, workers):
-        batches = partition(jobs, size)
+        jobs = list(jobs)
+        chosen_size = (adaptive_batch_size(len(jobs), available_slots or workers)
+                       if size is None else size)
+        batches = [make_batch(specs, index) for index, specs in
+                   enumerate(partition(jobs, chosen_size))]
         transport = map_batches or (lambda parts, count: _local(parts, count, method, timeout))
-        produced = 0
+        expected = {batch['batch_id']: batch for batch in batches}
+        ready, emitted, received = {}, 0, set()
         for envelope in transport(batches, workers):
-            rows = envelope['rows'] if isinstance(envelope, dict) else envelope
-            if on_batch:
-                on_batch(envelope)
-            for row in rows:
-                produced += 1
-                yield row
-        if produced != len(jobs):
-            raise ValueError(f'Batches returned {produced} rows for {len(jobs)} jobs')
+            batch_id = envelope.get('batch_id') if isinstance(envelope, dict) else None
+            if batch_id not in expected:
+                raise ValueError(f'Transport returned unknown batch: {batch_id}')
+            if batch_id in received:
+                raise ValueError(f'Transport returned duplicate batch: {batch_id}')
+            received.add(batch_id)
+            ready[batch_id] = validate_batch_result(expected[batch_id], envelope)
+            while emitted < len(batches) and batches[emitted]['batch_id'] in ready:
+                complete = ready.pop(batches[emitted]['batch_id'])
+                if on_batch:
+                    on_batch(complete)
+                yield from complete['rows']
+                emitted += 1
+        if emitted != len(batches):
+            missing = [batch['batch_id'] for batch in batches if batch['batch_id'] not in received]
+            raise OSError(f'Transport omitted {len(missing)} batch(es): {", ".join(missing)}')
     return runner

@@ -206,8 +206,9 @@ class JobStore:
                  outcome_of(row['score']), row['score'], row.get('money'),
                  row.get('opponent_money'), row.get('margin'),
                  int(bool(row.get('failures')) or bool(row.get('opponent_failures'))),
-                 row.get('wall_seconds'), self.provenance['hostname'],
-                 self.provenance.get('git_commit'), self.provenance.get('git_dirty'),
+                 row.get('wall_seconds'), row.get('hostname', self.provenance['hostname']),
+                 row.get('git_commit', self.provenance.get('git_commit')),
+                 row.get('git_dirty', self.provenance.get('git_dirty')),
                  datetime.now(timezone.utc).isoformat(), json.dumps(row, default=str)))
         return identity
 
@@ -265,13 +266,29 @@ def execute(jobs, store, split, runner, *, workers=4, attempts=3, on_row=None):
         remaining = store.pending(jobs)
         if not remaining:
             return store.rows({job['job_id'] for job in jobs})
-        payload = [{key: job[key] for key in ('candidate', 'opponent', 'seed', 'seat', 'backend')}
-                   for job in remaining]
+        # The worker needs the expected hashes and IDs so a remote batch can prove which
+        # artifacts and jobs it actually executed. ``arena.parallel`` strips this transport
+        # metadata before calling ``run_match``.
+        payload = [dict(job) for job in remaining]
+        expected = {job['job_id'] for job in remaining}
+        seen = set()
         try:
             for row in runner(payload, workers):
+                identity = id_of_row(row, split)
+                if row.get('job_id', identity) != identity:
+                    raise ValueError(f'Result job_id does not match its contents: {row.get("job_id")}')
+                if identity not in expected:
+                    raise ValueError(f'Result does not belong to the admitted plan: {identity}')
+                if identity in seen:
+                    raise ValueError(f'Runner returned duplicate job: {identity}')
+                seen.add(identity)
+                row['job_id'] = identity
                 store.record(row, split)
                 if on_row:
                     on_row(row)
+            missing = expected - seen
+            if missing:
+                raise OSError(f'Runner omitted {len(missing)} admitted job(s)')
         except INFRASTRUCTURE as exc:
             last = exc
             continue

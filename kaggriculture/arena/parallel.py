@@ -56,10 +56,17 @@ MATCH_TIMEOUT = float(os.environ.get('ARENA_MATCH_TIMEOUT', 300.))
 # shared by every forked worker instead of being redone per game.
 PRELOAD = ('arena.match', 'arena.engine', 'arena.agents', 'arena.telemetry',
            'kaggle_environments')
+MATCH_FIELDS = ('candidate', 'opponent', 'seed', 'seat', 'backend', 'configuration',
+                'replay', 'telemetry_enabled', 'replay_steps')
+
+
+def _match_kwargs(job):
+    """Keep transport/store metadata out of ``run_match``'s public arguments."""
+    return {field: job[field] for field in MATCH_FIELDS if field in job}
 
 
 def _run(kwargs):
-    return run_match(**kwargs)
+    return run_match(**_match_kwargs(kwargs))
 
 
 def _play(index, job, results):
@@ -74,7 +81,7 @@ def _play(index, job, results):
     except (AttributeError, OSError):  # Windows, or already a group leader.
         pass
     try:
-        results.put((index, run_match(**job), None))
+        results.put((index, run_match(**_match_kwargs(job)), None))
     except BaseException as exc:  # noqa: BLE001 - reported to the parent, never swallowed
         results.put((index, None, f'{type(exc).__name__}: {exc}'))
 

@@ -5,6 +5,7 @@ from pathlib import Path
 import time
 
 from .agents import agent_hash
+from .batch import batched_runner, worker_budget
 from .jobs import JobStore, execute, plan, single_provenance
 from .parallel import matches
 from .seeds import REGISTRY, SPLITS, admit_run, parse_seeds
@@ -23,7 +24,8 @@ def store_path(output):
 
 
 def run_league(candidate, opponents, seeds, workers=4, backend='fast', output=None, split='dev',
-               paired_with=(), registry_path=REGISTRY, resume=False, attempts=3, store=None):
+               paired_with=(), registry_path=REGISTRY, resume=False, attempts=3, store=None,
+               runner=None):
     if len(set(opponents)) != len(opponents) or not opponents or len(set(seeds)) != len(seeds) or not seeds:
         raise ValueError('Require unique, nonempty opponents and seeds')
     started = time.perf_counter()
@@ -60,7 +62,7 @@ def run_league(candidate, opponents, seeds, workers=4, backend='fast', output=No
             if counter['n'] % 20 == 0:
                 print(f'{counter["n"]}/{len(jobs)} games; {time.perf_counter()-started:.1f}s', flush=True)
 
-        rows = execute(jobs, job_store, split, matches, workers=workers,
+        rows = execute(jobs, job_store, split, runner or matches, workers=workers,
                        attempts=attempts, on_row=progress)
     # The store may hold games from an earlier attempt; refusing a mixed set here is
     # what makes a resumed or distributed run as trustworthy as a single-process one.
@@ -81,7 +83,13 @@ def main():
     parser.add_argument('--candidate', default='challenger')
     parser.add_argument('--opponents', default='starter,crop,animal,diversified')
     parser.add_argument('--seeds', default='1000:1010')
-    parser.add_argument('--workers', type=int, default=4)
+    parser.add_argument('--workers', type=int)
+    parser.add_argument('--leave-cpus-free', type=int, default=1)
+    parser.add_argument('--batch-size', type=int,
+                        help='jobs per batch; with Ray, omit for adaptive sizing')
+    parser.add_argument('--ray-address', help='private Ray head address, usually ray://HOST:10001')
+    parser.add_argument('--cpus-per-worker', type=int, default=1,
+                        help='Ray CPUs and local match children assigned to each batch task')
     parser.add_argument('--backend', choices=['fast', 'official'], default='fast')
     parser.add_argument('--split', choices=list(SPLITS), default='dev')
     parser.add_argument('--paired-with', dest='paired_with', default='',
@@ -95,6 +103,19 @@ def main():
     args.opponents = args.opponents.split(',')
     args.paired_with = [n for n in args.paired_with.split(',') if n]
     args.seeds = parse_seeds(args.seeds)
+    ray_address = args.__dict__.pop('ray_address')
+    batch_size = args.__dict__.pop('batch_size')
+    cpus_per_worker = args.__dict__.pop('cpus_per_worker')
+    leave_cpus_free = args.__dict__.pop('leave_cpus_free')
+    args.workers = args.workers or worker_budget(leave_cpus_free)
+    if ray_address:
+        from .ray_transport import connect
+        mapper = connect(ray_address, cpus_per_worker=cpus_per_worker,
+                         attempts=args.attempts)
+        args.runner = batched_runner(size=batch_size, map_batches=mapper,
+                                     available_slots=mapper.available_slots)
+    elif batch_size:
+        args.runner = batched_runner(size=batch_size)
     _, summary, _ = run_league(**vars(args))
     print(json.dumps(summary, indent=2))
 

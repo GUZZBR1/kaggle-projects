@@ -33,7 +33,7 @@ def check_spec(spec):
 def run_pair(baseline, candidate, opponents, seeds, output, *, workers=4, backend='fast',
              split='dev', min_blocks=100, strong_only=False, ratings=None, families=None,
              mirrors=(), cut=STRONG_CUT, max_age_days=MAX_RATING_AGE_DAYS,
-             registry_path=REGISTRY, incumbent=None):
+             registry_path=REGISTRY, incumbent=None, runner=None):
     started = time.perf_counter()
     seeds, opponents = list(seeds), list(opponents)
     if (workers < 1 or backend not in ('fast', 'official') or min_blocks < 2
@@ -72,7 +72,7 @@ def run_pair(baseline, candidate, opponents, seeds, output, *, workers=4, backen
             leg_started = time.perf_counter()
             rows, _, _ = run_league(agent, opponents, seeds, workers=workers, backend=backend,
                                    output=target / label, split=split, paired_with=(other,),
-                                   registry_path=registry_path)
+                                   registry_path=registry_path, runner=runner)
             timings[label] = time.perf_counter() - leg_started
             if len(rows) != len(seeds) * len(opponents) * 2:
                 raise ValueError('Incomplete comparison leg')
@@ -113,6 +113,10 @@ def main():
     parser.add_argument('--seeds', default='1000:1100')
     parser.add_argument('--split', choices=SPLITS, default='dev')
     parser.add_argument('--workers', type=int, default=4)
+    parser.add_argument('--ray-address')
+    parser.add_argument('--cpus-per-worker', type=int, default=1)
+    parser.add_argument('--batch-size', type=int,
+                        help='omit for adaptive sizing over the Ray cluster')
     parser.add_argument('--backend', choices=('fast', 'official'), default='fast')
     parser.add_argument('--min-blocks', type=int, default=100, help='lower only for development or smoke runs')
     parser.add_argument('--strong-only', action='store_true')
@@ -129,6 +133,17 @@ def main():
     args['opponents'] = args['opponents'].split(',')
     args['mirrors'] = [name for name in args['mirrors'].split(',') if name]
     incumbent_id, displaces = args.pop('incumbent_id'), args.pop('displaces')
+    ray_address = args.pop('ray_address')
+    cpus_per_worker = args.pop('cpus_per_worker')
+    batch_size = args.pop('batch_size')
+    if ray_address:
+        import atexit
+        from .batch import batched_runner
+        from .ray_transport import connect
+        mapper = connect(ray_address, cpus_per_worker=cpus_per_worker)
+        atexit.register(mapper.ray.shutdown)
+        args['runner'] = batched_runner(size=batch_size, map_batches=mapper,
+                                        available_slots=mapper.available_slots)
     # The hash is not taken from the operator: it is the baseline this run will freeze,
     # so a declaration naming the wrong agent is caught by check_spec, not by trust.
     args['incumbent'] = (None if not incumbent_id else

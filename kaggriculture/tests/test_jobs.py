@@ -157,6 +157,20 @@ def test_a_mixed_result_set_is_refused_by_the_aggregator():
         single_provenance([row(), {**row(seed=1), 'environment': {'engine': '1.33.0'}}])
 
 
+def test_execute_hard_fails_a_result_outside_the_admitted_plan(tmp_path):
+    jobs = specs()
+
+    def wrong_artifact(payload, workers):
+        for job in payload:
+            yield row(opponent=job['opponent'], seed=job['seed'], seat=job['seat'],
+                      candidate_hash='different')
+
+    with store(tmp_path) as book:
+        with pytest.raises(ValueError, match='admitted plan'):
+            execute(jobs, book, 'dev', wrong_artifact, attempts=3)
+        assert book.rows() == []
+
+
 def test_provenance_columns_travel_with_every_row(tmp_path):
     with store(tmp_path) as jobs:
         jobs.record(row(), 'dev')
@@ -195,6 +209,19 @@ def test_an_empty_plan_and_a_zero_attempt_budget_raise(tmp_path):
         assert execute([], jobs, 'dev', lambda p, w: iter(())) == []
         with pytest.raises(ValueError, match='attempts must be positive'):
             execute(specs(), jobs, 'dev', lambda p, w: iter(()), attempts=0)
+
+
+def test_an_incomplete_runner_is_retried_as_infrastructure(tmp_path):
+    calls = {'count': 0}
+
+    def incomplete(payload, workers):
+        calls['count'] += 1
+        yield from ()
+
+    with store(tmp_path) as jobs:
+        with pytest.raises(RuntimeError, match='omitted 2 admitted job'):
+            execute(specs(), jobs, 'dev', incomplete, attempts=2)
+    assert calls['count'] == 2
 
 
 @pytest.fixture

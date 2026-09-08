@@ -11,7 +11,8 @@ import threading
 
 import pytest
 
-from arena.batch import batched_runner, partition, run_batch, worker_budget
+from arena.batch import (adaptive_batch_size, batched_runner, make_batch, partition,
+                         run_batch, worker_budget)
 from arena.parallel import matches
 
 JOB = dict(candidate='pass', opponent='pass', backend='fast', telemetry_enabled=False)
@@ -41,6 +42,14 @@ def test_partition_covers_every_job_once_and_in_order():
         partition(work, 0)
 
 
+def test_adaptive_batches_keep_at_least_eight_waves_per_slot():
+    assert adaptive_batch_size(8000, 14) == 32
+    assert adaptive_batch_size(32, 14) == 1
+    assert adaptive_batch_size(0, 14) == 1
+    with pytest.raises(ValueError):
+        adaptive_batch_size(10, 0)
+
+
 def test_the_worker_budget_leaves_the_host_usable_and_never_returns_zero():
     assert worker_budget(cpus_free=2, cpus=16) == 14
     assert worker_budget(cpus_free=0, cpus=16) == 16
@@ -66,6 +75,9 @@ def test_an_envelope_carries_where_and_how_long():
     envelope = run_batch(jobs(2), workers=2)
     assert envelope['games'] == 2 and len(envelope['rows']) == 2
     assert envelope['wall_seconds'] > 0 and envelope['pid'] == os.getpid()
+    assert envelope['hostname']
+    assert envelope['job_ids'] == [row['job_id'] for row in envelope['rows']]
+    assert all(row['batch_id'] == envelope['batch_id'] for row in envelope['rows'])
 
 
 def test_a_transport_that_loses_a_batch_is_refused():
@@ -73,8 +85,45 @@ def test_a_transport_that_loses_a_batch_is_refused():
     def lossy(batches, workers):
         for batch in batches[:-1]:
             yield run_batch(batch, workers=workers)
-    with pytest.raises(ValueError, match='Batches returned'):
+    with pytest.raises(OSError, match='omitted'):
         list(batched_runner(size=2, map_batches=lossy)(jobs(4), 2))
+
+
+def test_transport_results_may_arrive_out_of_order_but_rows_do_not():
+    work = jobs(4)
+
+    def reversed_transport(batches, workers):
+        yield run_batch(batches[1], workers=workers)
+        yield run_batch(batches[0], workers=workers)
+
+    rows = list(batched_runner(size=2, map_batches=reversed_transport)(work, 2))
+    assert [row['seed'] for row in rows] == [job['seed'] for job in work]
+
+
+def test_a_duplicate_or_substituted_batch_is_refused():
+    work = jobs(4)
+
+    def duplicate(batches, workers):
+        result = run_batch(batches[0], workers=workers)
+        yield result
+        yield result
+
+    with pytest.raises(ValueError, match='duplicate batch'):
+        list(batched_runner(size=2, map_batches=duplicate)(work, 2))
+
+    def substitute(batches, workers):
+        result = run_batch(batches[0], workers=workers)
+        result['job_ids'][0] = 'another-job'
+        yield result
+
+    with pytest.raises(OSError, match='expected jobs'):
+        list(batched_runner(size=2, map_batches=substitute)(work, 2))
+
+
+def test_worker_refuses_an_artifact_hash_that_differs_from_the_head():
+    batch = make_batch([{**jobs(1)[0], 'candidate_hash': 'not-the-pass-agent'}])
+    with pytest.raises(ValueError, match='candidate_hash mismatch'):
+        run_batch(batch, workers=1)
 
 
 def test_the_deadline_still_kills_a_hanging_game_inside_a_batch(tmp_path):

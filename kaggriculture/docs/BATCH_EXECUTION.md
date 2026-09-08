@@ -1,8 +1,8 @@
 # A camada de lote: o que a #43 precisa antes do Ray, medido num PC só
 
-Entrega parcial da #43. **Não instala Ray e não distribui nada ainda** — constrói a costura
-que um transporte remoto vai usar, e verifica num PC só as duas coisas que a issue diz que
-precisam estar verificadas antes de confiar em qualquer número distribuído.
+Esta camada constrói a costura usada pelo transporte local e por Ray. A implementação Ray
+é opcional e fica inteiramente no harness; a prova de dois nós continua sendo requisito
+antes de considerar a #43 entregue.
 
 ## Por que lote, e não uma partida por task
 
@@ -26,10 +26,11 @@ arena.jobs.execute(jobs, store, split, runner, workers=...)
                                        o único ponto que um transporte Ray substitui
 ```
 
-`map_batches(batches, workers)` devolve um envelope por lote, na ordem dos lotes; o padrão
-executa aqui mesmo. As linhas saem **na ordem dos jobs** de qualquer forma, porque o
-`execute` e todo chamador que casa job com linha o fazem por posição. Um transporte que
-perca um lote é recusado em vez de parecer execução completa.
+`map_batches(batches, workers)` pode devolver envelopes fora de ordem; `batched_runner`
+reordena-os antes de emitir linhas. Cada envelope precisa provar `batch_id`, a lista
+ordenada de `job_id`, hostname, hashes e quantidade completa. Lote ausente, duplicado ou
+substituído é recusado. O head recalcula ainda cada `job_id` a partir do conteúdo retornado
+antes de escrever no SQLite, então uma contagem correta com jobs errados também falha.
 
 `worker_budget(cpus_free=1)` é a política de CPU: deixa um ou dois cores para a máquina,
 e nunca devolve menos de um worker. Uma execução que deixa o host inutilizável é
@@ -58,35 +59,38 @@ recusa publicar throughput se as linhas divergirem entre configurações.
 
 | workers | direta | em lotes de 8 |
 |---:|---:|---:|
-| 1 | 0,675 s/partida — 1,48/s | 0,594 s/partida — 1,68/s |
-| 2 | 0,313 s/partida — 3,20/s | 0,308 s/partida — 3,24/s |
-| 4 | 0,166 s/partida — 6,02/s | 0,166 s/partida — 6,04/s |
-| 8 | 0,097 s/partida — 10,26/s | 0,100 s/partida — 10,03/s |
-| 14 | **0,083 s/partida — 12,06/s** | 0,097 s/partida — 10,27/s |
+| 1 | 0,666 s/partida — 1,50/s | 0,629 s/partida — 1,59/s |
+| 2 | 0,307 s/partida — 3,26/s | 0,343 s/partida — 2,91/s |
+| 4 | 0,163 s/partida — 6,15/s | 0,195 s/partida — 5,13/s |
+| 8 | 0,095 s/partida — 10,52/s | 0,130 s/partida — 7,69/s |
+| 14 | **0,080 s/partida — 12,43/s** | 0,130 s/partida — 7,67/s |
 
-Até 8 workers o lote não custa nada. Em 14 ele custa 15%, e a razão é aritmética, não
-overhead: 32 partidas em lotes de 8 são **quatro** lotes para catorze workers, então a
-cauda do último lote domina. A regra que sai daí é a mesma que a issue já propunha por
-outro motivo — lotes pequenos, e muitos deles em relação ao número de workers. Com 8 000
-partidas de busca, lotes de 32 dão 250 lotes, e a cauda desaparece.
+Nesta repetição, o modo em lotes perde throughput já a partir de 2 workers e chega a 38%
+em 14. A razão dominante continua sendo a granularidade: 32 partidas em lotes de 8 são
+**quatro** lotes sequenciais que usam no máximo oito dos catorze workers. Esse
+smoke não separa cauda de scheduler com confiança e não deve sustentar uma conclusão de
+throughput. No transporte distribuído o tamanho adaptativo mantém pelo menos oito ondas
+por slot, limitado a 32; com 8 000 partidas e 14 slots, isso produz 250 lotes.
 
-Speedup de 7,2× de 1 para 14 workers. Reprodução:
+Na série direta, o speedup de 1 para 14 workers é **8,27×**, com eficiência
+paralela de 59,1%. Na série em lotes, é **4,83×**, com eficiência de 34,5%. O script
+calcula e grava os dois valores por linha, sempre contra o baseline de 1 worker do mesmo
+modo, para o texto nunca depender de uma divisão entre séries diferentes. Reprodução:
 
 ```bash
 python scripts/benchmark_pool.py --games 32 --workers 1,2,4,8,14 \
   --output docs/pool-benchmark.json
 ```
 
-## O que **não** está entregue
+## Estado da entrega Ray
 
-- **O transporte Ray.** É uma função: `map_batches` rodando `@ray.remote(num_cpus=N)`.
-  Não faz sentido escrevê-la sem uma segunda máquina para exercitá-la.
-- **Determinismo entre nós.** O `money` do motor é float, e igualdade exata entre CPUs
-  diferentes é provável mas não óbvia. É a única coisa que autoriza somar resultados de
-  máquinas distintas num agregado, e não pode ser testada aqui.
-- **Rede.** LAN privada ou VPN, sem dashboard exposto, sem token no git.
-- **`--cpus-per-worker`.** Só significa alguma coisa com o escalonador do Ray.
+`arena.ray_transport` implementa `map_batches` com `num_cpus`, desliga retries implícitos
+de exceções da aplicação, verifica todos os nós por afinidade e refaz somente lote perdido
+por falha de infraestrutura. `arena.league` expõe `--ray-address`, `--cpus-per-worker` e
+batch adaptativo. Ray está no extra `distributed` e não entra no artefato submetido.
 
-A #43 continua aberta por esses quatro itens. O que ela já tem é a camada que eles vão usar,
-com o isolamento e o deadline preservados um nível abaixo, e uma linha de base local honesta
-para comparar contra qualquer ganho distribuído que se alegue depois.
+Um cluster local de um nó já executou o caminho completo, com dois jobs distintos no store,
+hashes e resultados idênticos, e pacote de runtime de 6,7 MiB. Isso prova integração, não
+distribuição. A #43 continua aberta até existirem os dois artefatos de evidência descritos
+em `RAY_CLUSTER.md`: determinismo e deadline em dois hostnames, seguidos do benchmark de
+32, 256, 1 024 e 8 000 jobs com ganho material sobre o PC mais rápido.

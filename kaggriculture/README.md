@@ -13,6 +13,10 @@ bash scripts/setup.sh
 .venv/bin/python -m pytest -q
 ```
 
+Para o harness distribuído opcional, use `bash scripts/setup.sh --distributed`. A
+dependência Ray não faz parte do artefato de submissão. A configuração privada, os gates
+entre máquinas e o benchmark estão em [RAY_CLUSTER.md](docs/RAY_CLUSTER.md).
+
 O ambiente é `kaggle-environments==1.32.7`, com SHA-256 do interpretador validado
 em `arena/engine.py`. As dependências mínimas ficam em `requirements.lock`.
 O ambiente oficial é instalado com `--no-deps` para evitar dependências de outros
