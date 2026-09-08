@@ -169,9 +169,20 @@ def _family_rows(rows, opponents):
     return grouped
 
 
-def _family_summary(rows, opponents):
+def _family_summary(rows, opponents, own_family=None):
+    """Family scores for one candidate, excluding its own mirror match.
+
+    A candidate meets itself in the opponent pool and that match-up scores
+    exactly .5 by construction, in both seats, for every candidate. Counting it
+    tells us nothing about robustness and it silently floors the selection key
+    at .5 for anyone who never loses a family, handing the decision to the
+    tie-breaks instead. Worse, the variance tie-break then punishes a candidate
+    for dominating, because .5 sits far from its real scores.
+    """
     result = {}
     for family, batch in sorted(_family_rows(rows, opponents).items()):
+        if family == own_family:
+            continue
         scores = [row['score'] for row in batch]
         result[family] = {
             'games': len(batch),
@@ -199,6 +210,11 @@ def analyze_tournament(results, candidates, opponents, *, min_seed_blocks=100,
         raise ValueError('Missing or unexpected candidate results')
     if len({entry['family'] for entry in opponents}) < 3:
         raise ValueError('At least three opponent families are required')
+    for entry in candidates:
+        rival_families = {other['family'] for other in opponents} - {entry['family']}
+        if len(rival_families) < 2:
+            raise ValueError(f"{entry['id']} needs at least two rival families once its "
+                             'own mirror match is excluded')
     metrics = {}
     for entry in candidates:
         rows = results[entry['id']]
@@ -206,7 +222,7 @@ def analyze_tournament(results, candidates, opponents, *, min_seed_blocks=100,
             raise ValueError(f"{entry['id']} has fewer than {min_seed_blocks} seed blocks")
         if any(row['failures'] or row['opponent_failures'] for row in rows):
             raise ValueError(f"{entry['id']} has callback failures")
-        families = _family_summary(rows, opponents)
+        families = _family_summary(rows, opponents, own_family=entry['family'])
         scores = [data['score'] for data in families.values()]
         metrics[entry['id']] = {
             'family': entry['family'],
@@ -232,7 +248,8 @@ def analyze_tournament(results, candidates, opponents, *, min_seed_blocks=100,
                 if best_floor - metrics[entry['id']]['worst_family_score'] <= tie_tolerance]
     return {
         'schema_version': 1,
-        'selection_rule': 'max worst-family score CI95 lower; worst score and lower variance break ties',
+        'selection_rule': 'max worst-family score CI95 lower over rival families only '
+                          '(the mirror match is excluded); worst score and lower variance break ties',
         'status': 'selected',
         'selected_base': {key: best[key] for key in
                           ('id', 'family', 'path', 'agent_spec', 'sha256', 'lineage', 'source', 'version')},

@@ -74,3 +74,28 @@ def test_paired_comparison_rejects_missing_or_duplicate_games():
         compare(before, before[:-1])
     with pytest.raises(ValueError):
         compare(before + before[:1], before + before[:1])
+
+
+def test_the_mirror_match_never_counts_as_family_evidence():
+    """Issue #24: a candidate meeting itself scores .5 by construction.
+
+    Counting it floors the selection key at .5 for anyone who never loses a
+    family, which hands the decision to the tie-breaks, and the variance
+    tie-break then punishes the candidate that dominates.
+    """
+    from experiments.public_base_tournament import _family_summary
+
+    opponents = [{'id': n, 'path': f'{n}.py', 'agent_spec': f'{n}.py', 'family': n}
+                 for n in ('mine', 'rivalA', 'rivalB')]
+    rows = []
+    for name, score in (('mine', .5), ('rivalA', 1.), ('rivalB', 1.)):
+        for seed in range(4):
+            rows.append({'opponent': f'{name}.py', 'seed': seed, 'score': score,
+                         'money': 10., 'margin': 5.})
+
+    counted = _family_summary(rows, opponents)
+    assert min(data['score'] for data in counted.values()) == .5, 'mirror drags the floor down'
+
+    real = _family_summary(rows, opponents, own_family='mine')
+    assert set(real) == {'rivalA', 'rivalB'}
+    assert min(data['score'] for data in real.values()) == 1., 'floor now reflects rivals only'
