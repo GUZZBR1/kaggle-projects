@@ -103,7 +103,8 @@ def test_an_unsupported_schema_is_refused(tmp_path):
 
 def test_validation_seeds_are_burned_before_the_run(tmp_path):
     path = registry(tmp_path, entry('reserved', 0, 10, 'validation'))
-    metadata = admit_run([2, 3], 'validation', {'candidate': 'challenger'}, path)
+    run = {'candidate': 'challenger', 'batch_members': ['hashA'], 'seeds': [2, 3]}
+    metadata = admit_run([2, 3], 'validation', run, path)
     assert metadata['consumption_revision'] == 2
 
     # The same seeds are now spent evidence, whatever the outcome of that run.
@@ -115,7 +116,8 @@ def test_validation_seeds_are_burned_before_the_run(tmp_path):
     data, _ = load_registry(path)
     assert data['revision'] == 2
     assert data['history'][-1]['seeds'] == [2, 3]
-    assert data['history'][-1]['run'] == {'candidate': 'challenger'}
+    assert data['history'][-1]['run'] == run
+    assert data['history'][-1]['batch'] == metadata['batch']
     covered = sorted(s for e in data['entries'] if e['end'] is not None
                      for s in range(e['start'], e['end']))
     assert covered == list(range(10))
@@ -126,14 +128,15 @@ def test_admission_requires_provenance_and_leaves_no_lock(tmp_path):
     with pytest.raises(ValueError, match='provenance'):
         admit_run([1], 'validation', None, path)
     with pytest.raises(ValueError):
-        admit_run([1, 9000000], 'validation', {'run': 'x'}, path)
+        admit_run([1, 9000000], 'validation',
+                  {'batch_members': ['hashA'], 'seeds': [1, 9000000]}, path)
     assert not (tmp_path / 'registry.json.lock').exists()
     assert load_registry(path)[0]['revision'] == 1
 
 
 def test_non_validation_splits_are_checked_but_not_consumed(tmp_path):
     path = registry(tmp_path, entry('dev', 0, 10, 'dev'))
-    admit_run([1], 'dev', {'run': 'x'}, path)
+    admit_run([1], 'dev', {'run': 'x'}, path)  # non-validation needs no batch
     assert load_registry(path)[0]['revision'] == 1
     assert validate_seeds([1], 'dev', path)['split'] == 'dev'
 
@@ -144,3 +147,55 @@ def test_metadata_pins_the_registry_version_for_the_report():
     assert metadata['registry_sha256'] == load_registry()[1]
     assert metadata['competitive'] is True
     assert validate_seeds([314159], 'diagnostic')['competitive'] is False
+
+
+def paired(tmp_path, members=('hashA', 'hashB'), seeds=(2, 3)):
+    path = registry(tmp_path, entry('reserved', 0, 10, 'validation'))
+    provenance = {'batch_members': list(members), 'opponent_hashes': {'starter': 'o1'},
+                  'backend': 'fast', 'seeds': list(seeds)}
+    return path, provenance
+
+
+def test_both_legs_of_a_declared_batch_may_run_the_same_seeds(tmp_path):
+    # A paired comparison is two runs over identical seeds. The first burns
+    # them; without batch identity the second leg could never run at all.
+    path, provenance = paired(tmp_path)
+    first = admit_run([2, 3], 'validation', {**provenance, 'candidate': 'baseline'}, path)
+    second = admit_run([2, 3], 'validation', {**provenance, 'candidate': 'candidate'}, path)
+    assert (first['batch_leg'], second['batch_leg']) == (1, 2)
+    assert first['batch'] == second['batch']
+    assert load_registry(path)[0]['revision'] == 2, 'the batch burns its seeds exactly once'
+    assert validate_seeds([2, 3], 'seen', path)['split'] == 'seen'
+
+
+def test_the_batch_identity_ignores_which_leg_runs_first(tmp_path):
+    path, provenance = paired(tmp_path)
+    forwards = admit_run([2, 3], 'validation', {**provenance, 'candidate': 'baseline'}, path)
+    reversed_members = {**provenance, 'batch_members': ['hashB', 'hashA']}
+    assert admit_run([2, 3], 'validation', {**reversed_members, 'candidate': 'x'},
+                     path)['batch'] == forwards['batch']
+
+
+def test_an_undeclared_candidate_cannot_join_a_burned_batch(tmp_path):
+    path, provenance = paired(tmp_path)
+    admit_run([2, 3], 'validation', {**provenance, 'candidate': 'baseline'}, path)
+    late = {**provenance, 'batch_members': ['hashA', 'hashB', 'hashC']}
+    with pytest.raises(ValueError, match='different batch'):
+        admit_run([2, 3], 'validation', {**late, 'candidate': 'latecomer'}, path)
+
+
+def test_a_batch_cannot_be_widened_after_its_first_leg(tmp_path):
+    path, provenance = paired(tmp_path)
+    admit_run([2, 3], 'validation', {**provenance, 'candidate': 'baseline'}, path)
+    wider = {**provenance, 'seeds': [2, 3]}
+    with pytest.raises(ValueError, match='cannot be widened'):
+        admit_run([2, 3, 4], 'validation', {**wider, 'candidate': 'baseline'}, path)
+
+
+def test_validation_requires_declaring_the_batch_up_front(tmp_path):
+    path = registry(tmp_path, entry('reserved', 0, 10, 'validation'))
+    for provenance in ({'candidate': 'x'}, {'candidate': 'x', 'batch_members': []},
+                       {'candidate': 'x', 'batch_members': ['hashA', '']}):
+        with pytest.raises(ValueError, match='declare every candidate'):
+            admit_run([2], 'validation', provenance, path)
+    assert load_registry(path)[0]['revision'] == 1

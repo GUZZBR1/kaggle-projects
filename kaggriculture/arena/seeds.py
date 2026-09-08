@@ -81,11 +81,32 @@ def registry_lock(path):
         lock.unlink()
 
 
+def batch_id(provenance):
+    """Stable identity of one declared batch, independent of which leg runs first.
+
+    A paired comparison is two league runs over the same seeds. The first burns
+    them, so the second would be refused as `seen` unless both legs are known
+    to belong to one batch declared up front. Every candidate in the batch has
+    to be named before the first game, which is what stops a batch from being
+    widened after seeing a result.
+    """
+    if not provenance:
+        raise ValueError('Run admission requires provenance')
+    declared = provenance.get('batch_members')
+    if not declared or not all(declared):
+        raise ValueError('A validation batch must declare every candidate before admission')
+    payload = json.dumps({'members': sorted(declared),
+                          'opponents': sorted(provenance.get('opponent_hashes', {}).items()),
+                          'backend': provenance.get('backend'),
+                          'seeds': sorted(provenance.get('seeds', []))}, sort_keys=True)
+    return hashlib.sha256(payload.encode()).hexdigest()
+
+
 def admit_run(seeds, split, provenance, path=REGISTRY):
     """Burn reserved seeds BEFORE callbacks, including interrupted/failed runs.
 
-    Subsequent reproduction is allowed only with split='seen'. A paired batch
-    must declare all its candidate hashes in provenance before this admission.
+    A second leg of the same declared batch is readmitted against the recorded
+    batch id; anything else that meets burned seeds is refused.
     """
     seeds = list(seeds)
     if not provenance:
@@ -93,6 +114,10 @@ def admit_run(seeds, split, provenance, path=REGISTRY):
     if split != 'validation':
         return validate_seeds(seeds, split, path)
     with registry_lock(path):
+        registry, digest = load_registry(path)
+        batch = batch_id(provenance)
+        if not set(seeds) <= _classified(registry, 'validation'):
+            return _readmit(registry, digest, seeds, batch, path)
         metadata = validate_seeds(seeds, split, path)
         registry, _ = load_registry(path)
         revision = registry['revision'] + 1
@@ -119,7 +144,7 @@ def admit_run(seeds, split, provenance, path=REGISTRY):
         registry['revision'] = revision
         registry['history'].append(dict(revision=revision, date=datetime.now(timezone.utc).isoformat(),
             reason='Reserved validation consumed before execution', seeds=seeds, run=provenance,
-            previous_sha256=metadata['registry_sha256']))
+            batch=batch, previous_sha256=metadata['registry_sha256']))
         target = Path(path)
         temporary = target.with_suffix('.tmp')
         try:
@@ -129,5 +154,28 @@ def admit_run(seeds, split, provenance, path=REGISTRY):
         finally:
             temporary.unlink(missing_ok=True)
         metadata['consumption_revision'] = revision
+        metadata['batch'] = batch
+        metadata['batch_leg'] = 1
         metadata['consumed_registry_sha256'] = load_registry(target)[1]
         return metadata
+
+
+def _classified(registry, split):
+    return {seed for entry in registry['entries'] if entry['classification'] == split
+            and entry['end'] is not None for seed in range(entry['start'], entry['end'])}
+
+
+def _readmit(registry, digest, seeds, batch, path):
+    """Allow a later leg of an already-admitted batch; refuse everything else."""
+    consumed = [record for record in registry['history'] if record.get('batch') == batch]
+    if not consumed:
+        raise ValueError('These validation seeds are already consumed by a different batch; '
+                         'reproduce with split=\'seen\' or reserve new seeds')
+    covered = {seed for record in consumed for seed in record['seeds']}
+    if not set(seeds) <= covered:
+        raise ValueError('This batch never admitted every requested seed; a batch cannot be '
+                         'widened after its first leg has run')
+    return dict(registry_schema=1, registry_revision=registry['revision'], registry_sha256=digest,
+                split='validation', competitive=True, batch=batch,
+                batch_leg=len(consumed) + 1,
+                consumption_revision=max(record['revision'] for record in consumed))

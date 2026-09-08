@@ -96,6 +96,18 @@ sha256 do registro usados.
 Use pelo menos 100 blocos na validação, examine cada adversário separadamente e
 mantenha o holdout intocado até a decisão final.
 
+`docs/ISSUE22_DAILY_ECONOMICS.md` traz o primeiro diagnóstico feito com ela: o
+déficit contra o adversário público é de liquidez inicial, não de execução.
+
+Para uma comparação pareada em `validation`, declare as duas pernas com
+`--paired-with`, senão a segunda encontra os seeds já queimados pela primeira:
+
+```bash
+.venv/bin/python -m arena.league --candidate versions/v002/main.py \
+  --paired-with versions/v001/main.py --seeds 100100:100200 --split validation \
+  --opponents starter,animal --output experiments/results/validation-v002
+```
+
 Cada partida também emite telemetria diária (`daily.csv`, `summary.json`): caixa,
 primeira receita, piso de caixa, contratações, plantios, colheitas, preço
 realizado e o destino de cada ordem de mercado. Os agregados diários são
