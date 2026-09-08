@@ -136,6 +136,30 @@ O build também gera `.tar.gz` com `main.py` na raiz e um manifesto com hashes.
 Recusa sobrescrever um artefato diferente. O preflight joga uma temporada completa
 pelo loader oficial. Nenhum desses comandos envia uma submissão ao Kaggle.
 
+## Dossiê de release
+
+As quatro perguntas de um envio já tinham resposta em relatórios separados: o gate
+pareado contra o incumbente, o standing absoluto contra o meta, o preflight do arquivo
+exato e a política dos dois slots ativos. O risco estava na passagem manual entre eles —
+uma comparação sobre um artefato citada ao lado de um preflight de outro.
+
+```bash
+.venv/bin/python -m eval.dossier \
+  --slots docs/active-slots.json \
+  --candidate v009:A \
+  --comparison experiments/results/v009-vs-incumbent.json \
+  --standing experiments/results/v009-standing.json \
+  --preflight versions/v009/preflight.json \
+  --output docs/release-dossier.json
+```
+
+`eval.dossier` recusa antes de avaliar: se o hash avaliado, o hash do standing e o
+sha256 do preflight não forem o mesmo, o veredito é `NO DECISION` e nenhum número
+embaixo disso conserta. Nomear o slot deslocado basta — o incumbente é derivado da
+declaração, e é ele que `eval.submit_gate` confere contra a perna baseline que rodou.
+Somente leitura: não envia nada e não lê a conta do Kaggle.
+Veja [RELEASE_DOSSIER.md](docs/RELEASE_DOSSIER.md).
+
 ## Solver de blocos e política final
 
 [BLOCK_SOLVER.md](docs/BLOCK_SOLVER.md) descreve a primeira busca local de blocos,
@@ -144,3 +168,6 @@ seu comando e o resultado negativo inicial. É uma entrega parcial da #39.
 com respostas diretas dos hosts: episódios de toda a competição podem contar,
 desde que ambos os agentes continuem ativos. A #37 não depende mais de relato
 indireto nem da interpretação de avaliação somente após o prazo.
+[RELEASE_DOSSIER.md](docs/RELEASE_DOSSIER.md) descreve o veredito único de release
+da #47, que junta esses relatórios e recusa combinações que não falam do mesmo
+artefato.
