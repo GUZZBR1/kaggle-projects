@@ -6,17 +6,58 @@ transport implementation, but it is not evidence for issue #43's release gates.
 import argparse
 import atexit
 import json
+import os
 from pathlib import Path
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from arena.batch import make_batch  # noqa: E402
+from arena.batch import make_batch, run_batch  # noqa: E402
 from arena.jobs import plan  # noqa: E402
 from arena.ray_transport import connect  # noqa: E402
 
 NONDETERMINISTIC = {'runtime_ms', 'wall_seconds', 'hostname', 'git_commit', 'git_dirty'}
+
+
+class CrashGate:
+    """State survives the disposable worker that the recovery probe kills."""
+    def __init__(self):
+        self.seen = set()
+        self.calls = 0
+
+    def first(self, batch_id):
+        self.calls += 1
+        if batch_id in self.seen:
+            return False
+        self.seen.add(batch_id)
+        return True
+
+    def count(self):
+        return self.calls
+
+
+def crash_once(batch, workers, timeout, gate):
+    import ray
+    if ray.get(gate.first.remote(batch['batch_id'])):
+        os._exit(86)
+    return run_batch(batch, workers=workers, timeout=timeout)
+
+
+def verify_worker_recovery(mapper, batch, workers):
+    gate = mapper.ray.remote(num_cpus=0)(CrashGate).remote()
+    recovery_task = mapper.ray.remote(num_cpus=workers, max_retries=0,
+                                      retry_exceptions=False)(
+        lambda work, count, timeout: crash_once(work, count, timeout, gate))
+    original_task, mapper._task = mapper._task, recovery_task
+    try:
+        recovered = list(mapper([batch], workers))
+    finally:
+        mapper._task = original_task
+    calls = mapper.ray.get(gate.count.remote())
+    if len(recovered) != 1 or calls != 2:
+        raise SystemExit('A killed Ray worker did not resubmit exactly one batch')
+    return calls
 
 
 def exact_result(row):
@@ -77,13 +118,21 @@ def main():
         if row.get('timed_out') is not True or result['wall_seconds'] > deadline_limit:
             raise SystemExit(f'Deadline barrier failed on node {node["NodeID"]}')
 
+    # Ray's hidden retry stays disabled. The mapper observes one real worker death and
+    # explicitly resubmits the same batch; the actor keeps the probe's state outside the
+    # process being killed so the second attempt can finish.
+    recovery_attempts = verify_worker_recovery(mapper, make_batch([work[0]]),
+                                               args.cpus_per_worker)
+
     report = {'schema_version': 1, 'nodes': environments, 'hostnames': sorted(hostnames),
               'jobs_per_node': len(work), 'candidate': args.candidate,
               'opponent': args.opponent, 'seed_start': args.seed,
               'seed_pairs': args.pairs, 'bit_exact': True,
               'deadline_seconds': args.deadline,
               'deadline_limit_seconds': deadline_limit,
-              'deadline_passed_on_every_node': True}
+              'deadline_passed_on_every_node': True,
+              'worker_recovery_passed': True,
+              'worker_recovery_attempts': recovery_attempts}
     Path(args.output).write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
     print(json.dumps(report, indent=2))
     mapper.ray.shutdown()

@@ -46,7 +46,8 @@ resultado relevante serializado exatamente e roda em cada nó um agente que desl
 
 O comando recusa cluster de um único hostname, hash de agente diferente, fingerprint do
 motor diferente, qualquer diferença exata no resultado e deadline remoto que não mate o
-filho.
+filho. Ao final, ele mata um worker Ray de verdade na primeira tentativa e exige que o
+mapper reenvie aquele lote uma única vez; retries implícitos do Ray continuam desligados.
 
 Somente depois rode o benchmark. Os quatro tamanhos têm papéis diferentes: 32 é smoke,
 256 mede o scheduler local, 1024 mede throughput e 8000 representa a busca real.
