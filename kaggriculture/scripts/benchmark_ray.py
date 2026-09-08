@@ -1,6 +1,7 @@
 """Compare a private Ray cluster with the fastest per-node forkserver baseline."""
 import argparse
 import atexit
+import hashlib
 import json
 from pathlib import Path
 import sys
@@ -10,7 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 from arena.batch import batched_runner, make_batch, percentile  # noqa: E402
-from arena.jobs import plan  # noqa: E402
+from arena.jobs import git_provenance, plan  # noqa: E402
 from arena.ray_transport import connect  # noqa: E402
 
 
@@ -37,6 +38,43 @@ def game_result(row):
                       sort_keys=True, separators=(',', ':'), allow_nan=False)
 
 
+def load_verification(path, *, candidate, opponent, hostnames, current_git):
+    try:
+        raw = Path(path).read_bytes()
+        proof = json.loads(raw)
+    except (OSError, json.JSONDecodeError) as exc:
+        raise SystemExit(f'Cannot read Ray verification artifact: {exc}') from exc
+    required = ('paired_seats', 'bit_exact', 'money_binary64_exact',
+                'deadline_passed_on_every_node', 'worker_recovery_passed')
+    if proof.get('schema_version', 0) < 3 or any(proof.get(field) is not True
+                                                 for field in required):
+        raise SystemExit('Ray verification artifact has not passed every release gate')
+    if proof.get('candidate') != candidate or proof.get('opponent') != opponent:
+        raise SystemExit('Ray verification artifacts do not match benchmark agents')
+    if sorted(proof.get('hostnames', [])) != sorted(hostnames):
+        raise SystemExit('Ray verification hostnames do not match the current cluster')
+    if proof.get('seed_pairs', 0) < 200 or proof.get('jobs_per_node') != 2 * proof['seed_pairs']:
+        raise SystemExit('Ray verification does not cover 200 seeds in both seats')
+    verified_commit = proof.get('driver_git', {}).get('git_commit')
+    current_commit = current_git.get('git_commit')
+    if not verified_commit or not current_commit or verified_commit != current_commit:
+        raise SystemExit('Ray verification git commit does not match this benchmark')
+    determinism = proof.get('determinism_nodes', [])
+    recovery = proof.get('worker_recovery_nodes', [])
+    if ({item.get('hostname') for item in determinism} != set(hostnames)
+            or {item.get('hostname') for item in recovery} != set(hostnames)
+            or any(item.get('attempts') != 2 for item in recovery)):
+        raise SystemExit('Ray verification does not cover every current hostname')
+    result_digests = {item.get('relevant_result_sha256') for item in determinism}
+    money_digests = {item.get('money_binary64_sha256') for item in determinism}
+    if len(result_digests) != 1 or None in result_digests \
+            or len(money_digests) != 1 or None in money_digests:
+        raise SystemExit('Ray verification node digests are incomplete or divergent')
+    return {'path': str(path), 'sha256': hashlib.sha256(raw).hexdigest(),
+            'git_commit': verified_commit, 'hostnames': sorted(hostnames),
+            'jobs_per_node': proof.get('jobs_per_node')}
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--address', default='auto')
@@ -51,6 +89,8 @@ def main():
                         help='omit to keep at least eight waves queued per cluster slot')
     parser.add_argument('--minimum-representative-speedup', type=float, default=1.10,
                         help='required speedup for the 8000-job workload (default: 1.10)')
+    parser.add_argument('--verification',
+                        help='schema-3 output from verify_ray_cluster.py; required for 8000 jobs')
     parser.add_argument('--output', required=True)
     args = parser.parse_args()
     if args.minimum_representative_speedup <= 1:
@@ -64,10 +104,10 @@ def main():
 
     mapper = connect(args.address, cpus_per_worker=args.cpus_per_worker)
     atexit.register(mapper.ray.shutdown)
-    report = {'schema_version': 2, 'local_workers_cap': args.local_workers,
+    report = {'schema_version': 3, 'local_workers_cap': args.local_workers,
               'cluster_slots': mapper.available_slots,
               'cpus_per_worker': args.cpus_per_worker,
-              'cluster_hostnames': None, 'workloads': []}
+              'cluster_hostnames': None, 'verification': None, 'workloads': []}
     for count in counts:
         seeds = range(args.seed, args.seed + (count + 1) // 2)
         jobs = plan(args.candidate, [args.opponent], seeds, split='diagnostic')[:count]
@@ -81,6 +121,12 @@ def main():
             report['cluster_hostnames'] = hostnames
             if 8000 in counts and len(hostnames) < 2:
                 raise SystemExit('The representative benchmark requires two distinct hostnames')
+            if 8000 in counts and not args.verification:
+                raise SystemExit('The representative benchmark requires --verification first')
+            if args.verification:
+                report['verification'] = load_verification(
+                    args.verification, candidate=args.candidate, opponent=args.opponent,
+                    hostnames=hostnames, current_git=git_provenance(ROOT))
         elif hostnames != report['cluster_hostnames']:
             raise SystemExit('Ray cluster membership changed during the benchmark')
         local_runs = mapper.local_baseline_on_every_node(
@@ -125,6 +171,9 @@ def main():
         'passed': (None if representative is None else
                    representative['speedup'] >= args.minimum_representative_speedup),
     }
+    report['benchmark_valid'] = (report['verification'] is not None and
+                                 (representative is None or
+                                  report['throughput_gate']['passed'] is True))
     Path(args.output).write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
     if representative is not None and not report['throughput_gate']['passed']:
         raise SystemExit('Distributed 8000-job throughput did not beat the fastest local '

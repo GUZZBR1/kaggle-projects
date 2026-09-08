@@ -1,6 +1,6 @@
 import pytest
 
-from scripts.verify_ray_cluster import assert_identical
+from scripts.verify_ray_cluster import assert_identical, assert_paired_coverage
 
 
 def result(hostname, *, money=1.5, opponent_money=-0.0, score=1):
@@ -36,3 +36,9 @@ def test_any_other_relevant_result_difference_is_a_hard_failure():
             ({'NodeID': 'node-a'}, result('pc-a', score=1)),
             ({'NodeID': 'node-b'}, result('pc-b', score=0)),
         ])
+
+
+def test_release_coverage_requires_both_seats_for_every_seed():
+    assert_paired_coverage([{'seed': 1, 'seat': 0}, {'seed': 1, 'seat': 1}], 1)
+    with pytest.raises(SystemExit, match='both seats'):
+        assert_paired_coverage([{'seed': 1, 'seat': 0}, {'seed': 2, 'seat': 0}], 2)

@@ -99,3 +99,5 @@ em `RAY_CLUSTER.md`: determinismo do resultado completo e dos bytes binary64 de 
 deadline em dois hostnames e então o benchmark de
 32, 256, 1 024 e 8 000 jobs. O benchmark mede o `forkserver` em cada nó e usa o menor
 wall-clock como baseline; 8 000 jobs precisam superar esse baseline em pelo menos 1,10×.
+O relatório só é válido quando carrega o SHA-256 da prova A↔B do mesmo commit, dos mesmos
+hostnames e dos mesmos agentes.

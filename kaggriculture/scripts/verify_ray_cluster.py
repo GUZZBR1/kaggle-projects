@@ -16,10 +16,11 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 from arena.batch import make_batch, run_batch  # noqa: E402
-from arena.jobs import plan  # noqa: E402
+from arena.jobs import git_provenance, plan  # noqa: E402
 from arena.ray_transport import connect  # noqa: E402
 
 NONDETERMINISTIC = {'runtime_ms', 'wall_seconds', 'hostname', 'git_commit', 'git_dirty'}
+MINIMUM_SEED_PAIRS = 200
 
 
 class CrashGate:
@@ -125,6 +126,15 @@ def assert_identical(results):
     return evidence
 
 
+def assert_paired_coverage(work, expected_pairs):
+    coverage = {}
+    for job in work:
+        coverage.setdefault(job['seed'], []).append(job['seat'])
+    if len(coverage) != expected_pairs or any(sorted(seats) != [0, 1]
+                                               for seats in coverage.values()):
+        raise SystemExit('Determinism proof must cover both seats once for every seed')
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument('--address', default='auto')
@@ -138,6 +148,8 @@ def main():
     parser.add_argument('--deadline-overhead', type=float, default=15.)
     parser.add_argument('--output', required=True)
     args = parser.parse_args()
+    if args.pairs < MINIMUM_SEED_PAIRS:
+        parser.error(f'--pairs must be at least {MINIMUM_SEED_PAIRS} for release evidence')
 
     mapper = connect(args.address, cpus_per_worker=args.cpus_per_worker,
                      attempts=3, timeout=-1)
@@ -146,6 +158,7 @@ def main():
                 range(args.seed, args.seed + args.pairs), split='diagnostic')
     for job in work:
         job['telemetry_enabled'] = False
+    assert_paired_coverage(work, args.pairs)
     batch = make_batch(work)
     environments = mapper.verify_cluster([batch])
     hostnames = {node['hostname'] for node in environments}
@@ -171,9 +184,10 @@ def main():
                                             args.cpus_per_worker)
 
     report = {'schema_version': 3, 'nodes': environments, 'hostnames': sorted(hostnames),
+              'driver_git': git_provenance(ROOT),
               'jobs_per_node': len(work), 'candidate': args.candidate,
               'opponent': args.opponent, 'seed_start': args.seed,
-              'seed_pairs': args.pairs, 'bit_exact': True,
+              'seed_pairs': args.pairs, 'paired_seats': True, 'bit_exact': True,
               'money_binary64_exact': True,
               'determinism_nodes': determinism_nodes,
               'deadline_seconds': args.deadline,

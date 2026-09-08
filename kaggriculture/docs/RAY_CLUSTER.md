@@ -51,16 +51,20 @@ O comando recusa cluster de um único hostname, hash de agente diferente, finger
 motor diferente, qualquer diferença exata no resultado e deadline remoto que não mate o
 filho. `money` e `opponent_money` são comparados também pelos oito bytes IEEE-754 binary64,
 incluindo o sinal de zero; o artefato grava por NodeID os digests desses bytes e do resultado
-relevante completo. Ao final, ele mata um worker Ray de verdade na primeira tentativa e exige que o
-mapper reenvie aquele lote uma única vez. A morte e a recuperação são fixadas por afinidade
-e repetidas em cada NodeID vivo; retries implícitos do Ray continuam desligados.
+relevante completo. A prova de release exige pelo menos 200 seeds, cada um executado uma vez
+em cada assento; uma amostra menor é recusada. Ao final, ele mata um worker Ray de verdade
+na primeira tentativa e exige que o mapper reenvie aquele lote uma única vez. A morte e a
+recuperação são fixadas por afinidade e repetidas em cada NodeID vivo; retries implícitos
+do Ray continuam desligados.
 
 Somente depois rode o benchmark. Os quatro tamanhos têm papéis diferentes: 32 é smoke,
 256 mede o scheduler local, 1024 mede throughput e 8000 representa a busca real.
 
 ```bash
 .venv/bin/python scripts/benchmark_ray.py --address=auto \
-  --jobs=32,256,1024,8000 --output=docs/ray-benchmark.json
+  --jobs=32,256,1024,8000 \
+  --verification=docs/ray-cluster-verification.json \
+  --output=docs/ray-benchmark.json
 ```
 
 Antes da medição distribuída, o script roda o lote inteiro pela pool local em **cada** nó,
@@ -70,7 +74,10 @@ linhas por hostname, jobs/s, speedup, eficiência paralela, p50 e p95 de partida
 lote e utilização de CPU. No workload representativo de 8 000 jobs, o comando falha se o
 cluster não atingir ao menos 1,10× sobre o melhor `forkserver` local; esse limite pode ser
 elevado com `--minimum-representative-speedup`. Uma série que inclui 8 000 também recusa
-menos de dois hostnames distintos e mudança de membros durante a medição.
+menos de dois hostnames distintos e mudança de membros durante a medição. O benchmark liga
+o arquivo de verificação por SHA-256 e recusa schema, commit, hostnames, agentes, digests ou
+gates incompatíveis; sem `--verification`, uma série curta é apenas smoke e registra
+`benchmark_valid: false`, enquanto a série representativa nem começa.
 
 Referências operacionais: [segurança do Ray](https://docs.ray.io/en/latest/ray-security/index.html),
 [tolerância a falhas de tasks](https://docs.ray.io/en/latest/ray-core/fault_tolerance/tasks.html)
