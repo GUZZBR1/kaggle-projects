@@ -1,0 +1,92 @@
+{
+  "host": "DESKTOP-V3A6VJ6",
+  "cpus": 16,
+  "start_method": "forkserver",
+  "default_workers": 15,
+  "games": 32,
+  "batch_size": 8,
+  "rows": [
+    {
+      "workers": 1,
+      "mode": "direct",
+      "seconds": 21.592877674000192,
+      "seconds_per_game": 0.674777427312506,
+      "games_per_second": 1.481970142336838,
+      "speedup_vs_one_worker": 0.8799026306658401
+    },
+    {
+      "workers": 1,
+      "mode": "batched",
+      "seconds": 18.999629868998454,
+      "seconds_per_game": 0.5937384334062017,
+      "games_per_second": 1.6842433363512068,
+      "speedup_vs_one_worker": 1.0
+    },
+    {
+      "workers": 2,
+      "mode": "direct",
+      "seconds": 10.005927676000283,
+      "seconds_per_game": 0.31268523987500885,
+      "games_per_second": 3.198104267408768,
+      "speedup_vs_one_worker": 1.8988374176009701
+    },
+    {
+      "workers": 2,
+      "mode": "batched",
+      "seconds": 9.869908415999816,
+      "seconds_per_game": 0.30843463799999427,
+      "games_per_second": 3.2421780072574684,
+      "speedup_vs_one_worker": 1.92500569085309
+    },
+    {
+      "workers": 4,
+      "mode": "direct",
+      "seconds": 5.312481560999004,
+      "seconds_per_game": 0.16601504878121887,
+      "games_per_second": 6.023550318729473,
+      "speedup_vs_one_worker": 3.5764133297858645
+    },
+    {
+      "workers": 4,
+      "mode": "batched",
+      "seconds": 5.300958711999556,
+      "seconds_per_game": 0.16565495974998612,
+      "games_per_second": 6.0366438862394745,
+      "speedup_vs_one_worker": 3.584187484046951
+    },
+    {
+      "workers": 8,
+      "mode": "direct",
+      "seconds": 3.119009369002015,
+      "seconds_per_game": 0.09746904278131296,
+      "games_per_second": 10.25966780287005,
+      "speedup_vs_one_worker": 6.09155908854411
+    },
+    {
+      "workers": 8,
+      "mode": "batched",
+      "seconds": 3.1919908649979334,
+      "seconds_per_game": 0.09974971453118542,
+      "games_per_second": 10.02509134687662,
+      "speedup_vs_one_worker": 5.952282031048593
+    },
+    {
+      "workers": 14,
+      "mode": "direct",
+      "seconds": 2.6532272469994496,
+      "seconds_per_game": 0.0829133514687328,
+      "games_per_second": 12.06078372524969,
+      "speedup_vs_one_worker": 7.160950834680764
+    },
+    {
+      "workers": 14,
+      "mode": "batched",
+      "seconds": 3.1160707399976673,
+      "seconds_per_game": 0.0973772106249271,
+      "games_per_second": 10.269343243479753,
+      "speedup_vs_one_worker": 6.097303769494231
+    }
+  ],
+  "result_signature_stable": true,
+  "median_games_per_second": 6.030097102484474
+}
