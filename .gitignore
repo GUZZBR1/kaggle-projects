@@ -10,3 +10,4 @@ kaggriculture/submission/dist/
 kaggriculture/.tmp/
 *.egg-info/
 .env
+kaggriculture/versions/candidates/

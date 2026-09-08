@@ -115,3 +115,17 @@ Duas frentes, nessa ordem:
 
 O `yhay_router_0908` fica fixado como adversário de bancada: ele é hoje o teto
 medido do campo público na nossa arena, no lugar do `thomas_t95`.
+
+---
+
+> **Atualização (2026-09-08).** O `yhay_router_0908` deixou de ser o teto medido:
+> `versions/v004` reproduz o roteador dele exatamente e acrescenta uma única camada
+> reativa, e vence o confronto direto por 0,960 em seeds de validação reservadas.
+> Ver `docs/V004_ONE_LAYER.md`.
+>
+> Duas frentes que este documento propôs foram medidas e não pagam. Emendar as
+> fitas do `thomas_t95` na abertura do yhay dá 0,000 em quatro das cinco. E o
+> oráculo sobre as quatro fitas do yhay é 0,700 contra o `thomas_t95` onde a melhor
+> fita sozinha já faz 0,650, com empate entre todas as fitas em 49 de 80 contextos:
+> o roteamento sobre esta biblioteca está esgotado. Resta o ponto 5 do método dele,
+> gerar blocos próprios.

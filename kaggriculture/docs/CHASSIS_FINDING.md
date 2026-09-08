@@ -56,3 +56,21 @@ descobre quais delas realmente pagam, em vez de adotar as oito por fé.
 O `terminal_liquidation` e o `dead_stock` são os primeiros candidatos: nossa
 telemetria diária já reporta `unsold_items` e sobra de galpão, então o ganho é
 mensurável antes mesmo de implementar.
+
+---
+
+> **Correção (2026-09-08).** As duas conclusões centrais deste documento não
+> sobreviveram a um painel maior; ver `docs/V004_ONE_LAYER.md`.
+>
+> O v23 foi medido aqui em 0,920 agregado e 0,800 de pior família, mas o painel
+> não incluía o `yhay_router_0908`. Com ele dentro, nas mesmas 20 seeds `dev` e
+> nos dois assentos, o v23 faz **0,808 agregado e 0,250 de pior família**, porque
+> perde 0,250 para o yhay. A pior família de 0,800 era o `thomas_t95`, que é o
+> doador das fitas dele — quase um espelho.
+>
+> E o chassis não é o conserto genérico de uma fita replayada que este documento
+> propôs. Ele é um conjunto de camadas afinadas para a economia das fitas do
+> `thomas_t95`. Aplicado às fitas do yhay, o chassis completo faz 0,300 agregado e
+> perde 13 mil moedas para todas as famílias; a ablação camada a camada mostra que
+> o `budget_guard` sozinho responde por isso, ao drenar o caixa de que a
+> arbitragem de mercado dessas fitas depende. Seis das oito camadas são inertes.

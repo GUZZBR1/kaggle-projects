@@ -1,0 +1,22 @@
+{
+  "id": "aberatozer_v23",
+  "version": "v23",
+  "family": "reactive_chassis_over_public_tapes",
+  "kernel": "ahmedberatozer/notebook865729c24e",
+  "title": "v23 competitive submission (reactive chassis over thomas_t95 tapes)",
+  "source_url": "https://www.kaggle.com/code/ahmedberatozer/notebook865729c24e",
+  "path": "opponents/public/aberatozer_v23/main.py",
+  "sha256": "6eb728a40cc55f7e497add6ea2946ce38b0389c24531a208219d48587435838e",
+  "license": "Apache-2.0 (asserted in the file header, with the full licence text embedded)",
+  "captured_at": "2026-09-08",
+  "engine": {
+    "kaggle_environments": "1.32.7",
+    "interpreter_sha256": "bc8a54879ef02c7ea64b8b333d6a976f0ea65c4949149d01f463f23bccee653e"
+  },
+  "lineage": "The five thomas_t95 tapes, opening-normalised, driven by a reactive chassis of eight per-turn repair layers and a three-stage shop router.",
+  "adaptation_notes": "Downloaded verbatim as the notebook's output main.py; SHA-256 matches the digest the notebook asserts for its own build. No local edits.",
+  "base_selection_candidate": false,
+  "evaluation_opponent": true,
+  "usage": "benchmark opponent and, under Apache-2.0 with attribution, the source of the chassis this project builds on",
+  "retrieved_at": "2026-09-08"
+}

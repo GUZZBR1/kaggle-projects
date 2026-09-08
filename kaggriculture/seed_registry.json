@@ -1,17 +1,193 @@
 {
   "schema_version": 1,
-  "revision": 1,
+  "revision": 2,
   "holdout_start": 9000000,
   "entries": [
-    {"id": "diagnostic-low", "start": 0, "end": 1000, "classification": "diagnostic", "provenance": ["tests/: engine/unit/parity seeds; arena.match former default 123", "Reserved solely for compatibility and regression checks, never competitive evidence"]},
-    {"id": "dev", "start": 1000, "end": 1100, "classification": "dev", "provenance": ["config.yaml at 87b40bf", "docs/EXPERIMENT_C_CONTINUITY.md", "docs/EXPERIMENTS_A_B.md", "experiments/results/m0-v000/summary.json"]},
-    {"id": "issue3-consumed", "start": 100000, "end": 100100, "classification": "seen", "provenance": ["docs/issue3-provenance.json", "docs/ISSUE3_RESULTS.md"]},
-    {"id": "validation-reserved", "start": 100100, "end": 100200, "classification": "validation", "provenance": ["Issue #21 reservation", "2026-09-07 audit of reachable git reports, version artifacts and local experiment reports found no use in this interval"]},
-    {"id": "fertilize-consumed", "start": 200000, "end": 200100, "classification": "seen", "provenance": ["docs/EXPERIMENTS_A_B.md: 1400 paired validation games per configuration", "versions/v002/preflight.json and release documentation"]},
-    {"id": "official-preflight", "start": 314159, "end": 314160, "classification": "diagnostic", "provenance": ["submission/preflight.py", "versions/v001/preflight.json", "versions/v002/preflight.json"]},
-    {"id": "final-holdout", "start": 9000000, "end": null, "classification": "holdout", "provenance": ["config.yaml at 87b40bf; protected for separately authorized final evaluation"]}
+    {
+      "id": "diagnostic-low",
+      "start": 0,
+      "end": 1000,
+      "classification": "diagnostic",
+      "provenance": [
+        "tests/: engine/unit/parity seeds; arena.match former default 123",
+        "Reserved solely for compatibility and regression checks, never competitive evidence"
+      ]
+    },
+    {
+      "id": "dev",
+      "start": 1000,
+      "end": 1100,
+      "classification": "dev",
+      "provenance": [
+        "config.yaml at 87b40bf",
+        "docs/EXPERIMENT_C_CONTINUITY.md",
+        "docs/EXPERIMENTS_A_B.md",
+        "experiments/results/m0-v000/summary.json"
+      ]
+    },
+    {
+      "id": "issue3-consumed",
+      "start": 100000,
+      "end": 100100,
+      "classification": "seen",
+      "provenance": [
+        "docs/issue3-provenance.json",
+        "docs/ISSUE3_RESULTS.md"
+      ]
+    },
+    {
+      "id": "validation-reserved-r2-100100",
+      "start": 100100,
+      "end": 100125,
+      "classification": "seen",
+      "provenance": [
+        "Issue #21 reservation",
+        "2026-09-07 audit of reachable git reports, version artifacts and local experiment reports found no use in this interval",
+        "Consumed before run at registry revision 2"
+      ]
+    },
+    {
+      "id": "validation-reserved-r2-100125",
+      "start": 100125,
+      "end": 100200,
+      "classification": "validation",
+      "provenance": [
+        "Issue #21 reservation",
+        "2026-09-07 audit of reachable git reports, version artifacts and local experiment reports found no use in this interval"
+      ]
+    },
+    {
+      "id": "fertilize-consumed",
+      "start": 200000,
+      "end": 200100,
+      "classification": "seen",
+      "provenance": [
+        "docs/EXPERIMENTS_A_B.md: 1400 paired validation games per configuration",
+        "versions/v002/preflight.json and release documentation"
+      ]
+    },
+    {
+      "id": "official-preflight",
+      "start": 314159,
+      "end": 314160,
+      "classification": "diagnostic",
+      "provenance": [
+        "submission/preflight.py",
+        "versions/v001/preflight.json",
+        "versions/v002/preflight.json"
+      ]
+    },
+    {
+      "id": "final-holdout",
+      "start": 9000000,
+      "end": null,
+      "classification": "holdout",
+      "provenance": [
+        "config.yaml at 87b40bf; protected for separately authorized final evaluation"
+      ]
+    }
   ],
   "history": [
-    {"revision": 1, "date": "2026-09-07", "reason": "Initial inventory; 200000:200100 is already consumed, not a fresh validation reservation. Unregistered seeds fail closed."}
+    {
+      "revision": 1,
+      "date": "2026-09-07",
+      "reason": "Initial inventory; 200000:200100 is already consumed, not a fresh validation reservation. Unregistered seeds fail closed."
+    },
+    {
+      "revision": 2,
+      "date": "2026-09-08T13:18:52.478010+00:00",
+      "reason": "Reserved validation consumed before execution",
+      "seeds": [
+        100100,
+        100101,
+        100102,
+        100103,
+        100104,
+        100105,
+        100106,
+        100107,
+        100108,
+        100109,
+        100110,
+        100111,
+        100112,
+        100113,
+        100114,
+        100115,
+        100116,
+        100117,
+        100118,
+        100119,
+        100120,
+        100121,
+        100122,
+        100123,
+        100124
+      ],
+      "run": {
+        "candidate": "clock::versions/candidates/y_lead_only/main.py",
+        "candidate_hash": "fd478f8cc3ecfcc212c44f5e51fc2fa3c0fe223a009a6a01651f31666bcef9e3",
+        "paired_with": [
+          "clock::versions/candidates/y_bare/main.py"
+        ],
+        "batch_members": [
+          "cf4a26acf0bfd77a536885b8918ce55b15345088af4cf683ff9df4c21591764d",
+          "fd478f8cc3ecfcc212c44f5e51fc2fa3c0fe223a009a6a01651f31666bcef9e3"
+        ],
+        "opponents": [
+          "clock::opponents/public/thomas_t95/main.py",
+          "clock::opponents/public/thomas_t93/main.py",
+          "clock::opponents/public/kaitofukami_v48/main.py",
+          "clock::opponents/public/cok_v10/main.py",
+          "clock::opponents/public/boatlee_v21/main.py",
+          "clock::opponents/public/yhay_router_0908/main.py",
+          "clock::opponents/public/aberatozer_v23/main.py"
+        ],
+        "opponent_hashes": {
+          "clock::opponents/public/thomas_t95/main.py": "76254cf98142ec312ec677a73b678294f5ff574295640c74b319683fa6b00c4b",
+          "clock::opponents/public/thomas_t93/main.py": "3085587328f1df57f8b0ce554c2ab7aac5fb1e023cf16d650fd199d7b0c60bbe",
+          "clock::opponents/public/kaitofukami_v48/main.py": "8dd33dd4e7334d95be42674b6694fe576e62fb5d584ce66bc138c926d5b8bff8",
+          "clock::opponents/public/cok_v10/main.py": "8bbfcd45849e133b9f657a8d3872bb8582faf639d4e1ea470b0e6638a89382d9",
+          "clock::opponents/public/boatlee_v21/main.py": "d076d212da823f19b220571931ee219333aa2ffccab6ffaf9170663871629767",
+          "clock::opponents/public/yhay_router_0908/main.py": "fca9646b4ceec1e395f28ea2354fccd1a4ee993df5b1453249f6b4b848692c2c",
+          "clock::opponents/public/aberatozer_v23/main.py": "aff02bb9b2c07ca922f2d1a96f13fa63c31769bc6ba9623f0be881590765bdcc"
+        },
+        "backend": "fast",
+        "seeds": [
+          100100,
+          100101,
+          100102,
+          100103,
+          100104,
+          100105,
+          100106,
+          100107,
+          100108,
+          100109,
+          100110,
+          100111,
+          100112,
+          100113,
+          100114,
+          100115,
+          100116,
+          100117,
+          100118,
+          100119,
+          100120,
+          100121,
+          100122,
+          100123,
+          100124
+        ],
+        "seats": [
+          0,
+          1
+        ],
+        "requested_at": "2026-09-08T13:18:52.474831+00:00"
+      },
+      "batch": "23ab1be075b0e1390e4ca9142450612ad3e463f60577852a5bed02494c0b503f",
+      "previous_sha256": "f74c46693207e4c1108df4df48405466bf71de88bf6a717d883c72648d845653"
+    }
   ]
 }

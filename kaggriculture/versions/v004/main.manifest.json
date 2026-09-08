@@ -1,0 +1,107 @@
+{
+  "version": "v004",
+  "kind": "chassis_tape_portfolio",
+  "sha256": "133443035c9386bc0879293010d558f659222ea014593646ce908a10217d8c83",
+  "builder": "experiments/chassis_portfolio.py",
+  "tapes": [
+    {
+      "index": 0,
+      "sha256": "2c413946a556e6fb93d939d31db64ec39fddba53b45ac3873ad687451889beb5",
+      "origin": "opponents/public/yhay_router_0908/actions.json [0]"
+    },
+    {
+      "index": 1,
+      "sha256": "291af96e4f62a5dee66bab2d74b6f2fbeebc918faf77cc36ec7bf9e59e42b919",
+      "origin": "opponents/public/yhay_router_0908/actions.json [1]"
+    },
+    {
+      "index": 2,
+      "sha256": "d44a2b71bda9a3852c7cc03a56e07c9c52f3d3845ce497b49582d35b088392d9",
+      "origin": "opponents/public/yhay_router_0908/actions.json [2]"
+    },
+    {
+      "index": 3,
+      "sha256": "ae5266ed3a5f7bebca746636c1fd7976a21d414bcfe0cde0d88a46082d8b48ad",
+      "origin": "opponents/public/yhay_router_0908/actions.json [3]"
+    }
+  ],
+  "tape_roles": {
+    "0": "default season plan, and the opening every route shares",
+    "1": "season plan taken when the town has opened a yarn store by step 144",
+    "2": "route 0 with an alternative terminal liquidation ordering (differs from step 649)",
+    "3": "route 0 with a second terminal ordering (differs at steps 672-673 only)"
+  },
+  "stages": [
+    [
+      144,
+      "shop_count",
+      "YARN_STORE",
+      0.5,
+      1,
+      0
+    ],
+    [
+      648,
+      "market_inventory",
+      "EGG",
+      9888,
+      3,
+      2
+    ]
+  ],
+  "stage_description": "At step 144 take tape 1 when the town has opened a yarn store, otherwise stay on tape 0. At step 648 take tape 3 when the market holds more than 9888 EGG, otherwise tape 2. Both stages are yhay81's own, translated from its model.json and verified to reproduce its play exactly.",
+  "chassis": {
+    "source": "opponents/public/aberatozer_v23/main.py",
+    "source_sha256": "6eb728a40cc55f7e497add6ea2946ce38b0389c24531a208219d48587435838e",
+    "layers_enabled": [
+      "sell_lead"
+    ],
+    "layers_disabled": [
+      "hand_align",
+      "weed_repair",
+      "front_run",
+      "budget_guard",
+      "room_guard",
+      "clamp_sells",
+      "dead_stock",
+      "terminal_liquidation"
+    ],
+    "note": "Every layer was measured alone. budget_guard alone destroys these tapes (0.000 against every family, -17k coins) because it funds block purchases by selling, which dismantles the market arbitrage these tapes run on. Six more are inert. sell_lead is the only one that pays, so it is the only one enabled."
+  },
+  "measured": {
+    "dev": {
+      "seeds": "1070:1090",
+      "games": 280,
+      "aggregate": 0.921,
+      "worst_family": 0.75,
+      "vs_yhay_router_0908": {
+        "score": 1.0,
+        "mean_margin": 2285
+      },
+      "baseline_yhay": {
+        "aggregate": 0.85,
+        "worst_family": 0.75
+      }
+    },
+    "validation": {
+      "seeds": "100100:100125",
+      "games": 350,
+      "aggregate": 0.889,
+      "worst_family": 0.72,
+      "vs_yhay_router_0908": {
+        "score": 0.96,
+        "mean_margin": 2059
+      },
+      "baseline_yhay": {
+        "aggregate": 0.809,
+        "worst_family": 0.68
+      },
+      "note": "Paired against the same artifact without the layer, on reserved validation seeds. Every opponent improves in both score and margin."
+    }
+  },
+  "provenance": "The four action tapes and the two routing stages are yhay81's, from the public Kaggle notebook yhay81/shop-router-0908, pinned in opponents/public/yhay_router_0908. The runtime is the Apache-2.0 chassis published by ahmedberatozer, pinned in opponents/public/aberatozer_v23, reused whole and unmodified under its licence with the licence text and credit lines carried in this file. This project's own contribution is the measurement: reproducing the router exactly, then measuring every chassis layer alone to find which one pays on these tapes and which one destroys them. The hosts have stated that public notebooks and public replays are fair use for building a submission (forum topics #737788 and #738837).",
+  "engine": {
+    "kaggle_environments": "1.32.7",
+    "interpreter_sha256": "bc8a54879ef02c7ea64b8b333d6a976f0ea65c4949149d01f463f23bccee653e"
+  }
+}

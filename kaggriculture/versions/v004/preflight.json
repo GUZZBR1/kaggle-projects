@@ -1,0 +1,40 @@
+{
+  "artifact": "/mnt/d/Projects/kaggle-projects/kaggriculture/versions/v004/main.py",
+  "sha256": "133443035c9386bc0879293010d558f659222ea014593646ce908a10217d8c83",
+  "environment": {
+    "version": "1.32.7",
+    "interpreter_sha256": "bc8a54879ef02c7ea64b8b333d6a976f0ea65c4949149d01f463f23bccee653e",
+    "specification_sha256": "a82c89c1a2315b93f39775d8e025471a01b738647c9772658368ee6b1b6f4867"
+  },
+  "seed": 314159,
+  "states": 720,
+  "rewards": [
+    59586.0,
+    59586.0
+  ],
+  "liveness": [
+    {
+      "turns": 719,
+      "farmer_actions": 648,
+      "farmer_action_rate": 0.9012517385257302,
+      "first_farmer_action": "PASS",
+      "first_acting_turn": 1,
+      "hand_actions": 5730,
+      "market_orders": 1009,
+      "longest_idle_streak": 1,
+      "distinct_farmer_actions": 17
+    },
+    {
+      "turns": 719,
+      "farmer_actions": 648,
+      "farmer_action_rate": 0.9012517385257302,
+      "first_farmer_action": "PASS",
+      "first_acting_turn": 1,
+      "hand_actions": 5730,
+      "market_orders": 1009,
+      "longest_idle_streak": 1,
+      "distinct_farmer_actions": 17
+    }
+  ],
+  "status": "PASSED"
+}

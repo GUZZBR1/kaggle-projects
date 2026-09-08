@@ -75,3 +75,20 @@ A implementação fica, correta e testada, com `lead_sale` ligado por padrão. E
 não custa nada, não dispara nas nossas fitas hoje, e num ladder onde muita gente
 roda o mesmo notebook público um desempate a favor tem valor real — mas é isso
 que ela é, e o docstring agora diz isso.
+
+---
+
+> **Adendo (2026-09-08).** A retratação acima continua correta para as *nossas*
+> fitas, e pelo motivo que ela dá: elas vendem no primeiro instante possível, então
+> não há folga para antecipar e o único efeito observável era ganhar o empate do
+> espelho por uma moeda.
+>
+> Nas fitas do `yhay81/shop-router-0908` há folga, e a camada vale de verdade. Em
+> 25 seeds do split `validation`, sete famílias, dois assentos, 350 partidas por
+> perna, ligá-la melhora **todos** os oponentes em placar e em margem, e o
+> confronto direto contra o doador é 0,960 com **2 059 moedas** de margem média —
+> não uma moeda. Ver `docs/V004_ONE_LAYER.md`.
+>
+> A lição de método deste documento é o que permitiu distinguir os dois casos:
+> olhar a distribuição de margens antes de aceitar o placar. Ela não muda; muda
+> apenas a conclusão sobre a camada, que agora depende da fita em que ela roda.

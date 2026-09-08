@@ -35,8 +35,12 @@ def test_the_shipped_registry_is_well_formed():
 
 
 def test_documented_history_keeps_its_classification():
+    # 100100:100125 was reserved validation until the v004 paired comparison spent
+    # it; consuming a reservation reclassifies exactly the seeds used and leaves the
+    # rest of the interval reserved, which is what the last two rows assert.
     for seed, split in [(1000, 'dev'), (1099, 'dev'), (100000, 'seen'), (100099, 'seen'),
-                        (100100, 'validation'), (314159, 'diagnostic')]:
+                        (100100, 'seen'), (100124, 'seen'), (100125, 'validation'),
+                        (314159, 'diagnostic')]:
         assert validate_seeds([seed], split)['split'] == split
 
 
