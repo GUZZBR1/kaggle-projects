@@ -1,0 +1,52 @@
+{
+  "sources": [
+    {
+      "url": "https://www.kaggle.com/competitions/kaggriculture/discussion/732931",
+      "retrieved_at": "2026-09-08",
+      "sha256": "7b428086ffa92cf2c35aa558cfe5aa10dfec77ae63ed1b34ee45b6782088d017",
+      "format": "Firecrawl markdown"
+    },
+    {
+      "url": "https://www.kaggle.com/competitions/kaggriculture/discussion/739410",
+      "retrieved_at": "2026-09-08",
+      "sha256": "fc6449bb8aacfa52c119ea216d711fab8ef5c18f1a0ff29d0c42dbed8ba194b7",
+      "format": "Firecrawl markdown"
+    },
+    {
+      "url": "https://www.kaggle.com/competitions/kaggriculture/overview/evaluation",
+      "retrieved_at": "2026-09-08",
+      "sha256": "1cbfc6c2774614108104542f435d0683058401606d44a3b08051a081422275f3",
+      "format": "Firecrawl markdown"
+    },
+    {
+      "url": "https://www.kaggle.com/competitions/kaggriculture/discussion/736219",
+      "retrieved_at": "2026-09-08",
+      "sha256": "e03e5f84ff9ba692aa2261662bbd7c37b66865852764cbfdec2f4d909dd0ac1d",
+      "format": "Firecrawl markdown"
+    },
+    {
+      "url": "https://www.kaggle.com/competitions/kaggriculture/discussion/737788",
+      "retrieved_at": "2026-09-08",
+      "sha256": "706c297715cdf9299b42e52b95db2697da81189e7b9046bb184c9b54582957e2",
+      "format": "Firecrawl markdown"
+    },
+    {
+      "url": "https://www.kaggle.com/competitions/kaggriculture/discussion/738837",
+      "retrieved_at": "2026-09-08",
+      "sha256": "874a4c57c48bc881c8b01a5eadcafb507aa3fe5ae18471079c6ef4b5767fc659",
+      "format": "Firecrawl markdown"
+    }
+  ],
+  "confirmed": {
+    "episode_period": "whole competition",
+    "both_agents_active_required": true,
+    "active_submissions_per_team": 2,
+    "team_score": "better of the two submissions",
+    "tie_score": 0.5
+  },
+  "unconfirmed": [
+    "current rating as prior",
+    "post-deadline episode rate",
+    "failed upload effect on active slots"
+  ]
+}

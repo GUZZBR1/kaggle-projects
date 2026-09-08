@@ -52,7 +52,7 @@ def decide(comparison):
         reasons.append('Positive strong-cohort CI95 over at least 100 paired blocks, no strong-opponent regression, and improvement survives each strong opponent and family removal.')
     return {'verdict': verdict, 'policy_version': 1, 'reasons': reasons,
             'candidate_hash': comparison.get('snapshot', {}).get('candidate_hash'),
-            'note': 'Local competitive gate only. Artifact preflight and the active-slot policy must also be satisfied.'}
+            'note': 'Local competitive gate only. Artifact preflight and docs/FINAL_SUBMISSION_POLICY.md must also be satisfied.'}
 
 
 def main():

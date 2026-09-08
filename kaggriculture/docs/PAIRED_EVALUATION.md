@@ -3,7 +3,7 @@
 A decisão competitiva usa vitórias, derrotas e empates (0,5), com a coorte forte
 como métrica primária. Margem e dinheiro permanecem diagnósticos. O gate é uma
 recomendação local; não envia arquivos e não substitui preflight nem a política
-de agentes ativos investigada na #37.
+de agentes ativos confirmada na #37: veja [FINAL_SUBMISSION_POLICY.md](FINAL_SUBMISSION_POLICY.md).
 
 ## Um comando para as duas pernas
 
