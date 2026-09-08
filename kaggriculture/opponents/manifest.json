@@ -1,12 +1,68 @@
 [
   {
     "id": "cok_v10",
+    "version": "v10",
     "family": "public_adaptive_livestock_routes",
     "repository": "https://github.com/COK-ZhangZiliang/Kaggriculture",
+    "source_url": "https://github.com/COK-ZhangZiliang/Kaggriculture",
     "commit": "7ef67eac458cd9ecd13786063e2e581fbe7403ec",
     "path": "opponents/public/cok_v10/main.py",
-    "sha256": "56831f3c43c9727d90016b7a7a8d4eb51d1a4c08c1120d58f061d9176e8bc109",
-    "license": "Apache-2.0; see retained THIRD_PARTY_NOTICES.md",
+    "sha256": "1c7335f698692f1c7bac34913a9ededc0f736dfb2b51346a4fa59098ab471d01",
+    "upstream_sha256": "56831f3c43c9727d90016b7a7a8d4eb51d1a4c08c1120d58f061d9176e8bc109",
+    "license": "Apache-2.0",
+    "captured_at": "2026-09-07",
+    "engine": {
+      "kaggle_environments": "1.32.7",
+      "interpreter_sha256": "bc8a54879ef02c7ea64b8b333d6a976f0ea65c4949149d01f463f23bccee653e"
+    },
+    "lineage": "Public adaptive livestock routes reconstructed from public episode replay behavior.",
+    "adaptation_notes": "Local pinned file hash is the byte-for-byte artifact in this workspace; the upstream pre-normalization hash is preserved separately for provenance. See THIRD_PARTY_NOTICES.md.",
+    "base_selection_candidate": true,
+    "evaluation_opponent": true,
+    "usage": "benchmark opponent only",
+    "retrieved_at": "2026-09-07"
+  },
+  {
+    "id": "seyamalam_v21",
+    "version": "v21",
+    "family": "route_market_recovery",
+    "repository": "https://github.com/Seyamalam/Kaggriculture",
+    "source_url": "https://github.com/Seyamalam/Kaggriculture",
+    "commit": "8b8c421eb10634c756583ce10c75189f50c83a72",
+    "path": "opponents/public/seyamalam_v21/main.py",
+    "sha256": "0cd14b653102d276c4f902fa3b8c6bd81d869b8ab64c422cb881b9d2346ec639",
+    "license": "MIT",
+    "captured_at": "2026-09-07",
+    "engine": {
+      "kaggle_environments": "1.32.7",
+      "interpreter_sha256": "bc8a54879ef02c7ea64b8b333d6a976f0ea65c4949149d01f463f23bccee653e"
+    },
+    "lineage": "Public route + market-recovery overlay from the upstream Kaggriculture research repository.",
+    "adaptation_notes": "Imported verbatim from the pinned upstream commit; no local edits or replay reconstruction.",
+    "base_selection_candidate": true,
+    "evaluation_opponent": true,
+    "usage": "benchmark opponent only",
+    "retrieved_at": "2026-09-07"
+  },
+  {
+    "id": "lonespear_v11",
+    "version": "v11",
+    "family": "standing_on_work_livestock",
+    "repository": "https://github.com/lonespear/kaggriculture",
+    "source_url": "https://github.com/lonespear/kaggriculture",
+    "commit": "774b26093ccf4246525517d48420349b841b6e50",
+    "path": "opponents/public/lonespear_v11/main.py",
+    "sha256": "eb5b5f59a8ec2d40b77cc99d4ffe3b932136fdcf9f6b6e168726b7f07ab47cb0",
+    "license": "MIT",
+    "captured_at": "2026-09-07",
+    "engine": {
+      "kaggle_environments": "1.32.7",
+      "interpreter_sha256": "bc8a54879ef02c7ea64b8b333d6a976f0ea65c4949149d01f463f23bccee653e"
+    },
+    "lineage": "Livestock/economy lineage with standing-on-work assignment and a stateless policy loop.",
+    "adaptation_notes": "Imported verbatim from the pinned upstream commit; upstream names this artifact v11, so the local directory and manifest use v11 as well.",
+    "base_selection_candidate": true,
+    "evaluation_opponent": true,
     "usage": "benchmark opponent only",
     "retrieved_at": "2026-09-07"
   }

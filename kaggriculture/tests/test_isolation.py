@@ -157,7 +157,7 @@ def test_registering_a_private_helper_module_is_not_tampering(tmp_path):
 
 @pytest.mark.parametrize('name', ['opponents/public/cok_v10/main.py', 'opponents/frozen/crop/main.py',
                                   'opponents/frozen/animal/main.py', 'versions/v000/main.py',
-                                  'versions/v002/main.py', 'champion'])
+                                  'versions/v002/main.py', 'champion', 'liquidity_first'])
 def test_every_bundle_the_project_actually_runs_loads_clean(name):
     load_agent(name)
     assert load_agent.last_tampering == []

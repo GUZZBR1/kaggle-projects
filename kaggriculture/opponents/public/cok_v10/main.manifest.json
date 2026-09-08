@@ -1,0 +1,22 @@
+{
+  "id": "cok_v10",
+  "version": "v10",
+  "family": "public_adaptive_livestock_routes",
+  "repository": "https://github.com/COK-ZhangZiliang/Kaggriculture",
+  "source_url": "https://github.com/COK-ZhangZiliang/Kaggriculture",
+  "commit": "7ef67eac458cd9ecd13786063e2e581fbe7403ec",
+  "path": "opponents/public/cok_v10/main.py",
+  "sha256": "1c7335f698692f1c7bac34913a9ededc0f736dfb2b51346a4fa59098ab471d01",
+  "upstream_sha256": "56831f3c43c9727d90016b7a7a8d4eb51d1a4c08c1120d58f061d9176e8bc109",
+  "license": "Apache-2.0",
+  "captured_at": "2026-09-07",
+  "engine": {
+    "kaggle_environments": "1.32.7",
+    "interpreter_sha256": "bc8a54879ef02c7ea64b8b333d6a976f0ea65c4949149d01f463f23bccee653e"
+  },
+  "lineage": "Public adaptive livestock routes reconstructed from public episode replay behavior.",
+  "adaptation_notes": "Local pinned file hash is the byte-for-byte artifact in this workspace; the upstream pre-normalization hash is preserved separately for provenance. See THIRD_PARTY_NOTICES.md.",
+  "base_selection_candidate": true,
+  "evaluation_opponent": true,
+  "usage": "benchmark opponent only"
+}

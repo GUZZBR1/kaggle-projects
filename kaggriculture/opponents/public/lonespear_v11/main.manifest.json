@@ -1,0 +1,21 @@
+{
+  "id": "lonespear_v11",
+  "version": "v11",
+  "family": "standing_on_work_livestock",
+  "repository": "https://github.com/lonespear/kaggriculture",
+  "source_url": "https://github.com/lonespear/kaggriculture",
+  "commit": "774b26093ccf4246525517d48420349b841b6e50",
+  "path": "opponents/public/lonespear_v11/main.py",
+  "sha256": "eb5b5f59a8ec2d40b77cc99d4ffe3b932136fdcf9f6b6e168726b7f07ab47cb0",
+  "license": "MIT",
+  "captured_at": "2026-09-07",
+  "engine": {
+    "kaggle_environments": "1.32.7",
+    "interpreter_sha256": "bc8a54879ef02c7ea64b8b333d6a976f0ea65c4949149d01f463f23bccee653e"
+  },
+  "lineage": "Livestock/economy lineage with standing-on-work assignment and a stateless policy loop.",
+  "adaptation_notes": "Imported verbatim from the pinned upstream commit; upstream names this artifact v11, so the local directory and manifest use v11 as well.",
+  "base_selection_candidate": true,
+  "evaluation_opponent": true,
+  "usage": "benchmark opponent only"
+}

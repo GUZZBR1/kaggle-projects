@@ -6,7 +6,8 @@ import pytest
 from agent.planner import policy
 from agent.state import State
 from arena.engine import make_environment
-from arena.match import observations, run_match
+import arena.match as match_module
+from arena.match import deadline, observations, run_match
 
 
 def clock(step, day=3, hour=7, turns=24):
@@ -39,6 +40,15 @@ def test_turns_left_follows_the_derived_step():
     state = State({'day': 29, 'hour': 23}, {'turnsPerDay': 24, 'episodeSteps': 720})
     assert state.step == 719
     assert state.turns_left == 0
+
+
+def test_deadline_falls_back_without_sigalrm(monkeypatch):
+    monkeypatch.delattr(match_module.signal, 'SIGALRM', raising=False)
+    ticks = iter((10.0, 12.0))
+    monkeypatch.setattr(match_module.time, 'perf_counter', lambda: next(ticks))
+    with pytest.raises(TimeoutError, match='deadline exceeded'):
+        with deadline(1):
+            pass
 
 
 def test_the_official_framework_gives_both_players_the_same_clock():

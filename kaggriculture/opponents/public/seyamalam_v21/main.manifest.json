@@ -1,0 +1,21 @@
+{
+  "id": "seyamalam_v21",
+  "version": "v21",
+  "family": "route_market_recovery",
+  "repository": "https://github.com/Seyamalam/Kaggriculture",
+  "source_url": "https://github.com/Seyamalam/Kaggriculture",
+  "commit": "8b8c421eb10634c756583ce10c75189f50c83a72",
+  "path": "opponents/public/seyamalam_v21/main.py",
+  "sha256": "0cd14b653102d276c4f902fa3b8c6bd81d869b8ab64c422cb881b9d2346ec639",
+  "license": "MIT",
+  "captured_at": "2026-09-07",
+  "engine": {
+    "kaggle_environments": "1.32.7",
+    "interpreter_sha256": "bc8a54879ef02c7ea64b8b333d6a976f0ea65c4949149d01f463f23bccee653e"
+  },
+  "lineage": "Public route + market-recovery overlay from the upstream Kaggriculture research repository.",
+  "adaptation_notes": "Imported verbatim from the pinned upstream commit; no local edits or replay reconstruction.",
+  "base_selection_candidate": true,
+  "evaluation_opponent": true,
+  "usage": "benchmark opponent only"
+}
