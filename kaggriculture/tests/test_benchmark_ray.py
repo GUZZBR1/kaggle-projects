@@ -16,7 +16,12 @@ def proof():
         'candidate': 'candidate.py',
         'opponent': 'opponent.py',
         'hostnames': ['pc-a', 'pc-b'],
-        'driver_git': {'git_commit': 'abc123'},
+        'driver_git': {'git_commit': 'abc123', 'git_dirty': False},
+        'nodes': [
+            {'hostname': host, 'python': '3.12.0', 'environment': {'engine': 'same'},
+             'artifacts': {'candidate.py': 'candidate-hash',
+                           'opponent.py': 'opponent-hash'}} for host in ('pc-a', 'pc-b')
+        ],
         'jobs_per_node': 400,
         'seed_pairs': 200,
         'determinism_nodes': [
@@ -37,8 +42,8 @@ def write(tmp_path, value):
 
 def load(path, **changes):
     arguments = {'candidate': 'candidate.py', 'opponent': 'opponent.py',
-                 'hostnames': ['pc-a', 'pc-b'],
-                 'current_git': {'git_commit': 'abc123'}}
+                 'environments': proof()['nodes'],
+                 'current_git': {'git_commit': 'abc123', 'git_dirty': False}}
     arguments.update(changes)
     return load_verification(path, **arguments)
 
@@ -58,6 +63,10 @@ def test_benchmark_binds_the_exact_verification_artifact(tmp_path):
     (lambda value: value.update(hostnames=['pc-a']), 'current cluster'),
     (lambda value: value.update(seed_pairs=1, jobs_per_node=2), '200 seeds'),
     (lambda value: value['driver_git'].update(git_commit='old'), 'git commit'),
+    (lambda value: value['driver_git'].update(git_dirty=True), 'git commit'),
+    (lambda value: value['nodes'][1]['artifacts'].update(
+        **{'candidate.py': 'changed'}), 'artifacts changed'),
+    (lambda value: value['nodes'][1].update(python='3.13.0'), 'python changed'),
     (lambda value: value['worker_recovery_nodes'].pop(), 'every current hostname'),
     (lambda value: value['determinism_nodes'][1].update(
         money_binary64_sha256='different'), 'digests'),

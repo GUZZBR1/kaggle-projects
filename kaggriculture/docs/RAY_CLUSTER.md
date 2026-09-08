@@ -76,7 +76,8 @@ cluster não atingir ao menos 1,10× sobre o melhor `forkserver` local; esse lim
 elevado com `--minimum-representative-speedup`. Uma série que inclui 8 000 também recusa
 menos de dois hostnames distintos e mudança de membros durante a medição. O benchmark liga
 o arquivo de verificação por SHA-256 e recusa schema, commit, hostnames, agentes, digests ou
-gates incompatíveis; sem `--verification`, uma série curta é apenas smoke e registra
+gates incompatíveis. Checkout sujo também é recusado, e Python, fingerprint do motor e
+hashes dos agentes são comparados novamente por hostname; sem `--verification`, uma série curta é apenas smoke e registra
 `benchmark_valid: false`, enquanto a série representativa nem começa.
 
 Referências operacionais: [segurança do Ray](https://docs.ray.io/en/latest/ray-security/index.html),

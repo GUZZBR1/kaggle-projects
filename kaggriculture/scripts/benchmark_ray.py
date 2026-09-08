@@ -38,7 +38,7 @@ def game_result(row):
                       sort_keys=True, separators=(',', ':'), allow_nan=False)
 
 
-def load_verification(path, *, candidate, opponent, hostnames, current_git):
+def load_verification(path, *, candidate, opponent, environments, current_git):
     try:
         raw = Path(path).read_bytes()
         proof = json.loads(raw)
@@ -51,14 +51,26 @@ def load_verification(path, *, candidate, opponent, hostnames, current_git):
         raise SystemExit('Ray verification artifact has not passed every release gate')
     if proof.get('candidate') != candidate or proof.get('opponent') != opponent:
         raise SystemExit('Ray verification artifacts do not match benchmark agents')
-    if sorted(proof.get('hostnames', [])) != sorted(hostnames):
+    hostnames = sorted({item.get('hostname') for item in environments})
+    if sorted(proof.get('hostnames', [])) != hostnames:
         raise SystemExit('Ray verification hostnames do not match the current cluster')
     if proof.get('seed_pairs', 0) < 200 or proof.get('jobs_per_node') != 2 * proof['seed_pairs']:
         raise SystemExit('Ray verification does not cover 200 seeds in both seats')
     verified_commit = proof.get('driver_git', {}).get('git_commit')
     current_commit = current_git.get('git_commit')
-    if not verified_commit or not current_commit or verified_commit != current_commit:
+    if (not verified_commit or not current_commit or verified_commit != current_commit
+            or proof.get('driver_git', {}).get('git_dirty') is not False
+            or current_git.get('git_dirty') is not False):
         raise SystemExit('Ray verification git commit does not match this benchmark')
+    verified_nodes = {item.get('hostname'): item for item in proof.get('nodes', [])}
+    current_nodes = {item.get('hostname'): item for item in environments}
+    if set(verified_nodes) != set(hostnames) or set(current_nodes) != set(hostnames):
+        raise SystemExit('Ray environment evidence does not cover every current hostname')
+    for hostname in hostnames:
+        before, now = verified_nodes[hostname], current_nodes[hostname]
+        for field in ('python', 'environment', 'artifacts'):
+            if before.get(field) != now.get(field):
+                raise SystemExit(f'Ray {field} changed on {hostname} after verification')
     determinism = proof.get('determinism_nodes', [])
     recovery = proof.get('worker_recovery_nodes', [])
     if ({item.get('hostname') for item in determinism} != set(hostnames)
@@ -71,7 +83,8 @@ def load_verification(path, *, candidate, opponent, hostnames, current_git):
             or len(money_digests) != 1 or None in money_digests:
         raise SystemExit('Ray verification node digests are incomplete or divergent')
     return {'path': str(path), 'sha256': hashlib.sha256(raw).hexdigest(),
-            'git_commit': verified_commit, 'hostnames': sorted(hostnames),
+            'git_commit': verified_commit, 'hostnames': hostnames,
+            'artifacts': current_nodes[hostnames[0]]['artifacts'],
             'jobs_per_node': proof.get('jobs_per_node')}
 
 
@@ -126,7 +139,7 @@ def main():
             if args.verification:
                 report['verification'] = load_verification(
                     args.verification, candidate=args.candidate, opponent=args.opponent,
-                    hostnames=hostnames, current_git=git_provenance(ROOT))
+                    environments=environments, current_git=git_provenance(ROOT))
         elif hostnames != report['cluster_hostnames']:
             raise SystemExit('Ray cluster membership changed during the benchmark')
         local_runs = mapper.local_baseline_on_every_node(
