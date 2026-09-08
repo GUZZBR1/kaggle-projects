@@ -22,8 +22,8 @@
   "ladder_rating": {
     "rating": 2618.5,
     "observed_at": "2026-09-08",
-    "kind": "author_current",
+    "kind": "author_upper_bound",
     "source": "author team 'track' (ahmedberatozer), rank 125 of 8177, public leaderboard snapshot kaggriculture-publicleaderboard-2026-09-08T13:56:14.csv",
-    "note": "notebook865729c24e is the author's only published kaggriculture notebook"
+    "note": "notebook865729c24e, superseded by the same author's notebookd5e3d21fa6 (pinned as aberatozer_d5e3); above the cut, so this bound decides nothing"
   }
 }

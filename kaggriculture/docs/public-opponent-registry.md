@@ -41,3 +41,16 @@ notebook writes. Per-file hashes are in its manifest, together with the SHA-256 
 notebook blob itself. Its four tapes are the output of the author's own native policy,
 not a harvest of someone else's replay, which is what `docs/YHAY_ROUTER_FINDING.md`
 measures.
+
+## Varredura de 2026-09-08 (issue #35)
+
+Adicionados pela varredura descrita em `docs/PANEL_REFRESH.md`: notebooks públicos cujo
+time do autor está acima de 2 300 no leaderboard e cujo agente é extraível verbatim.
+Extração por `scripts/pin_notebook_agent.py`, rating em `opponents/ratings.json`.
+
+| ID | Family | Kernel | main.py SHA256 |
+| --- | --- | --- | --- |
+| `aberatozer_d5e3` | `reactive_chassis_over_public_tapes` | [ahmedberatozer/notebookd5e3d21fa6](https://www.kaggle.com/code/ahmedberatozer/notebookd5e3d21fa6) | `d5e3ab887e3385db76d06a96b8b2a16648fc59354b679f2faed626847b6ec7d9` |
+| `yamakawanin_king_v4e` | `adaptive_public_state_multi_route` | [yamakawanin/king-v4e-rc4](https://www.kaggle.com/code/yamakawanin/king-v4e-rc4) | `26ffba5273e4432dbc4ec822d5a65b09d3e9f1473c3ce813c528812eeb45779d` |
+| `lynnsakurai_v4` | `farming_score_shop_selection` | [lynnsakurai/farming-score-v4-a-better-shop](https://www.kaggle.com/code/lynnsakurai/farming-score-v4-a-better-shop) | `1590394cf30c8989a3e1cfdb027d89b5ccd97c2fb4cdc14959a15555b2b2361a` |
+| `reyhanksatria_v1` | `adaptive_shop_guard` | [reyhanksatria/strong-adaptive-agent-v1](https://www.kaggle.com/code/reyhanksatria/strong-adaptive-agent-v1) | `6c0fe2d59557b2874b8df35245e36723f80662b624ac8fd5e3060596830f58f9` |

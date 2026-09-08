@@ -1,0 +1,29 @@
+{
+  "id": "yamakawanin_king_v4e",
+  "version": "v4e-rc4",
+  "family": "adaptive_public_state_multi_route",
+  "kernel": "yamakawanin/king-v4e-rc4",
+  "title": "king-v4e-rc4",
+  "source_url": "https://www.kaggle.com/code/yamakawanin/king-v4e-rc4",
+  "path": "opponents/public/yamakawanin_king_v4e/main.py",
+  "sha256": "26ffba5273e4432dbc4ec822d5a65b09d3e9f1473c3ce813c528812eeb45779d",
+  "license": "Apache-2.0 (Kaggle notebook default; no separate upstream assertion)",
+  "captured_at": "2026-09-08",
+  "engine": {
+    "kaggle_environments": "1.32.7",
+    "interpreter_sha256": "bc8a54879ef02c7ea64b8b333d6a976f0ea65c4949149d01f463f23bccee653e"
+  },
+  "lineage": "Source is a gzip+base64 literal (RC4_SOURCE_GZIP_B64) the notebook decompresses and compiles; the notebook checks its own SHA-256. Pure Python, no native extension.",
+  "adaptation_notes": "Extracted verbatim by scripts/pin_notebook_agent.py; no local edits.",
+  "base_selection_candidate": false,
+  "evaluation_opponent": true,
+  "usage": "benchmark opponent only",
+  "retrieved_at": "2026-09-08",
+  "ladder_rating": {
+    "rating": 2648.4,
+    "observed_at": "2026-09-08",
+    "kind": "author_current",
+    "source": "author team '青春猪头少年不会梦到kaggle金牌' (yamakawanin), rank 97 of 8177, public leaderboard snapshot kaggriculture-publicleaderboard-2026-09-08T13:56:14.csv",
+    "note": "newest published kaggriculture notebook by this author"
+  }
+}

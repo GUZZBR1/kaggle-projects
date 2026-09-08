@@ -1,0 +1,29 @@
+{
+  "id": "reyhanksatria_v1",
+  "version": "v1",
+  "family": "adaptive_shop_guard",
+  "kernel": "reyhanksatria/strong-adaptive-agent-v1",
+  "title": "Strong Adaptive Agent v1",
+  "source_url": "https://www.kaggle.com/code/reyhanksatria/strong-adaptive-agent-v1",
+  "path": "opponents/public/reyhanksatria_v1/main.py",
+  "sha256": "6c0fe2d59557b2874b8df35245e36723f80662b624ac8fd5e3060596830f58f9",
+  "license": "Apache-2.0 (Kaggle notebook default; no separate upstream assertion)",
+  "captured_at": "2026-09-08",
+  "engine": {
+    "kaggle_environments": "1.32.7",
+    "interpreter_sha256": "bc8a54879ef02c7ea64b8b333d6a976f0ea65c4949149d01f463f23bccee653e"
+  },
+  "lineage": "Single self-contained main.py written by a %%writefile cell. The notebook packages a native library separately; the pinned file runs standalone under the official loader.",
+  "adaptation_notes": "Extracted verbatim by scripts/pin_notebook_agent.py; no local edits.",
+  "base_selection_candidate": false,
+  "evaluation_opponent": true,
+  "usage": "benchmark opponent only",
+  "retrieved_at": "2026-09-08",
+  "ladder_rating": {
+    "rating": 2427.3,
+    "observed_at": "2026-09-08",
+    "kind": "author_current",
+    "source": "author team 'Reyhan Ksatria' (reyhanksatria), rank 469 of 8177, public leaderboard snapshot kaggriculture-publicleaderboard-2026-09-08T13:56:14.csv",
+    "note": "newest published kaggriculture notebook by this author"
+  }
+}

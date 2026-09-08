@@ -1,0 +1,29 @@
+{
+  "id": "aberatozer_d5e3",
+  "version": "d5e3",
+  "family": "reactive_chassis_over_public_tapes",
+  "kernel": "ahmedberatozer/notebookd5e3d21fa6",
+  "title": "notebookd5e3d21fa6",
+  "source_url": "https://www.kaggle.com/code/ahmedberatozer/notebookd5e3d21fa6",
+  "path": "opponents/public/aberatozer_d5e3/main.py",
+  "sha256": "d5e3ab887e3385db76d06a96b8b2a16648fc59354b679f2faed626847b6ec7d9",
+  "license": "Apache-2.0 (Kaggle notebook default; no separate upstream assertion)",
+  "captured_at": "2026-09-08",
+  "engine": {
+    "kaggle_environments": "1.32.7",
+    "interpreter_sha256": "bc8a54879ef02c7ea64b8b333d6a976f0ea65c4949149d01f463f23bccee653e"
+  },
+  "lineage": "Successor to the same author's notebook865729c24e (pinned as aberatozer_v23). Single self-contained main.py written by a %%writefile cell; no native extension.",
+  "adaptation_notes": "Extracted verbatim by scripts/pin_notebook_agent.py; no local edits.",
+  "base_selection_candidate": false,
+  "evaluation_opponent": true,
+  "usage": "benchmark opponent only",
+  "retrieved_at": "2026-09-08",
+  "ladder_rating": {
+    "rating": 2618.5,
+    "observed_at": "2026-09-08",
+    "kind": "author_current",
+    "source": "author team 'track' (ahmedberatozer), rank 125 of 8177, public leaderboard snapshot kaggriculture-publicleaderboard-2026-09-08T13:56:14.csv",
+    "note": "newest published kaggriculture notebook by this author"
+  }
+}

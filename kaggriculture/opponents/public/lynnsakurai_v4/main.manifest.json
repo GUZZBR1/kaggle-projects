@@ -1,0 +1,29 @@
+{
+  "id": "lynnsakurai_v4",
+  "version": "v4",
+  "family": "farming_score_shop_selection",
+  "kernel": "lynnsakurai/farming-score-v4-a-better-shop",
+  "title": "Farming Score V4: A Better Shop",
+  "source_url": "https://www.kaggle.com/code/lynnsakurai/farming-score-v4-a-better-shop",
+  "path": "opponents/public/lynnsakurai_v4/main.py",
+  "sha256": "1590394cf30c8989a3e1cfdb027d89b5ccd97c2fb4cdc14959a15555b2b2361a",
+  "license": "Apache-2.0 (Kaggle notebook default; no separate upstream assertion)",
+  "captured_at": "2026-09-08",
+  "engine": {
+    "kaggle_environments": "1.32.7",
+    "interpreter_sha256": "bc8a54879ef02c7ea64b8b333d6a976f0ea65c4949149d01f463f23bccee653e"
+  },
+  "lineage": "Source is a base64 literal (MAIN_B64) the notebook decodes and compiles. Pure Python.",
+  "adaptation_notes": "Extracted verbatim by scripts/pin_notebook_agent.py; no local edits.",
+  "base_selection_candidate": false,
+  "evaluation_opponent": true,
+  "usage": "benchmark opponent only",
+  "retrieved_at": "2026-09-08",
+  "ladder_rating": {
+    "rating": 2572.7,
+    "observed_at": "2026-09-08",
+    "kind": "author_current",
+    "source": "author team 'Lynxx' (lynnsakurai), rank 216 of 8177, public leaderboard snapshot kaggriculture-publicleaderboard-2026-09-08T13:56:14.csv",
+    "note": "newest published kaggriculture notebook by this author"
+  }
+}
