@@ -101,3 +101,38 @@ Próximas etapas da #39: ampliar edições para produção/trabalho, comparar bl
 seis dias não terminais, aumentar cobertura de desenvolvimento e, só havendo fitas
 complementares melhores, ajustar o roteador. Uma nova estratégia precisa depois
 passar pelo driver/gate em validação registrada e pelo preflight real.
+
+## Etapa 2: produção e trabalhadores
+
+`--mutation-space production` acrescenta seis hipóteses: preencher `PASS` com
+`WATER`, `HARVEST`, `CARE`, `FEED`, `COLLECT_FERTILIZER` ou `FERTILIZE`.
+Cada hipótese aplica uma dessas tarefas aos slots explicitamente ociosos do bloco.
+Outras propostas trocam duas tarefas estacionárias consecutivas da mesma unidade,
+incluindo `PLANT` com seus argumentos originais. Não troca tarefas entre
+trabalhadores, não atravessa fronteiras, não altera comandos de movimento e não
+modifica mercado. Isso isola a produção da hipótese anterior de ordens de venda.
+
+Os comandos permanecem sujeitos à execução oficial: fertilizar sem fertilizante
+ou colher sem uma planta produtiva pode não fazer nada. A busca registra as ações
+ineficazes da partida inteira como diagnóstico. Essa contagem não desempata
+vitórias. O estado final pode mudar mesmo que os comandos de movimento sejam
+idênticos — a garantia é sobre os comandos emitidos, não a trajetória resultante.
+
+Exemplo de bloco de seis dias, começando no turno 144:
+
+```bash
+python -m experiments.block_solver --mutation-space production \
+  --source opponents/public/yhay_router_0908/actions.json --start 144 --days 6 \
+  --proposals 8 --rounds 1 \
+  --opponents clock::opponents/public/thomas_t95/main.py,clock::opponents/public/aberatozer_v23/main.py \
+  --seeds 1012:1016 --check-seeds 1020:1024 --workers 4 \
+  --output experiments/searches/production-144-01
+```
+
+O padrão continua sendo `--mutation-space market`. As duas famílias de mutações
+ficam separadas para atribuir resultados. A busca também passou a excluir digests
+já medidos **antes** de preencher o orçamento de propostas: tentativas repetidas
+não roubam vagas da rodada seguinte. Planos novos registram hashes do código do
+solver e dos geradores, além do hash da fita de origem.
+
+Os resultados da etapa 2 ficam em [PRODUCTION_SEARCH.md](PRODUCTION_SEARCH.md).

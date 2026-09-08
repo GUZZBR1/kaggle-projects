@@ -1,0 +1,621 @@
+{
+  "schema_version": 1,
+  "split": "dev",
+  "release_status": "not_validated",
+  "experiments": [
+    {
+      "name": "production-144-01",
+      "plan": {
+        "schema_version": 1,
+        "kind": "production_block_local_search",
+        "mutation_space": "production",
+        "split": "dev",
+        "created_at": "2026-09-08T14:53:09.243674+00:00",
+        "source": {
+          "source": "/tmp/kaggriculture-production/kaggriculture/opponents/public/yhay_router_0908/actions.json",
+          "source_sha256": "171c8550addac9fdb49acb44af36f64b4eb54e34c561eb6f3d4a83e2dcc803a6",
+          "tape_index": 0,
+          "initial_tape_sha256": "2c413946a556e6fb93d939d31db64ec39fddba53b45ac3873ad687451889beb5",
+          "source_url": "https://www.kaggle.com/code/yhay81/shop-router-0908",
+          "license": "Apache-2.0 (author states handwritten code is Apache-2.0; Kaggle notebook default)"
+        },
+        "start": 144,
+        "end": 288,
+        "days": 6,
+        "proposals": 8,
+        "rounds": 1,
+        "seeds": [
+          1012,
+          1013,
+          1014,
+          1015
+        ],
+        "check_seeds": [
+          1020,
+          1021,
+          1022,
+          1023
+        ],
+        "search_seed": 771,
+        "opponents": [
+          "clock::opponents/public/thomas_t95/main.py",
+          "clock::opponents/public/aberatozer_v23/main.py"
+        ],
+        "opponent_hashes": {
+          "clock::opponents/public/thomas_t95/main.py": "76254cf98142ec312ec677a73b678294f5ff574295640c74b319683fa6b00c4b",
+          "clock::opponents/public/aberatozer_v23/main.py": "aff02bb9b2c07ca922f2d1a96f13fa63c31769bc6ba9623f0be881590765bdcc"
+        },
+        "environment": {
+          "version": "1.32.7",
+          "interpreter_sha256": "bc8a54879ef02c7ea64b8b333d6a976f0ea65c4949149d01f463f23bccee653e",
+          "specification_sha256": "a82c89c1a2315b93f39775d8e025471a01b738647c9772658368ee6b1b6f4867"
+        },
+        "registry": {
+          "search": {
+            "registry_schema": 1,
+            "registry_revision": 2,
+            "registry_sha256": "911be9bb20b421dc66ac6bf77a1a25d993e0de327c98f3a42876e2c744b2c8b9",
+            "split": "dev",
+            "competitive": true
+          },
+          "check": {
+            "registry_schema": 1,
+            "registry_revision": 2,
+            "registry_sha256": "911be9bb20b421dc66ac6bf77a1a25d993e0de327c98f3a42876e2c744b2c8b9",
+            "split": "dev",
+            "competitive": true
+          }
+        },
+        "objective": [
+          "worst_opponent_win_score",
+          "overall_win_score"
+        ]
+      },
+      "evaluated_mutations": 8,
+      "accepted_mutations": [],
+      "initial_fitness": [
+        0.75,
+        0.75
+      ],
+      "selected_fitness": [
+        0.75,
+        0.75
+      ],
+      "check_delta": {
+        "games": 16,
+        "delta_win": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "delta_margin_diagnostic": 0.0
+      },
+      "history": [
+        {
+          "round": 0,
+          "mutation": {
+            "kind": "idle_work",
+            "work": "WATER",
+            "target_count": 99,
+            "targets_sha256": "fd18bef058a1bb06c16afeb33070a9ff7e0719059bbdd37a2f8ebd163c7719ae"
+          },
+          "tape_sha256": "33daedeff27371f8e75d49247170feb2ca72515119dd610bf3749a1d31e24349",
+          "artifact_hash": "ae61492d6f225348652b29ac74b562f74ad35e88192913020cc95ab4c193797e",
+          "fitness": [
+            0.75,
+            0.75
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "delta_margin_diagnostic": 0.0
+          },
+          "ineffective_unit_actions": 1712
+        },
+        {
+          "round": 0,
+          "mutation": {
+            "kind": "idle_work",
+            "work": "HARVEST",
+            "target_count": 99,
+            "targets_sha256": "fd18bef058a1bb06c16afeb33070a9ff7e0719059bbdd37a2f8ebd163c7719ae"
+          },
+          "tape_sha256": "2d059216ead9c674f46a218e0721d76ce759d5523ccea1b6925f4dbdb8a22dea",
+          "artifact_hash": "0f1b0429976df3d250d48e78c44a02cc51b0744e2f1eecfe39a85fe34b4dec65",
+          "fitness": [
+            0.75,
+            0.75
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "delta_margin_diagnostic": -942.8125
+          },
+          "ineffective_unit_actions": 1800
+        },
+        {
+          "round": 0,
+          "mutation": {
+            "kind": "idle_work",
+            "work": "CARE",
+            "target_count": 99,
+            "targets_sha256": "fd18bef058a1bb06c16afeb33070a9ff7e0719059bbdd37a2f8ebd163c7719ae"
+          },
+          "tape_sha256": "014f031fbede75b604d168424ab5bc4996d03a01e7d5747708f2f0516fc07412",
+          "artifact_hash": "7f65caef82d7bf122ea2c0e92d720d71efdbcf091afeb4194c9739362d407e47",
+          "fitness": [
+            0.75,
+            0.75
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "delta_margin_diagnostic": 0.0
+          },
+          "ineffective_unit_actions": 1712
+        },
+        {
+          "round": 0,
+          "mutation": {
+            "kind": "idle_work",
+            "work": "FEED",
+            "target_count": 99,
+            "targets_sha256": "fd18bef058a1bb06c16afeb33070a9ff7e0719059bbdd37a2f8ebd163c7719ae"
+          },
+          "tape_sha256": "73cf8c480826f4eab657489beafcc643754267a604b0fcbacc362ddf867cc3b8",
+          "artifact_hash": "c335709f99120f39e2bc3068ece3b39a623e8a88005294e06d383bf5fb1e5d12",
+          "fitness": [
+            0.75,
+            0.75
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "delta_margin_diagnostic": 0.0
+          },
+          "ineffective_unit_actions": 1712
+        },
+        {
+          "round": 0,
+          "mutation": {
+            "kind": "idle_work",
+            "work": "COLLECT_FERTILIZER",
+            "target_count": 99,
+            "targets_sha256": "fd18bef058a1bb06c16afeb33070a9ff7e0719059bbdd37a2f8ebd163c7719ae"
+          },
+          "tape_sha256": "b5aa8f00de24fa99c37f6ac17bb9e8e70a449a8921c9ce86e806418d00f62fac",
+          "artifact_hash": "33dcaeb0d75be98bfc1ee0e5cf477d98e4234b88fdb559d01b937d246a8e41c5",
+          "fitness": [
+            0.75,
+            0.75
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "delta_margin_diagnostic": 0.0
+          },
+          "ineffective_unit_actions": 1744
+        },
+        {
+          "round": 0,
+          "mutation": {
+            "kind": "idle_work",
+            "work": "FERTILIZE",
+            "target_count": 99,
+            "targets_sha256": "fd18bef058a1bb06c16afeb33070a9ff7e0719059bbdd37a2f8ebd163c7719ae"
+          },
+          "tape_sha256": "be9ed49f9667f6e8db0cf9f9d0c5da409f3235258a4fc1a687f05f445a2770f6",
+          "artifact_hash": "68ac1d322680ec3be2c6d28279c206922be9d6a1ab6c167d7de8adf3dea08370",
+          "fitness": [
+            0.75,
+            0.75
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "delta_margin_diagnostic": -30.0
+          },
+          "ineffective_unit_actions": 1696
+        },
+        {
+          "round": 0,
+          "mutation": {
+            "kind": "swap_work",
+            "turn": 210,
+            "role": "hands",
+            "index": 5
+          },
+          "tape_sha256": "ca9d790ce9cd62b74578a3ba02c3a9e648c618e61129f314794f38d8ecb614aa",
+          "artifact_hash": "6b3b57649bc871a76eed5e78f6c616fc10dbd535fc8867c180c79c4174fcb4a4",
+          "fitness": [
+            0.5,
+            0.5
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": -0.25,
+            "ci95": [
+              -0.75,
+              0.0
+            ],
+            "delta_margin_diagnostic": -750.875
+          },
+          "ineffective_unit_actions": 368
+        },
+        {
+          "round": 0,
+          "mutation": {
+            "kind": "swap_work",
+            "turn": 280,
+            "role": "hands",
+            "index": 2
+          },
+          "tape_sha256": "6d69e72539abe52ed55e6969db0dd084f195782a213fa14097188a19f947f51c",
+          "artifact_hash": "5c961576e6b506fa283f11c2f3117ffc0e4c4c6c93a05546a3d739712cd8c00b",
+          "fitness": [
+            0.75,
+            0.75
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "delta_margin_diagnostic": -332.25
+          },
+          "ineffective_unit_actions": 368
+        }
+      ],
+      "wall_seconds": 87.83261668699924,
+      "evidence_files": {
+        "baseline-check/matches.jsonl": "d6444870300608c02d3311c2d1d031463bfc815877cd6ab8f544902867a7465f",
+        "baseline-search/matches.jsonl": "dd3a801776124c2d9e1d7e7865936d5703f94defca1a6daca7a9dec30bf46806",
+        "candidate-check/matches.jsonl": "a116f3132848327fb7a2800a6be94d8ccf82fbbd3d1b40c0bc26224540b41f90",
+        "round-0-proposal-0/matches.jsonl": "77ec9849eb16059b3b4e85349b5b8004dc49c5978293107cbe0a29c92df2535e",
+        "round-0-proposal-1/matches.jsonl": "866bb150c1bf5577a3c37db98c11b10adcb34a4f2f7e41b7fe40d307e9e056db",
+        "round-0-proposal-2/matches.jsonl": "a70a74b8793451aa92c270f6a5d9bb19a9afcacf9e00dd8ddf18595d53c2a787",
+        "round-0-proposal-3/matches.jsonl": "016289922b64616104e2d3073437fcdb8692366d93d20766cb2ec50cd88395a5",
+        "round-0-proposal-4/matches.jsonl": "81af085a6b1b9250144ff980a92611b4033ab4c06ad458793567dff740f892a4",
+        "round-0-proposal-5/matches.jsonl": "c4a1064a294d73fb4938ef11b0f0e0d470bbeb086b20d602dbdef077773b8d9e",
+        "round-0-proposal-6/matches.jsonl": "083eed583d7e780231dfe78b0d230b91670eb3ec1f61d4168a68fcd26c255c09",
+        "round-0-proposal-7/matches.jsonl": "d78cffd83679b0f8af8adc33c41bdf8c1ee39c5f23095a94b045b48830499372"
+      },
+      "baseline_ineffective_unit_actions": 128,
+      "game_count": 176,
+      "selection_sha256": "a8b4edaa3431872ce53c03352de2a54097080860112fad53cdbab2d5c1cdd4cc"
+    },
+    {
+      "name": "production-432-01",
+      "plan": {
+        "schema_version": 1,
+        "kind": "production_block_local_search",
+        "mutation_space": "production",
+        "split": "dev",
+        "created_at": "2026-09-08T14:54:00.825886+00:00",
+        "source": {
+          "source": "/tmp/kaggriculture-production/kaggriculture/opponents/public/yhay_router_0908/actions.json",
+          "source_sha256": "171c8550addac9fdb49acb44af36f64b4eb54e34c561eb6f3d4a83e2dcc803a6",
+          "tape_index": 0,
+          "initial_tape_sha256": "2c413946a556e6fb93d939d31db64ec39fddba53b45ac3873ad687451889beb5",
+          "source_url": "https://www.kaggle.com/code/yhay81/shop-router-0908",
+          "license": "Apache-2.0 (author states handwritten code is Apache-2.0; Kaggle notebook default)"
+        },
+        "start": 432,
+        "end": 576,
+        "days": 6,
+        "proposals": 8,
+        "rounds": 1,
+        "seeds": [
+          1016,
+          1017,
+          1018,
+          1019
+        ],
+        "check_seeds": [
+          1024,
+          1025,
+          1026,
+          1027
+        ],
+        "search_seed": 771,
+        "opponents": [
+          "clock::opponents/public/thomas_t95/main.py",
+          "clock::opponents/public/aberatozer_v23/main.py"
+        ],
+        "opponent_hashes": {
+          "clock::opponents/public/thomas_t95/main.py": "76254cf98142ec312ec677a73b678294f5ff574295640c74b319683fa6b00c4b",
+          "clock::opponents/public/aberatozer_v23/main.py": "aff02bb9b2c07ca922f2d1a96f13fa63c31769bc6ba9623f0be881590765bdcc"
+        },
+        "environment": {
+          "version": "1.32.7",
+          "interpreter_sha256": "bc8a54879ef02c7ea64b8b333d6a976f0ea65c4949149d01f463f23bccee653e",
+          "specification_sha256": "a82c89c1a2315b93f39775d8e025471a01b738647c9772658368ee6b1b6f4867"
+        },
+        "registry": {
+          "search": {
+            "registry_schema": 1,
+            "registry_revision": 2,
+            "registry_sha256": "911be9bb20b421dc66ac6bf77a1a25d993e0de327c98f3a42876e2c744b2c8b9",
+            "split": "dev",
+            "competitive": true
+          },
+          "check": {
+            "registry_schema": 1,
+            "registry_revision": 2,
+            "registry_sha256": "911be9bb20b421dc66ac6bf77a1a25d993e0de327c98f3a42876e2c744b2c8b9",
+            "split": "dev",
+            "competitive": true
+          }
+        },
+        "objective": [
+          "worst_opponent_win_score",
+          "overall_win_score"
+        ]
+      },
+      "evaluated_mutations": 8,
+      "accepted_mutations": [],
+      "initial_fitness": [
+        0.625,
+        0.6875
+      ],
+      "selected_fitness": [
+        0.625,
+        0.6875
+      ],
+      "check_delta": {
+        "games": 16,
+        "delta_win": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "delta_margin_diagnostic": 0.0
+      },
+      "history": [
+        {
+          "round": 0,
+          "mutation": {
+            "kind": "idle_work",
+            "work": "WATER",
+            "target_count": 26,
+            "targets_sha256": "5801e6985230e29f5af1a4ce8629a4625a3504399f8a5daf7ae641fb6c10c98f"
+          },
+          "tape_sha256": "f1794ad75b1bc312ce2399210bac047cd7c6d4d88782867d9eea619dc6825b8d",
+          "artifact_hash": "53a3e2069dcec38acefd8aafd782f8fb64b075c2a47a6d192fea4a6c7feceb4f",
+          "fitness": [
+            0.625,
+            0.6875
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "delta_margin_diagnostic": 0.0
+          },
+          "ineffective_unit_actions": 538
+        },
+        {
+          "round": 0,
+          "mutation": {
+            "kind": "idle_work",
+            "work": "HARVEST",
+            "target_count": 26,
+            "targets_sha256": "5801e6985230e29f5af1a4ce8629a4625a3504399f8a5daf7ae641fb6c10c98f"
+          },
+          "tape_sha256": "a589856179f412932641b24347273d9ba18d161c9114a52803ca634ba78919e4",
+          "artifact_hash": "49a2781bb793afdb850e0adfd5f5420b6bd53fbe29aae621d92baac70ce0b0ee",
+          "fitness": [
+            0.625,
+            0.6875
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "delta_margin_diagnostic": -242.1875
+          },
+          "ineffective_unit_actions": 650
+        },
+        {
+          "round": 0,
+          "mutation": {
+            "kind": "idle_work",
+            "work": "CARE",
+            "target_count": 26,
+            "targets_sha256": "5801e6985230e29f5af1a4ce8629a4625a3504399f8a5daf7ae641fb6c10c98f"
+          },
+          "tape_sha256": "f51154901c3e38d6e7cf7ae14ab4d53086e7024fbcd1210e776c0635a690920e",
+          "artifact_hash": "cca8c76f9a2dbdedca31441d77b36ca96ed693090ffbfb5c8c56a6e69deda8ec",
+          "fitness": [
+            0.625,
+            0.6875
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "delta_margin_diagnostic": 0.0
+          },
+          "ineffective_unit_actions": 570
+        },
+        {
+          "round": 0,
+          "mutation": {
+            "kind": "idle_work",
+            "work": "FEED",
+            "target_count": 26,
+            "targets_sha256": "5801e6985230e29f5af1a4ce8629a4625a3504399f8a5daf7ae641fb6c10c98f"
+          },
+          "tape_sha256": "8f4b346d68aee38bfdab82d6f88ccf0225197dfea2c61866f488ee4049103665",
+          "artifact_hash": "6e5a7ae60092bde71e320857a1c36ce08dd1f901fe4c63f52569f59c9c7a4e90",
+          "fitness": [
+            0.625,
+            0.6875
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "delta_margin_diagnostic": -142.375
+          },
+          "ineffective_unit_actions": 586
+        },
+        {
+          "round": 0,
+          "mutation": {
+            "kind": "idle_work",
+            "work": "COLLECT_FERTILIZER",
+            "target_count": 26,
+            "targets_sha256": "5801e6985230e29f5af1a4ce8629a4625a3504399f8a5daf7ae641fb6c10c98f"
+          },
+          "tape_sha256": "0f809a0cab4a822b8f803fef0ad43ea221ad5eb7daa30466365ebfbcad610c6e",
+          "artifact_hash": "22a082f009daf3cad7911f3e389f26cf89db624a0252d038300a022e632623b4",
+          "fitness": [
+            0.625,
+            0.6875
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "delta_margin_diagnostic": 0.0
+          },
+          "ineffective_unit_actions": 570
+        },
+        {
+          "round": 0,
+          "mutation": {
+            "kind": "idle_work",
+            "work": "FERTILIZE",
+            "target_count": 26,
+            "targets_sha256": "5801e6985230e29f5af1a4ce8629a4625a3504399f8a5daf7ae641fb6c10c98f"
+          },
+          "tape_sha256": "46aaacd66d2c65ed5da0f3e37ea0147c68295888a1c56a38571a5c76a04b0e20",
+          "artifact_hash": "cb1d6124601e23800963f76b3fd07f2617895d4c78d3e90142b44feb83b60746",
+          "fitness": [
+            0.625,
+            0.6875
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "delta_margin_diagnostic": -35.3125
+          },
+          "ineffective_unit_actions": 522
+        },
+        {
+          "round": 0,
+          "mutation": {
+            "kind": "swap_work",
+            "turn": 438,
+            "role": "hands",
+            "index": 7
+          },
+          "tape_sha256": "45e6c78d52247aabf6ffd3f0b3edcc3b13d074a45b30059becddcaceea65f40f",
+          "artifact_hash": "a64e90bf92161eaf8543209ce0adbb881d6b0282eea9d4f8a4bb1a18b6db006b",
+          "fitness": [
+            0.625,
+            0.6875
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "delta_margin_diagnostic": 0.0
+          },
+          "ineffective_unit_actions": 154
+        },
+        {
+          "round": 0,
+          "mutation": {
+            "kind": "swap_work",
+            "turn": 509,
+            "role": "hands",
+            "index": 0
+          },
+          "tape_sha256": "7b7d4e90b013cf32fb710c4c22ac940314af836d09c0d7316d21f717a3713473",
+          "artifact_hash": "bfbcc361284fd5197077ed43e81fe4f339f483fef7b42f70f4e94f4cd19e774b",
+          "fitness": [
+            0.625,
+            0.6875
+          ],
+          "delta_from_initial": {
+            "games": 16,
+            "delta_win": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "delta_margin_diagnostic": 0.0
+          },
+          "ineffective_unit_actions": 154
+        }
+      ],
+      "wall_seconds": 149.58480734099976,
+      "evidence_files": {
+        "baseline-check/matches.jsonl": "7d9a25c10293618bc0853409be4fd6bafafa3f7d177b11e61d72d04b329f9c46",
+        "baseline-search/matches.jsonl": "dcabc6de0b5d411ff4825de667f30dd205988af0410fa5c6fe83a35cb9550861",
+        "candidate-check/matches.jsonl": "29a5f6fc1c4710571f6388f65ea1bb52a45c72ff169d86f0e0846cff671f9241",
+        "round-0-proposal-0/matches.jsonl": "9ff638ceb5c392043086078c12168a2fca980e10fd7e5a51f6b775a6442ba11e",
+        "round-0-proposal-1/matches.jsonl": "966eb519fe8393bc2937a929a70e77ade64387250dcac9eede55aa6aa1e1a2cf",
+        "round-0-proposal-2/matches.jsonl": "b98def4fcbc939fd423d6b768b144935eae374b3b3a5bfcc706f2689f97d1475",
+        "round-0-proposal-3/matches.jsonl": "3608afc50762f74ec8617c509e48675dacd51b5fe7f94cee49080dbad6480b2f",
+        "round-0-proposal-4/matches.jsonl": "59ba8bf8b89a655e2d15bf7bc60a112683e8e4c846847dd8dfbb296601933ca7",
+        "round-0-proposal-5/matches.jsonl": "b180c9b60336366d2703a72701db2448a35423d6d1ea6453b102eb5d9a007f1d",
+        "round-0-proposal-6/matches.jsonl": "cfc1911628ac8f560f7bbf61df188cb58c74e9a70d1ab953ab620f4f7be8dbee",
+        "round-0-proposal-7/matches.jsonl": "c39adf5b8f19e329cf419f6a032b69a4b654e0fb8ddc95c1f64d9e192ceac573"
+      },
+      "baseline_ineffective_unit_actions": 154,
+      "game_count": 176,
+      "selection_sha256": "8374abe4a7ccd1c156ac649a9819ed89d0fc2b9ce77f7f8cda7ef6e8b34e2fec"
+    }
+  ]
+}

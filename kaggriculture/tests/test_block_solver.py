@@ -98,7 +98,8 @@ def test_invalid_snapshot_steps_are_rejected(tmp_path, steps):
         run_match('pass', 'pass', 1, replay=tmp_path / 'bad.json', replay_steps=steps)
 
 
-def test_search_freezes_before_disjoint_check_and_keeps_incumbent_on_ties(tmp_path, monkeypatch):
+@pytest.mark.parametrize('mutation_space', ['market', 'production'])
+def test_search_freezes_before_disjoint_check_and_keeps_incumbent_on_ties(tmp_path, monkeypatch, mutation_space):
     from experiments import block_solver as solver
     source = tmp_path / 'source.json'
     source.write_text(json.dumps([tape()]))
@@ -119,13 +120,13 @@ def test_search_freezes_before_disjoint_check_and_keeps_incumbent_on_ties(tmp_pa
         calls.append(directory.name)
         rows = [dict(seed=seed, seat=seat, opponent='starter', score=.5, margin=0,
             candidate_hash='same', opponent_hash='opponent', environment={}, configuration={},
-            backend='fast', failures=[], opponent_failures=[]) for seed in seeds for seat in (0, 1)]
+            backend='fast', failures=[], opponent_failures=[], audit={}) for seed in seeds for seat in (0, 1)]
         return dict(rows=rows, frontiers={'test': 'frontier'}, fitness=(.5, .5),
                     artifact=str(artifact), artifact_hash='same')
     monkeypatch.setattr(solver, 'evaluate', evaluate)
     monkeypatch.setattr(solver, 'engine_fingerprint', lambda: {})
     result = solver.search(source, output, opponents=['starter'], seeds=[1000, 1001],
-                           check_seeds=[1002, 1003], proposals=2, rounds=1)
+                           check_seeds=[1002, 1003], proposals=2, rounds=1, mutation_space=mutation_space)
     assert result['accepted_mutations'] == []
     assert calls[-2:] == ['baseline-check', 'candidate-check']
     assert result['release_status'] == 'not_validated'

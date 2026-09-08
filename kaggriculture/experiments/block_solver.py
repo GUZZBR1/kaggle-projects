@@ -1,4 +1,4 @@
-"""Generate market-action blocks and evaluate their arrival states by fixed continuation.
+"""Generate market or production-action blocks and evaluate their arrival states by fixed continuation.
 
 All search and the disjoint check use registered development seeds. The output is
 an experimental tape, never a promotion recommendation. Prefix replay is used to
@@ -25,6 +25,7 @@ from eval.ladder import delta_win
 from eval.pairing import paired_rows
 from experiments.tape_agent import build
 from experiments.tape_harvest import tape_digest
+from experiments.production_mutations import production_mutations
 
 TURNS = 719
 BLOCK = 72
@@ -53,7 +54,7 @@ def arrival_state(observation, seat):
     return {'sha256': digest(state), 'state': state}
 
 
-def mutations(actions, start, end, count, rng):
+def mutations(actions, start, end, count, rng, excluded=()):
     """Local market edits; prefix, suffix and worker actions remain exactly fixed."""
     if len(actions) != TURNS or not 0 <= start < end <= TURNS or count < 1:
         raise ValueError('Require a complete tape, bounded block and positive proposal count')
@@ -76,7 +77,7 @@ def mutations(actions, start, end, count, rng):
             candidates.append(('rotate', turn, None, None))
     rng.shuffle(candidates)
     candidates = [('block_order', start, None, direction) for direction in (1, -1, 0)] + candidates
-    seen, result = {tape_digest(actions)}, []
+    seen, result = set(excluded) | {tape_digest(actions)}, []
     for kind, turn, slot, value in candidates:
         tape = copy.deepcopy(actions)
         orders = tape[turn].setdefault('market', [])
@@ -159,8 +160,10 @@ def evaluate(actions, directory, opponents, seeds, start, end, workers, provenan
 
 
 def search(source, output, *, tape_index=0, start=648, days=3, proposals=4, rounds=2,
-           opponents, seeds, check_seeds, workers=4, search_seed=771):
+           opponents, seeds, check_seeds, workers=4, search_seed=771, mutation_space='market'):
     started = time.perf_counter()
+    if mutation_space not in ('market', 'production'):
+        raise ValueError('Unknown mutation space')
     end = block_end(start, days)
     seeds, check_seeds, opponents = list(seeds), list(check_seeds), list(opponents)
     if not opponents or len(set(opponents)) != len(opponents) or workers < 1 or proposals < 1 or rounds < 1:
@@ -190,12 +193,15 @@ def search(source, output, *, tape_index=0, start=648, days=3, proposals=4, roun
     credit = json.dumps(provenance, sort_keys=True)
     output = Path(output)
     output.mkdir(parents=True, exist_ok=False)
-    plan = dict(schema_version=1, kind='market_block_local_search', split='dev',
+    plan = dict(schema_version=1, kind=f'{mutation_space}_block_local_search', mutation_space=mutation_space, split='dev',
                 created_at=datetime.now(timezone.utc).isoformat(), source=provenance,
                 start=start, end=end, days=days, proposals=proposals, rounds=rounds,
                 seeds=seeds, check_seeds=check_seeds, search_seed=search_seed,
                 opponents=opponents, opponent_hashes=hashes, environment=engine_fingerprint(),
-                registry=registry, objective=['worst_opponent_win_score', 'overall_win_score'])
+                registry=registry, objective=['worst_opponent_win_score', 'overall_win_score'],
+                generator_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+                production_mutations_sha256=hashlib.sha256(
+                    Path(__file__).with_name('production_mutations.py').read_bytes()).hexdigest())
     (output / 'plan.json').write_text(json.dumps(plan, indent=2) + '\n')
     rng = random.Random(search_seed)
     history, visited = [], {tape_digest(initial)}
@@ -206,7 +212,8 @@ def search(source, output, *, tape_index=0, start=648, days=3, proposals=4, roun
         incumbent, measured = copy.deepcopy(initial), original
         accepted = []
         for generation in range(rounds):
-            candidates = mutations(incumbent, start, end, proposals, rng)
+            generator = mutations if mutation_space == 'market' else production_mutations
+            candidates = generator(incumbent, start, end, proposals, rng, excluded=visited)
             best_actions, best_result, best_mutation = incumbent, measured, None
             for index, proposal in enumerate(candidates):
                 if proposal['sha256'] in visited:
@@ -220,7 +227,8 @@ def search(source, output, *, tape_index=0, start=648, days=3, proposals=4, roun
                 delta = delta_win(original['rows'], result['rows'], ratings={})
                 history.append(dict(round=generation, mutation=proposal['mutation'],
                     tape_sha256=proposal['sha256'], artifact_hash=result['artifact_hash'],
-                    fitness=result['fitness'], delta_from_initial=delta['all']))
+                    fitness=result['fitness'], delta_from_initial=delta['all'],
+                    ineffective_unit_actions=sum(row['audit'].get('no_effect_actions', 0) for row in result['rows'])))
                 print(f"round={generation} proposal={index} fitness={result['fitness']}", flush=True)
                 if result['fitness'] > best_result['fitness']:
                     best_actions, best_result, best_mutation = proposal['actions'], result, proposal['mutation']
@@ -260,6 +268,7 @@ def search(source, output, *, tape_index=0, start=648, days=3, proposals=4, roun
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--mutation-space', choices=('market', 'production'), default='market')
     parser.add_argument('--source', required=True, help='JSON list of tapes or a tapes envelope')
     parser.add_argument('--tape-index', type=int, default=0)
     parser.add_argument('--start', type=int, default=648)
