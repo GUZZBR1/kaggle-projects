@@ -17,3 +17,7 @@ include = ["agent*", "arena*", "eval*", "experiments*", "submission*"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["."]
+# tmp_path must resolve under ROOT or test_public_base_tournament.py trips
+# validate_entry's path-containment guard. Also sidesteps a locked-down
+# default temp dir on some Windows setups.
+addopts = "--basetemp=.tmp/pytest"

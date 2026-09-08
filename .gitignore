@@ -7,5 +7,6 @@ kaggriculture/experiments/results/
 kaggriculture/experiments/searches/
 kaggriculture/replays/
 kaggriculture/submission/dist/
+kaggriculture/.tmp/
 *.egg-info/
 .env
