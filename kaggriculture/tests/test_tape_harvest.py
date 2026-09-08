@@ -57,7 +57,7 @@ def test_a_real_harvest_keeps_only_wins_and_deduplicates(tmp_path):
     """End to end against the engine, small enough to stay a unit test.
 
     challenger beats starter, so the filter keeps those games; the tapes carry
-    the margin that justifies them and repeated streams collapse to one entry.
+    diagnostic margins and repeated streams collapse to one entry.
     """
     payload = harvest(['challenger'], ['starter'], [1000, 1001], tmp_path / 'lib.json',
                       workers=2, min_score=1.)
@@ -71,13 +71,12 @@ def test_a_real_harvest_keeps_only_wins_and_deduplicates(tmp_path):
         assert tape['score'] == 1. and tape['margin'] > 0
         assert tape['sha256'] == tape_digest(tape['actions'])
         assert tape['sources'], 'every tape records which games produced it'
-    margins = [tape['margin'] for tape in payload['tapes']]
-    assert margins == sorted(margins, reverse=True), 'library is ranked by evidence'
+    assert [t['sha256'] for t in payload['tapes']] == sorted(t['sha256'] for t in payload['tapes'])
     assert json.loads((tmp_path / 'lib.json').read_text())['tapes']
 
 
 def test_an_impossible_filter_yields_an_honest_empty_library(tmp_path):
     payload = harvest(['challenger'], ['starter'], [1000], tmp_path / 'none.json',
-                      workers=2, min_margin=10 ** 9)
+                      workers=2, min_score=2.)
     assert payload['tapes'] == []
     assert payload['stats']['rejected_weak'] == 2

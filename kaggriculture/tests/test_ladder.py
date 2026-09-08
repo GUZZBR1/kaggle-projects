@@ -24,7 +24,10 @@ TODAY = __import__('datetime').date(2026, 9, 8)
 
 def game(opponent, seed, seat, score_value, margin=0):
     return {'opponent': f'clock::opponents/public/{opponent}/main.py', 'seed': seed,
-            'seat': seat, 'score': score_value, 'margin': margin}
+            'seat': seat, 'score': score_value, 'margin': margin,
+            'candidate_hash': 'candidate', 'opponent_hash': opponent,
+            'environment': {}, 'configuration': {}, 'backend': 'fast',
+            'failures': [], 'opponent_failures': []}
 
 
 def league(results, seeds=range(10)):

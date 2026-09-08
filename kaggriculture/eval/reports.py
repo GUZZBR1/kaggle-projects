@@ -8,12 +8,13 @@ def write_report(directory, rows, summary, metadata):
     path = Path(directory)
     path.mkdir(parents=True, exist_ok=False)
     (path / 'matches.jsonl').write_text(''.join(json.dumps(r) + '\n' for r in rows))
-    (path / 'summary.json').write_text(json.dumps({'metadata': metadata, **summary}, indent=2) + '\n')
+    (path / 'summary.json').write_text(json.dumps({'metadata': {**metadata, 'diagnostic_fields': ['money', 'opponent_money', 'margin']}, **summary}, indent=2) + '\n')
     fields = ['candidate', 'opponent', 'seed', 'seat', 'score', 'money', 'opponent_money', 'margin', 'steps', 'wall_seconds']
     with (path / 'matches.csv').open('w', newline='') as stream:
-        writer = csv.DictWriter(stream, fieldnames=fields, extrasaction='ignore')
+        export_fields = ['margin_diagnostic' if f == 'margin' else f for f in fields]
+        writer = csv.DictWriter(stream, fieldnames=export_fields, extrasaction='ignore')
         writer.writeheader()
-        writer.writerows(rows)
+        writer.writerows(dict(row, margin_diagnostic=row['margin']) for row in rows)
     daily = summary.get('daily')
     if daily:
         columns = [k for k in daily['days'][0] if k not in ('orders', 'realized_price')]
@@ -27,9 +28,9 @@ def write_report(directory, rows, summary, metadata):
              f"Score: {summary['score_rate']:.1%}; seed-block CI95: {summary['score_ci95']}",
              f"Failures: {summary['failures']}; ineffective unit actions: {summary['no_effect_actions']}",
              f"Runtime (ms): {summary['runtime_ms']}", '',
-             '| Opponent | Games | Score | CI95 | Mean margin |', '|---|---:|---:|---|---:|']
+             '| Opponent | Games | Score | CI95 | Mean margin (diagnostic) |', '|---|---:|---:|---|---:|']
     for name, data in summary['per_opponent'].items():
-        lines.append(f"| {name} | {data['games']} | {data['score_rate']:.1%} | {data['score_ci95']} | {data['mean_margin']:.0f} |")
+        lines.append(f"| {name} | {data['games']} | {data['score_rate']:.1%} | {data['score_ci95']} | {data['mean_margin_diagnostic']:.0f} |")
     if daily:
         problems = daily['reconciliation_problems']
         lines += ['', '## Daily economics', '',
@@ -45,6 +46,6 @@ def write_report(directory, rows, summary, metadata):
     page += '<style>body{font:16px system-ui;margin:2rem;background:#f6f7f2;color:#17251a}td,th{padding:.5rem;border-bottom:1px solid #ccd}table{border-collapse:collapse}input{padding:.6rem}</style>'
     page += '<h1>Kaggriculture league</h1><pre>' + html.escape('\n'.join(lines[:8])) + '</pre>'
     page += '<label>Filter matches <input id="filter"></label><table><thead><tr>'
-    page += ''.join('<th>' + f + '</th>' for f in fields) + '</tr></thead><tbody>' + records + '</tbody></table>'
+    page += ''.join('<th>' + ('margin (diagnostic)' if f == 'margin' else f) + '</th>' for f in fields) + '</tr></thead><tbody>' + records + '</tbody></table>'
     page += '<script>document.querySelector("#filter").oninput=e=>document.querySelectorAll("tbody tr").forEach(r=>r.hidden=!r.textContent.toLowerCase().includes(e.target.value.toLowerCase()))</script>'
     (path / 'dashboard.html').write_text(page)

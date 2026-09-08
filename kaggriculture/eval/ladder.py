@@ -26,6 +26,7 @@ from pathlib import Path
 import statistics
 
 from .metrics import blocked_interval
+from .pairing import paired_rows
 
 ROOT = Path(__file__).resolve().parents[1]
 RATINGS = ROOT / 'opponents' / 'ratings.json'
@@ -136,15 +137,18 @@ def score(rows, ratings=None, **cohort_kwargs):
 
 def _paired(baseline, candidate):
     """Both legs must have met the same opponents on the same seeds and seats."""
-    key = lambda row: (row['seed'], row['seat'], opponent_id(row['opponent']))
-    left = {key(row): row for row in baseline}
-    right = {key(row): row for row in candidate}
-    if len(left) != len(baseline) or len(right) != len(candidate):
-        raise ValueError('Duplicate seed/seat/opponent keys in one of the legs')
-    if not left or left.keys() != right.keys():
-        raise ValueError('Unpaired comparison: the two legs must share every seed, seat '
-                         'and opponent, so an unpaired run raises instead of widening')
-    return left, right
+    left, right = paired_rows(baseline, candidate)
+    specs = {key[2] for key in left}
+    if len({opponent_id(name) for name in specs}) != len(specs):
+        raise ValueError('Ambiguous opponent IDs; use distinct bundle names')
+    return ({(seed, seat, opponent_id(name)): row for (seed, seat, name), row in left.items()},
+            {(seed, seat, opponent_id(name)): row for (seed, seat, name), row in right.items()})
+
+
+def delta_interval(rows):
+    # Differences range from -1 to 1. One block cannot estimate sampling uncertainty.
+    return blocked_interval([dict(row, delta=row['score']) for row in rows],
+                            samples=10000, field='delta')
 
 
 def delta_win(baseline, candidate, ratings=None, **cohort_kwargs):
@@ -171,7 +175,7 @@ def delta_win(baseline, candidate, ratings=None, **cohort_kwargs):
             return {'games': 0, 'delta_win': None, 'ci95': [None, None]}
         return {'games': len(subset),
                 'delta_win': statistics.mean(row['score'] for row in subset),
-                'ci95': blocked_interval(subset, field='score'),
+                'ci95': delta_interval(subset),
                 'delta_margin_diagnostic': statistics.mean(row['margin'] for row in subset)}
 
     per_opponent = {}
@@ -179,6 +183,7 @@ def delta_win(baseline, candidate, ratings=None, **cohort_kwargs):
         subset = [row for row in deltas if row['opponent'] == name]
         per_opponent[name] = {'cohort': labels[name], **summarize(subset)}
     return {
+        'bootstrap': {'method': 'percentile', 'unit': 'seed', 'samples': 10000, 'seed': 771},
         'games_per_leg': len(left), 'seed_blocks': len({key[0] for key in left}),
         'strong': summarize([row for row in deltas if row['cohort'] == 'strong']),
         'all': summarize(deltas),
@@ -221,15 +226,15 @@ def leave_one_out(baseline, candidate, ratings=None, **cohort_kwargs):
         result[dropped] = ({'games': 0, 'delta_win': None, 'ci95': [None, None]} if not rows else
                            {'games': len(rows),
                             'delta_win': statistics.mean(row['score'] for row in rows),
-                            'ci95': blocked_interval(rows, field='score')})
+                            'ci95': delta_interval(rows)})
     return result
 
 
 def carried_by(leave_one_out_result):
     """Strong opponents whose removal leaves the primary delta indistinguishable from zero.
 
-    If any single opponent appears here, the measured gain is that opponent's gain and the
-    candidate has not been shown to be better against the field.
+    If any single opponent appears here, the remaining evidence does not establish a positive
+    field-wide effect. This does not prove all improvement comes from that opponent.
     """
     return sorted(name for name, row in leave_one_out_result.items()
                   if row['delta_win'] is None or row['ci95'][0] is None or row['ci95'][0] <= 0)
@@ -247,14 +252,26 @@ def main():
     parser.add_argument('candidate', help='league result directory for the challenger')
     parser.add_argument('--cut', type=float, default=STRONG_CUT)
     parser.add_argument('--max-rating-age-days', type=int, default=MAX_RATING_AGE_DAYS)
+    parser.add_argument('--ratings', help='frozen ratings JSON (ratings mapping or ratings.json envelope)')
+    parser.add_argument('--as-of', type=date.fromisoformat, default=date.today())
+    parser.add_argument('--mirrors', default='', help='comma-separated known shared-tape opponent IDs')
     parser.add_argument('--output')
     args = parser.parse_args()
-    result = delta_win(rows_from(args.baseline), rows_from(args.candidate),
-                       cut=args.cut, max_age_days=args.max_rating_age_days)
-    result['concentrated_regression'] = concentrated_regression(result)
-    result['leave_one_out'] = leave_one_out(rows_from(args.baseline), rows_from(args.candidate),
-                                            cut=args.cut, max_age_days=args.max_rating_age_days)
-    result['carried_by'] = carried_by(result['leave_one_out'])
+    from .comparison import build_comparison
+    ratings = None
+    if args.ratings:
+        raw = json.loads(Path(args.ratings).read_text())
+        ratings = raw.get('ratings', raw)
+    splits = []
+    for directory in (args.baseline, args.candidate):
+        summary = Path(directory) / 'summary.json'
+        splits.append(json.loads(summary.read_text()).get('metadata', {}).get('split')
+                      if summary.is_file() else None)
+    split = splits[0] if splits[0] == splits[1] else None
+    result = build_comparison(rows_from(args.baseline), rows_from(args.candidate),
+                              ratings=ratings, today=args.as_of, split=split,
+                              mirrors=[name for name in args.mirrors.split(',') if name],
+                              cut=args.cut, max_age_days=args.max_rating_age_days)
     text = json.dumps(result, indent=2) + '\n'
     if args.output:
         Path(args.output).write_text(text, encoding='utf-8')

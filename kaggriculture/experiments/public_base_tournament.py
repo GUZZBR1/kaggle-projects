@@ -190,7 +190,7 @@ def _family_summary(rows, opponents, own_family=None):
             'score': statistics.mean(scores),
             'score_ci95': blocked_interval(batch),
             'money': statistics.mean(row['money'] for row in batch),
-            'margin': statistics.mean(row['margin'] for row in batch),
+            'margin_diagnostic': statistics.mean(row['margin'] for row in batch),
         }
     return result
 

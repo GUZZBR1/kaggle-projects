@@ -18,11 +18,11 @@ def blocked_interval(rows, samples=5000, seed=771, field='score'):
     blocks = defaultdict(list)
     for row in rows:
         blocks[row['seed']].append(row[field])
-    means = [statistics.mean(values) for values in blocks.values()]
+    means = [statistics.mean(blocks[key]) for key in sorted(blocks)]
     if len(means) < 2:
         return [0., 1.] if field == 'score' else [None, None]
     rng = random.Random(seed)
-    boot = [statistics.mean(rng.choices(means, k=len(means))) for _ in range(samples)]
+    boot = [sum(rng.choices(means, k=len(means))) / len(means) for _ in range(samples)]
     return [quantile(boot, .025), quantile(boot, .975)]
 
 
@@ -45,7 +45,7 @@ def summarize(rows, samples=5000):
         per_opponent[opponent] = {
             'games': len(subset), 'score_rate': statistics.mean(r['score'] for r in subset),
             'score_ci95': blocked_interval(subset, samples),
-            'mean_margin': statistics.mean(r['margin'] for r in subset),
+            'mean_margin_diagnostic': statistics.mean(r['margin'] for r in subset),
         }
     return {
         'games': n, 'seed_blocks': len({r['seed'] for r in rows}),
@@ -54,8 +54,8 @@ def summarize(rows, samples=5000):
         'loss_rate': sum(r['score'] == 0 for r in rows) / n,
         'score_rate': statistics.mean(r['score'] for r in rows),
         'score_ci95': blocked_interval(rows, samples),
-        'mean_margin': statistics.mean(r['margin'] for r in rows),
-        'median_margin': statistics.median(r['margin'] for r in rows),
+        'mean_margin_diagnostic': statistics.mean(r['margin'] for r in rows),
+        'median_margin_diagnostic': statistics.median(r['margin'] for r in rows),
         'failures': sum(len(r['failures']) for r in rows),
         'opponent_failures': sum(len(r['opponent_failures']) for r in rows),
         'no_effect_actions': sum(r['audit'].get('no_effect_actions', 0) for r in rows),

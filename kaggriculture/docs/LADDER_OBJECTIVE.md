@@ -1,6 +1,7 @@
 # O objetivo local passa a ser o objetivo do leaderboard
 
-Fecha as issues #31 e #33. O que estava errado até aqui não era a arena — era o que a
+A #31 introduziu a métrica. A conclusão da #33 e o gate estão em
+[PAIRED_EVALUATION.md](PAIRED_EVALUATION.md). O que estava errado até aqui não era a arena — era o que a
 arena otimizava.
 
 ## O que estava errado
@@ -14,9 +15,12 @@ O `v004` é o caso concreto. Refeita a comparação pareada e bloqueada por seed
 
 | recorte | v004 | yhay | delta | CI95 |
 |---|---:|---:|---:|---|
-| painel completo | 0,8886 | 0,8086 | +0,080 | [+0,044, +0,116] |
-| **sem o espelho com o yhay** | 0,8767 | 0,8600 | **+0,017** | **[−0,030, +0,063]** |
+| painel completo | 0,8886 | 0,8086 | +0,080 | [+0,045714, +0,114286] |
+| **sem o espelho com o yhay** | 0,8767 | 0,8600 | **+0,017** | **[−0,026667, +0,060000]** |
 | só contra `yhay_router_0908` | 0,9600 | 0,5000 | +0,460 | [+0,406, +0,514] |
+
+Os intervalos acima foram recalculados com 10.000 reamostragens e PRNG seed 771;
+os valores manuais anteriores e a diferença estão documentados em `PAIRED_EVALUATION.md`.
 
 As margens melhoraram de 1 200 a 1 600 moedas em todas as famílias. Foi nisso que a
 submissão foi gasta.

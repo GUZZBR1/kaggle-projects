@@ -27,8 +27,8 @@ atualizar somente o hash não valida a mudança.
 - `eval/`: métricas, intervalos por blocos de seeds e comparação pareada.
 - `submission/`: geração de Python independente e teste pelo loader real do Kaggle.
 - `versions/`: artefatos imutáveis; `champion` aponta para `v000`, `challenger` usa o código atual.
-  `v003` não é gerado por `submission/build.py`: é um portfólio de fitas roteado, construído
-  por `experiments/tape_portfolio.py`, com a proveniência das fitas no seu manifesto.
+  `v003` e `v004` não são gerados por `submission/build.py`: são portfólios de fitas construídos
+  por `experiments/tape_portfolio.py` e `experiments/chassis_portfolio.py`, respectivamente, com a proveniência das fitas no seu manifesto.
 - `opponents/frozen/`: snapshots anteriores à correção de venda, com parâmetros e hashes.
 - `opponents/public/`: adversários externos fixados por commit ou por notebook público, com licença preservada.
 - `experiments/episode_tapes.py`, `tape_screen.py`, `tape_portfolio.py`: ler o dump diário de
@@ -82,10 +82,10 @@ do holdout. `config.yaml` e este README apenas resumem o registro.
 1. `diagnostic`: `0:1000` e `314159`, para testes e preflight. Nunca é evidência
    competitiva.
 2. `dev`: `1000:1100`, com ajustes permitidos.
-3. `seen`: `100000:100100`, já consumidos pela issue #3 e pelo experimento de
+3. `seen`: `100000:100125`, já consumidos pela issue #3 e pelo experimento de
    FERTILIZE. Não são validação inédita: não ajuste parâmetros neles e depois os
    reutilize como teste independente.
-4. `validation`: `100100:100200`, reservados para um candidato já congelado.
+4. `validation`: `100125:100200`, reservados para um candidato já congelado.
 5. `holdout`: começa em `9000000`, reservado para a decisão final de lançamento.
 
 As faixas são semiabertas. Rodar `--split validation` queima os seeds pedidos
@@ -94,11 +94,9 @@ Uma execução interrompida ou fracassada não os devolve: essa é a diferença 
 validação inédita e evidência já vista. O `summary.json` registra a revisão e o
 sha256 do registro usados.
 
-```bash
-.venv/bin/python -m arena.league --candidate versions/v002/main.py \
-  --opponents starter,animal --seeds 100100:100200 --split validation \
-  --output experiments/results/validation-v002
-```
+A reserva atual contém 75 seeds inéditas. Uma validação de 100 blocos exige nova
+faixa registrada com proveniência; não reutilize `100100:100125`. Veja o driver
+pareado e a política em [PAIRED_EVALUATION.md](docs/PAIRED_EVALUATION.md).
 
 Use pelo menos 100 blocos na validação, examine cada adversário separadamente e
 mantenha o holdout intocado até a decisão final.
@@ -106,14 +104,11 @@ mantenha o holdout intocado até a decisão final.
 `docs/ISSUE22_DAILY_ECONOMICS.md` traz o primeiro diagnóstico feito com ela: o
 déficit contra o adversário público é de liquidez inicial, não de execução.
 
-Para uma comparação pareada em `validation`, declare as duas pernas com
-`--paired-with`, senão a segunda encontra os seeds já queimados pela primeira:
-
-```bash
-.venv/bin/python -m arena.league --candidate versions/v002/main.py \
-  --paired-with versions/v001/main.py --seeds 100100:100200 --split validation \
-  --opponents starter,animal --output experiments/results/validation-v002
-```
+Para executar as duas pernas com um comando, use `python -m arena.paired`.
+Ele declara os dois candidatos no registro antes das partidas, congela os ratings,
+produz o bootstrap pareado e executa o gate. `--paired-with` de `arena.league`
+continua disponível para declarar lotes manualmente. Comandos completos estão em
+[PAIRED_EVALUATION.md](docs/PAIRED_EVALUATION.md).
 
 Cada partida também emite telemetria diária (`daily.csv`, `summary.json`): caixa,
 primeira receita, piso de caixa, contratações, plantios, colheitas, preço

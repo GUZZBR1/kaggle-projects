@@ -5,13 +5,13 @@ import time
 
 from .agents import agent_hash
 from .parallel import matches
-from .seeds import SPLITS, admit_run, parse_seeds
+from .seeds import REGISTRY, SPLITS, admit_run, parse_seeds
 from eval.metrics import summarize
 from eval.reports import write_report
 
 
 def run_league(candidate, opponents, seeds, workers=4, backend='fast', output=None, split='dev',
-               paired_with=()):
+               paired_with=(), registry_path=REGISTRY):
     if len(set(opponents)) != len(opponents) or not opponents or len(set(seeds)) != len(seeds) or not seeds:
         raise ValueError('Require unique, nonempty opponents and seeds')
     started = time.perf_counter()
@@ -27,7 +27,7 @@ def run_league(candidate, opponents, seeds, workers=4, backend='fast', output=No
                   'opponents': opponents, 'opponent_hashes': hashes, 'backend': backend,
                   'seeds': list(seeds), 'seats': [0, 1],
                   'requested_at': datetime.now(timezone.utc).isoformat()}
-    registry = admit_run(seeds, split, provenance)
+    registry = admit_run(seeds, split, provenance, path=registry_path)
     jobs = [dict(candidate=candidate, opponent=opponent, seed=seed, seat=seat, backend=backend)
             for seed in seeds for opponent in opponents for seat in (0, 1)]
     rows = []

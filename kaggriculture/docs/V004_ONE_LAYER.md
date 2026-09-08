@@ -1,5 +1,11 @@
 # Uma camada paga, uma camada mata, e seis não fazem nada
 
+> Registro histórico. A interpretação de promoção abaixo foi revista em
+> [LADDER_OBJECTIVE.md](LADDER_OBJECTIVE.md) e
+> [PAIRED_EVALUATION.md](PAIRED_EVALUATION.md): o gate atual retorna **NO SUBMIT**.
+> Margens nas tabelas são diagnósticos; o ganho fora do espelho não ficou demonstrado.
+
+
 Medição de 2026-09-08. O `v004` é a primeira submissão nossa que bate o teto do
 campo público em vez de perder para ele, e o ganho inteiro vem de uma decisão de
 uma linha, tomada com base em ablação e não em fé.

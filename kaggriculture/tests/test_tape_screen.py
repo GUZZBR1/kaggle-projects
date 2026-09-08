@@ -24,9 +24,12 @@ def test_a_tape_is_ranked_by_its_weakest_matchup_not_its_average():
     assert table[0]['score'] == table[1]['score'] == 0.5, 'the aggregate cannot separate them'
 
 
-def test_margin_breaks_a_tie_that_score_cannot():
+def test_margin_cannot_break_a_score_tie():
     rows = [row('rich', 'a', 1., margin=9000.), row('poor', 'a', 1., margin=10.)]
-    assert [entry['tape'] for entry in rank(payload(rows))] == ['rich', 'poor']
+    assert [entry['tape'] for entry in rank(payload(rows))] == ['poor', 'rich']
+    for entry in rows:
+        entry['margin'] *= -100
+    assert [entry['tape'] for entry in rank(payload(rows))] == ['poor', 'rich']
 
 
 def test_ranking_carries_the_provenance_of_each_tape():

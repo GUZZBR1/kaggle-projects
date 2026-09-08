@@ -48,7 +48,7 @@ def run_sweep(seeds: list[int], workers: int, artifact_dir: Path) -> list[dict]:
                 "animal_target": target,
                 "score_rate": summary["score_rate"],
                 "score_ci95": summary["score_ci95"],
-                "mean_margin": summary["mean_margin"],
+                "mean_margin_diagnostic": summary["mean_margin_diagnostic"],
                 "failures": summary["failures"],
                 "opponent_failures": summary["opponent_failures"],
                 "per_opponent": summary["per_opponent"],
@@ -57,7 +57,7 @@ def run_sweep(seeds: list[int], workers: int, artifact_dir: Path) -> list[dict]:
         )
         print(
             f"{name}: score={summary['score_rate']:.1%} "
-            f"CI95={summary['score_ci95']} margin={summary['mean_margin']:.0f}",
+            f"CI95={summary['score_ci95']} margin (diagnostic)={summary['mean_margin_diagnostic']:.0f}",
             flush=True,
         )
     return results
@@ -74,7 +74,7 @@ def write_report(output: Path, seeds: list[int], workers: int, results: list[dic
         "results": results,
     }
     (output / "summary.json").write_text(json.dumps(payload, indent=2) + "\n")
-    ranked = sorted(results, key=lambda row: (row["score_rate"], row["mean_margin"]), reverse=True)
+    ranked = sorted(results, key=lambda row: (-row["score_rate"], row["animal_type"], row["animal_target"]))
     lines = [
         "# Animal strategy sweep",
         "",
@@ -83,19 +83,19 @@ def write_report(output: Path, seeds: list[int], workers: int, results: list[dic
         f"Games per configuration: {len(seeds) * len(OPPONENTS) * 2}",
         f"Seed blocks: {len(seeds)}",
         "",
-        "| Rank | Animal | Target | Score | CI95 | Mean margin | Failures |",
+        "| Rank | Animal | Target | Score | CI95 | Mean margin (diagnostic) | Failures |",
         "|---:|---|---:|---:|---|---:|---:|",
     ]
     for rank, row in enumerate(ranked, 1):
         lines.append(
             f"| {rank} | {row['animal_type']} | {row['animal_target']} | "
             f"{row['score_rate']:.1%} | {row['score_ci95']} | "
-            f"{row['mean_margin']:.0f} | {row['failures']} |"
+            f"{row['mean_margin_diagnostic']:.0f} | {row['failures']} |"
         )
     lines.extend(
         [
             "",
-            "The winner is selected by score rate, with mean margin used only as a tie-breaker.",
+            "The winner is selected by score rate; animal type and target provide a deterministic tie order. Margin is diagnostic.",
             "The sweep does not change the immutable `versions/v000` artifact.",
         ]
     )

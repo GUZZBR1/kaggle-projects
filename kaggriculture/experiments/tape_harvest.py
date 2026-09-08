@@ -43,7 +43,7 @@ def extract(replay, seat):
     return actions
 
 
-def harvest(donors, opponents, seeds, output, *, workers=4, min_margin=0., min_score=1.,
+def harvest(donors, opponents, seeds, output, *, workers=4, min_score=1.,
             replay_dir=None):
     """Run every donor against every opponent on both seats and keep the winners.
 
@@ -74,7 +74,7 @@ def harvest(donors, opponents, seeds, output, *, workers=4, min_margin=0., min_s
             stats['failed'] += 1
             path.unlink(missing_ok=True)
             continue
-        if row['score'] < min_score or row['margin'] < min_margin:
+        if row['score'] < min_score:
             stats['rejected_weak'] += 1
             path.unlink(missing_ok=True)
             continue
@@ -95,12 +95,14 @@ def harvest(donors, opponents, seeds, output, *, workers=4, min_margin=0., min_s
         seen[digest] = entry
         library.append(entry)
         stats['kept'] += 1
-    library.sort(key=lambda tape: -tape['margin'])
+    library.sort(key=lambda tape: (-tape['score'], tape['sha256']))
     payload = {'schema_version': SCHEMA,
                'created_at': datetime.now(timezone.utc).isoformat(),
                'donors': {name: agent_hash(name) for name in donors},
                'opponents': {name: agent_hash(name) for name in opponents},
-               'seeds': seeds, 'filter': {'min_score': min_score, 'min_margin': min_margin},
+               'seeds': seeds, 'filter': {'min_score': min_score},
+               'diagnostic_fields': ['money', 'opponent_money', 'margin'],
+               'selection_rule': 'score descending, then action digest',
                'stats': dict(stats), 'tapes': library}
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(payload) + '\n', encoding='utf-8')
@@ -113,16 +115,15 @@ def main():
     parser.add_argument('--opponents', required=True)
     parser.add_argument('--seeds', default='1000:1010')
     parser.add_argument('--workers', type=int, default=4)
-    parser.add_argument('--min-margin', type=float, default=0.)
     parser.add_argument('--min-score', type=float, default=1.)
     parser.add_argument('--output', required=True)
     args = parser.parse_args()
     payload = harvest(args.donors.split(','), args.opponents.split(','),
                       parse_seeds(args.seeds), args.output, workers=args.workers,
-                      min_margin=args.min_margin, min_score=args.min_score)
+                      min_score=args.min_score)
     print(json.dumps({'stats': payload['stats'],
                       'tapes': len(payload['tapes']),
-                      'best_margin': payload['tapes'][0]['margin'] if payload['tapes'] else None},
+                      'first_margin_diagnostic': payload['tapes'][0]['margin'] if payload['tapes'] else None},
                      indent=2))
 
 

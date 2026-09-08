@@ -74,8 +74,9 @@ def build(tape, output, provenance='unknown'):
 
 
 def select(library, rank=0):
-    """Tapes arrive ranked by the margin they actually produced."""
-    tapes = library['tapes']
+    """Select by win outcome and stable digest, including legacy libraries."""
+    tapes = sorted(library['tapes'], key=lambda tape: (-tape.get('score', 0),
+                                                     tape.get('sha256', tape.get('id', ''))))
     if not tapes:
         raise ValueError('The library is empty; nothing to replay')
     if not 0 <= rank < len(tapes):
@@ -92,9 +93,9 @@ def main():
     library = json.loads(Path(args.library).read_text())
     tape = select(library, args.rank)
     provenance = f"{tape['id']} from {Path(tape['donor']).name} vs {Path(tape['opponent']).name} " \
-                 f"seed {tape['seed']} seat {tape['seat']} margin {tape['margin']:.0f}"
+                 f"seed {tape['seed']} seat {tape['seat']} diagnostic margin {tape['margin']:.0f}"
     build(tape, args.output, provenance)
-    print(json.dumps({'tape': tape['id'], 'margin': tape['margin'], 'donor': tape['donor'],
+    print(json.dumps({'tape': tape['id'], 'margin_diagnostic': tape['margin'], 'donor': tape['donor'],
                       'output': args.output}, indent=2))
 
 

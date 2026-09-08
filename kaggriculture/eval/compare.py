@@ -5,6 +5,7 @@ from pathlib import Path
 import random
 import statistics
 
+from .pairing import paired_rows
 from .metrics import blocked_interval, quantile, summarize
 
 
@@ -29,24 +30,10 @@ def sales_interval(left, right, item, samples=5000):
 
 
 def compare(baseline, candidate):
-    def keyed(rows):
-        result = {(r['seed'], r['seat'], r['opponent']): r for r in rows}
-        if len(result) != len(rows):
-            raise ValueError('Duplicate match keys')
-        if len({r['candidate_hash'] for r in rows}) != 1:
-            raise ValueError('Candidate changed during the league')
-        return result
-    left, right = keyed(baseline), keyed(candidate)
-    if not left or left.keys() != right.keys():
-        raise ValueError('Require identical nonempty seed/seat/opponent sets')
+    left, right = paired_rows(baseline, candidate)
     deltas = []
     for key, old in left.items():
         new = right[key]
-        for field in ('opponent_hash', 'configuration', 'environment', 'backend'):
-            if old[field] != new[field]:
-                raise ValueError(f'Unpaired {field}: {key}')
-        if old['failures'] or new['failures'] or old['opponent_failures'] or new['opponent_failures']:
-            raise ValueError(f'Callback failure invalidates comparison: {key}')
         deltas.append({'seed': key[0], **{field: new[field] - old[field]
                        for field in ('score', 'money', 'margin', 'unsold_items')}})
     summaries = [summarize(rows) for rows in (baseline, candidate)]
@@ -58,7 +45,8 @@ def compare(baseline, candidate):
                           'delta_per_unit': b - a if a is not None and b is not None else None,
                           'delta_per_unit_ci95': sales_interval(left, right, item)}
     return {'games_per_agent': len(left), 'seed_blocks': len({k[0] for k in left}),
-            'paired_deltas': {field: {'mean': statistics.mean(d[field] for d in deltas),
+            'paired_deltas': {field: {'role': 'diagnostic' if field in ('money', 'margin', 'unsold_items') else 'objective',
+                                       'mean': statistics.mean(d[field] for d in deltas),
                                       'ci95': blocked_interval(deltas, field=field)}
                               for field in ('score', 'money', 'margin', 'unsold_items')},
             'premium_sales': products,

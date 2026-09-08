@@ -58,7 +58,7 @@ def test_identical_streams_collapse_into_one_tape_that_counts_its_repeats(tmp_pa
     tapes = payload['tapes']
     assert payload['episodes'] == 3
     assert len(tapes) == 3, 'two distinct seat-0 streams and the shared seat-1 stream'
-    assert tapes[0]['money'] == 200., 'the library is ranked by the money it produced'
+    assert [t['sha256'] for t in tapes] == sorted(t['sha256'] for t in tapes)
     repeats = {tape['actions'][0]['farmer'][0]: tape['repeats'] for tape in tapes}
     assert repeats['NORTH'] == 1 and repeats['EAST'] == 0
     assert repeats['SOUTH'] == 2, 'the same seat-1 stream appeared in all three episodes'

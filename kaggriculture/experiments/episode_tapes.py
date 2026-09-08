@@ -60,7 +60,7 @@ def read_episode(path):
 
 
 def collect(source, output, *, workers=8, winners_only=False):
-    """Every distinct action stream in a dump, ranked by the money it produced."""
+    """Every distinct action stream in a dump, ordered by action digest."""
     output = Path(output)
     if output.exists():
         raise FileExistsError(output)
@@ -85,10 +85,12 @@ def collect(source, output, *, workers=8, winners_only=False):
                 row['repeats'] = 0
                 seen[row['sha256']] = row
                 library.append(row)
-    library.sort(key=lambda row: -(row['money'] or 0))
+    library.sort(key=lambda row: row['sha256'])
     payload = {'schema_version': SCHEMA, 'source': str(source),
                'created_at': datetime.now(timezone.utc).isoformat(),
                'episodes': len(paths), 'errors': errors[:20], 'error_count': len(errors),
+               'diagnostic_fields': ['money', 'opponent_money'],
+               'selection_rule': 'action digest; optional win filter',
                'winners_only': winners_only, 'tapes': library}
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(payload) + '\n', encoding='utf-8')
@@ -106,8 +108,8 @@ def main():
                       winners_only=args.winners_only)
     best = payload['tapes'][0] if payload['tapes'] else {}
     print(json.dumps({'episodes': payload['episodes'], 'errors': payload['error_count'],
-                      'tapes': len(payload['tapes']), 'best_money': best.get('money'),
-                      'best_team': best.get('team')}, indent=2))
+                      'tapes': len(payload['tapes']), 'first_money_diagnostic': best.get('money'),
+                      'first_team': best.get('team')}, indent=2))
 
 
 if __name__ == '__main__':

@@ -63,6 +63,7 @@ def screen(tapes, opponents, seeds, *, workers=4, agent_dir, output=None):
               for tape in tapes}
     payload = {'opponents': opponents, 'opponent_hashes': {n: agent_hash(p) for n, p in
                                                            opponents.items()},
+               'diagnostic_fields': ['money', 'opponent_money', 'margin'],
                'seeds': list(seeds), 'agent_dir': str(agent_dir), 'tapes': labels, 'rows': rows}
     if output:
         Path(output).parent.mkdir(parents=True, exist_ok=True)
@@ -84,11 +85,11 @@ def rank(payload):
         table.append({'tape': sha, 'games': len(rows),
                       'score': statistics.mean(row['score'] for row in rows),
                       'worst_family': worst,
-                      'margin': statistics.mean(row['margin'] for row in rows),
+                      'margin_diagnostic': statistics.mean(row['margin'] for row in rows),
                       'per_opponent': {name: statistics.mean(values)
                                        for name, values in sorted(by_opponent.items())},
                       **payload['tapes'].get(sha, {})})
-    table.sort(key=lambda entry: (-entry['worst_family'], -entry['score'], -entry['margin']))
+    table.sort(key=lambda entry: (-entry['worst_family'], -entry['score'], entry['tape']))
     return table
 
 
@@ -99,7 +100,7 @@ def main():
                         help='comma-separated name=path pairs')
     parser.add_argument('--seeds', default='1000:1002')
     parser.add_argument('--workers', type=int, default=4)
-    parser.add_argument('--limit', type=int, default=0, help='keep the N richest tapes')
+    parser.add_argument('--limit', type=int, default=0, help='screen the first N tapes in digest order')
     parser.add_argument('--only', default='', help='comma-separated tape id prefixes')
     parser.add_argument('--agent-dir', required=True)
     parser.add_argument('--output', required=True)
@@ -110,13 +111,13 @@ def main():
         wanted = tuple(args.only.split(','))
         tapes = [t for t in tapes if t['sha256'].startswith(wanted)]
     elif args.limit:
-        tapes = tapes[:args.limit]
+        tapes = sorted(tapes, key=lambda tape: tape['sha256'])[:args.limit]
     opponents = dict(pair.split('=', 1) for pair in args.opponents.split(','))
     payload = screen(tapes, opponents, parse_seeds(args.seeds), workers=args.workers,
                      agent_dir=args.agent_dir, output=args.output)
     for entry in rank(payload)[:25]:
         print(f"{entry['tape'][:12]}  worst={entry['worst_family']:.3f} "
-              f"score={entry['score']:.3f} margin={entry['margin']:9.0f}  {entry.get('team')}")
+              f"score={entry['score']:.3f} margin (diagnostic)={entry['margin_diagnostic']:9.0f}  {entry.get('team')}")
 
 
 if __name__ == '__main__':
