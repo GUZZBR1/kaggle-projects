@@ -80,9 +80,16 @@ and the mechanism is visible in the observation itself:
 A tape is a bet on a particular demand profile. Routing at 72-turn block
 boundaries is not "reading the opponent", it is *waiting until the game has told
 you which world you are in*. That is why every strong public artifact branches on
-a 72- or 144-turn schedule, and why all five tapes inside `thomas95` are
-byte-identical for the first 144 turns: before then there is genuinely nothing to
-decide.
+a 72- or 144-turn schedule.
+
+> **Correção (2026-09-08).** Este documento afirmava que as cinco fitas do
+> `thomas95` são byte-idênticas nos primeiros 144 turnos. **Elas não são**: as
+> quatro divergem da rota 0 já no turno 1, em 15 a 29 dos primeiros 144 turnos.
+> A normalização da abertura é uma *decisão de projeto* que o notebook v23 do
+> `ahmedberatozer` toma explicitamente (`tape[:144] = base[:144]`), não uma
+> propriedade dos dados. O argumento de que não há nada a decidir antes do
+> primeiro shop continua válido pelo lado do jogo — a cidade não revelou nada —
+> mas não pode ser apoiado nessa evidência.
 
 The corrected direction is therefore a portfolio of strong tapes routed on **town
 and market state** at block boundaries, not a library specialised per opponent.
