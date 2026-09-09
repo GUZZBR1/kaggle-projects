@@ -79,7 +79,7 @@ def provenance(rows):
             'seeds': sorted({row['seed'] for row in rows})}
 
 
-def standing(rows, ranks, lineages=None, *, floor=LINEAGE_FLOOR,
+def standing(rows, ranks=None, lineages=None, *, panel=None, floor=LINEAGE_FLOOR,
              safe_top20=SAFE_TOP20_WIN_RATE):
     """Absolute standing of one agent against a panel, banded by opponent rank.
 
@@ -87,9 +87,26 @@ def standing(rows, ranks, lineages=None, *, floor=LINEAGE_FLOOR,
     opponent id to its leaderboard rank; an opponent absent from it is reported under
     `unbanded` and gates nothing. `lineages` groups opponents that share provenance --
     the manifest family is the usual source -- and defaults to one lineage per opponent.
+
+    `panel` is a snapshot from `eval/panel.py`, and it is the form a release standing
+    should take: the ranks and the lineages are derived from it instead of typed beside
+    the run, the report records the revision it stood against, and a panel that cannot
+    support the question -- an empty decisive band, a band carried by one lineage, an
+    observation past its freshness window -- fails the gate rather than being averaged
+    into a number that looks fine. Passing both is a contradiction, not a merge.
     """
     if not rows:
         raise ValueError('Cannot report standing over an empty panel')
+    reference = None
+    if panel is not None:
+        from . import panel as panels
+        if ranks is not None or lineages is not None:
+            raise ValueError('A panel snapshot already carries the ranks and the lineages; '
+                             'passing them beside it is the drift the snapshot removes')
+        ranks, lineages = panels.ranks(panel), panels.lineages(panel)
+        reference = panels.reference(panel)
+    elif ranks is None:
+        raise ValueError('Standing needs either a panel snapshot or a ranks mapping')
     for row in rows:
         if row['score'] not in (0., .5, 1.):
             raise ValueError('Standing is a wins-only statistic; margin is not a score')
@@ -128,6 +145,7 @@ def standing(rows, ranks, lineages=None, *, floor=LINEAGE_FLOOR,
         'top20': top20,
         'lineage_floor': floor,
         'provenance': provenance(rows),
+        'panel': reference,
     }
     report['gate'] = gate(report, floor=floor, safe_top20=safe_top20)
     return report
@@ -142,6 +160,12 @@ def gate(report, *, floor=LINEAGE_FLOOR, safe_top20=SAFE_TOP20_WIN_RATE):
     in it.
     """
     reasons = []
+    # The panel refuses first, and for a different reason than the numbers do: a band
+    # carried by one lineage or a snapshot a fortnight old makes every win rate below it
+    # a statement about the wrong population. A standing over a panel that cannot answer
+    # the question is not a weaker pass, it is not an answer.
+    for refusal in ((report.get('panel') or {}).get('gate') or {}).get('refusals') or []:
+        reasons.append('Panel: ' + refusal)
     for name, _, _, threshold in BANDS:
         row = report['per_band'][name]
         if row['win_rate'] is None:
@@ -176,7 +200,10 @@ def render(report, candidate='candidate', panel='TOP20 META'):
     overall, low, high = report['overall'], *report['overall']['ci95']
     seats = '   '.join(f'seat{seat} = {_pct(row["win_rate"])}'
                        for seat, row in sorted(report['per_seat'].items()))
-    lines = [f'Candidate {candidate}', f'vs {panel}', '',
+    stood = report.get('panel') or {}
+    against = (f'{panel} (panel {stood["revision"][:12]}, observed {stood["observed_at"]})'
+               if stood else f'{panel} (no panel snapshot)')
+    lines = [f'Candidate {candidate}', f'vs {against}', '',
              f'WR = {_pct(overall["win_rate"])}   '
              f'95% CI = [{_pct(low)}, {_pct(high)}]   '
              f'({overall["games"]} games, {report["seed_blocks"]} seed blocks)',
@@ -206,10 +233,13 @@ def main():
     from .near_ties import _rows
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('run', help='matches.csv file or results directory')
-    parser.add_argument('--ranks', required=True, help='JSON mapping opponent id to leaderboard rank')
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument('--panel', dest='panel_snapshot',
+                       help='a filed eval.panel revision; the form a release standing takes')
+    group.add_argument('--ranks', help='JSON mapping opponent id to leaderboard rank')
     parser.add_argument('--lineages', help='JSON mapping opponent id to lineage; defaults to the manifest family')
     parser.add_argument('--candidate', default='candidate')
-    parser.add_argument('--panel', default='TOP20 META')
+    parser.add_argument('--panel-label', default='TOP20 META', dest='panel')
     parser.add_argument('--output')
     args = parser.parse_args()
     from .comparison import load_families
@@ -222,8 +252,15 @@ def main():
             if full is not None and full.exists() else _rows(args.run))
     for row in rows:
         row['opponent'] = opponent_id(row['opponent'])
-    lineages = (json.loads(Path(args.lineages).read_text()) if args.lineages else load_families())
-    report = standing(rows, json.loads(Path(args.ranks).read_text()), lineages)
+    if args.panel_snapshot:
+        from .panel import load as load_panel
+        if args.lineages:
+            parser.error('--lineages contradicts --panel: the snapshot carries the lineages')
+        report = standing(rows, panel=load_panel(args.panel_snapshot))
+    else:
+        lineages = (json.loads(Path(args.lineages).read_text()) if args.lineages
+                    else load_families())
+        report = standing(rows, json.loads(Path(args.ranks).read_text()), lineages)
     print(render(report, args.candidate, args.panel), end='')
     if args.output:
         Path(args.output).write_text(json.dumps(report, indent=2, default=str) + '\n')

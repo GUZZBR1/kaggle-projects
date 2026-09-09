@@ -127,6 +127,29 @@ Não promova apenas por margem média ou vitória contra variantes próprias. Co
 taxa de vitória pareada, falhas, sobras, descarte e orçamento de execução. O intervalo
 bootstrap descreve os seeds e adversários testados; não estima a posição no ranking.
 
+## Painel meta versionado
+
+```bash
+.venv/bin/python -m eval.panel            # o que as fontes atuais produzem
+.venv/bin/python -m eval.panel --write    # fila a revisão em opponents/panels/
+```
+
+O painel é um dataset versionado, não um `--ranks` digitado ao lado da execução. Cada
+revisão junta o artefato fixado (hash, lineage, motor), o rating datado de
+`opponents/ratings.json` e o rank datado de `opponents/panel-observations.json`, e hasheia
+o conjunto em uma `revision` imutável. Um rank `author_upper_bound` nunca coloca um
+oponente *dentro* de uma faixa: ele limita o artefato por cima e só pode provar que um
+agente não é top 10.
+
+O gate recusa painel vencido (7 dias), faixa decisiva vazia, faixa carregada por uma só
+lineage e concentração acima de 50% — sempre recusando, nunca aprovando por omissão.
+`eval.standing --panel <revisão>` deriva ranks e lineages da revisão e registra no
+relatório contra o que ele ficou de pé; `--panel` e `--ranks` são mutuamente exclusivos.
+
+Hoje o painel **falha**: o melhor artefato público fixado está em rank 45, as faixas
+`top10` e `rank10_30` estão vazias e nenhum standing sobre ele autoriza um envio. Detalhes
+e procedimento de refresh em [PANEL_SNAPSHOT.md](docs/PANEL_SNAPSHOT.md).
+
 ## Artefato de submissão
 
 ```bash
