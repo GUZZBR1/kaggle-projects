@@ -27,6 +27,8 @@ SAFE_TOP20_WIN_RATE = .58
 # A structural 25-75 against a lineage the meta is full of sinks a run whatever the
 # aggregate says, so the floor is a gate condition and not a diagnostic.
 LINEAGE_FLOOR = .40
+# What a match row has to carry before a standing can name the artifact it measured.
+PROVENANCE_FIELDS = ('candidate_hash', 'environment', 'backend')
 
 
 def band_of(rank):
@@ -44,6 +46,37 @@ def _rate(rows):
         return {'games': 0, 'win_rate': None, 'ci95': [None, None]}
     return {'games': len(rows), 'win_rate': statistics.mean(r['score'] for r in rows),
             'ci95': blocked_interval(rows, samples=10000)}
+
+
+def provenance(rows):
+    """What this standing is a standing *of*, or None when the rows cannot say.
+
+    `matches.csv` drops the hash columns, so a standing loaded from it measures an
+    artifact it cannot name: the win rates are right and nothing ties them to the agent
+    a release decision is about. Supplying that tie here would be the same hand-carry
+    `eval/dossier.py` exists to remove, so the report states that it has none and the
+    dossier refuses the combination. A run directory keeps `matches.jsonl`, which does
+    carry the fields, and `main` prefers it for that reason.
+    """
+    if any(field not in row for row in rows for field in PROVENANCE_FIELDS):
+        return None
+    first = rows[0]
+    for field in PROVENANCE_FIELDS:
+        if any(row[field] != first[field] for row in rows):
+            raise ValueError(f'Standing mixes {field} across rows; one standing is one '
+                             'artifact, under one engine, on one backend')
+    hashes = {}
+    for row in rows:
+        if 'opponent_hash' not in row:
+            continue
+        if hashes.setdefault(row['opponent'], row['opponent_hash']) != row['opponent_hash']:
+            raise ValueError(f'Opponent {row["opponent"]} changed artifact mid-panel')
+    return {'candidate_hash': first['candidate_hash'], 'environment': first['environment'],
+            'backend': first['backend'],
+            'configuration': {key: value for key, value
+                              in (first.get('configuration') or {}).items() if key != 'seed'},
+            'opponent_hashes': dict(sorted(hashes.items())),
+            'seeds': sorted({row['seed'] for row in rows})}
 
 
 def standing(rows, ranks, lineages=None, *, floor=LINEAGE_FLOOR,
@@ -94,6 +127,7 @@ def standing(rows, ranks, lineages=None, *, floor=LINEAGE_FLOOR,
             row['win_rate'] for row in per_lineage.values()),
         'top20': top20,
         'lineage_floor': floor,
+        'provenance': provenance(rows),
     }
     report['gate'] = gate(report, floor=floor, safe_top20=safe_top20)
     return report
@@ -180,7 +214,12 @@ def main():
     args = parser.parse_args()
     from .comparison import load_families
     from .ladder import opponent_id
-    rows = _rows(args.run)
+    # Prefer matches.jsonl: matches.csv drops the hash columns, and they are what binds
+    # this standing to one artifact for eval.dossier.
+    run = Path(args.run)
+    full = run / 'matches.jsonl' if run.is_dir() else None
+    rows = ([json.loads(line) for line in full.read_text().splitlines() if line]
+            if full is not None and full.exists() else _rows(args.run))
     for row in rows:
         row['opponent'] = opponent_id(row['opponent'])
     lineages = (json.loads(Path(args.lineages).read_text()) if args.lineages else load_families())
