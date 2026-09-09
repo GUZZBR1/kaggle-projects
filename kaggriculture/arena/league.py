@@ -25,7 +25,7 @@ def store_path(output):
 
 def run_league(candidate, opponents, seeds, workers=4, backend='fast', output=None, split='dev',
                paired_with=(), registry_path=REGISTRY, resume=False, attempts=3, store=None,
-               runner=None):
+               runner=None, run_id=None):
     if len(set(opponents)) != len(opponents) or not opponents or len(set(seeds)) != len(seeds) or not seeds:
         raise ValueError('Require unique, nonempty opponents and seeds')
     started = time.perf_counter()
@@ -51,7 +51,7 @@ def run_league(candidate, opponents, seeds, workers=4, backend='fast', output=No
         target = ':memory:'
     elif not resume and Path(target).exists():
         raise ValueError(f'{target} already holds games for this run; pass resume to continue it')
-    with JobStore(target) as job_store:
+    with JobStore(target, run_id=run_id) as job_store:
         remaining = len(job_store.pending(jobs))
         if resume and remaining != len(jobs):
             print(f'resuming: {len(jobs) - remaining}/{len(jobs)} games already recorded', flush=True)
@@ -71,6 +71,7 @@ def run_league(candidate, opponents, seeds, workers=4, backend='fast', output=No
     metadata = {'candidate': candidate, 'candidate_hash': provenance['candidate_hash'],
                 'opponents': opponents, 'opponent_hashes': hashes,
                 'split': split, 'seeds': seeds, 'backend': backend, 'registry': registry,
+                'run_id': run_id,
                 'created_at': datetime.now(timezone.utc).isoformat(),
                 'wall_seconds': time.perf_counter() - started}
     if output:
