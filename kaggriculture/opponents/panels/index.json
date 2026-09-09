@@ -1,0 +1,23 @@
+[
+  {
+    "revision": "ce52cf88cacf97ac2692ea0cf117430512567a28c466da4f522e3062a892eb53",
+    "file": "panel-ce52cf88cacf.json",
+    "observed_at": "2026-09-08",
+    "built_at": "2026-09-09T00:21:57.869939+00:00",
+    "verdict": "FAIL",
+    "opponents": [
+      "aberatozer_d5e3",
+      "aberatozer_v23",
+      "boatlee_v16",
+      "boatlee_v21",
+      "kaitofukami_v48",
+      "lynnsakurai_v4",
+      "reyhanksatria_v1",
+      "seyamalam_v21",
+      "thomas_t93",
+      "thomas_t95",
+      "yamakawanin_king_v4e",
+      "yhay_router_0908"
+    ]
+  }
+]

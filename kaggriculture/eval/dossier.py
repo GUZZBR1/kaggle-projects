@@ -144,6 +144,8 @@ def run_spec(finalist):
             'standing_configuration': known.get('configuration'),
             'standing_panel': sorted(known.get('opponent_hashes') or {}),
             'standing_seeds': known.get('seeds'),
+            'panel_revision': ((finalist.get('standing') or {}).get('panel') or {}
+                               ).get('revision'),
             'candidate_hash': snapshot.get('candidate_hash'),
             'baseline_hash': snapshot.get('baseline_hash')}
     return {**spec, 'sha256': digest(spec)}
@@ -176,6 +178,17 @@ def criteria(finalist, *, now, registry=None):
             reasons.append(f'Standing: the panel ran on {split or "unregistered"} seeds. An '
                            'absolute standing that authorizes a release comes from reserved '
                            'validation seeds, like the paired comparison beside it.')
+
+    # A standing built against a filed panel revision already carries that panel's own
+    # refusals, and `eval/standing.py` folds them into its gate. Reported here as a
+    # separate line so a reader can see that the population, not the arithmetic, is what
+    # is missing. A standing with no panel reference is the pre-#45 form and is left to
+    # the band checks below.
+    stood = report.get('panel') or {}
+    if stood and (stood.get('gate') or {}).get('verdict') != 'PASS':
+        reasons += ['Panel: ' + reason for reason
+                    in (stood['gate'].get('refusals')
+                        or ['the panel snapshot does not support a release standing.'])]
 
     for band in TOP20_BANDS:
         opponents = ((report.get('per_band') or {}).get(band) or {}).get('opponents') or []
