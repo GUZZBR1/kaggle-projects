@@ -9,6 +9,7 @@ import time
 from .agents import VARIANTS, agent_hash
 from .engine import fingerprint
 from .league import run_league
+from . import runspec
 from .seeds import REGISTRY, SPLITS, parse_seeds, validate_seeds
 from eval.comparison import build_comparison, digest, load_families
 from eval.ladder import cohort, load_ratings, opponent_id, STRONG_CUT, MAX_RATING_AGE_DAYS
@@ -33,7 +34,8 @@ def check_spec(spec):
 def run_pair(baseline, candidate, opponents, seeds, output, *, workers=4, backend='fast',
              split='dev', min_blocks=100, strong_only=False, ratings=None, families=None,
              mirrors=(), cut=STRONG_CUT, max_age_days=MAX_RATING_AGE_DAYS,
-             registry_path=REGISTRY, incumbent=None, runner=None):
+             registry_path=REGISTRY, incumbent=None, runner=None, panel=None,
+             deadline_seconds=None, attempts=3, distribution=None):
     started = time.perf_counter()
     seeds, opponents = list(seeds), list(opponents)
     if (workers < 1 or backend not in ('fast', 'official') or min_blocks < 2
@@ -56,14 +58,28 @@ def run_pair(baseline, candidate, opponents, seeds, output, *, workers=4, backen
     # Read-only prechecks precede any consumption. The league admits both hashes
     # atomically before its first callback and readmits the second leg.
     registry_before = validate_seeds(seeds, split, path=registry_path)
+    # Everything the spec checks is read-only and happens here, before `run_league` reaches
+    # `admit_run` and burns reserved seeds. A run refused after admission has already spent
+    # the evidence it needed to learn it was misconfigured.
+    spec = runspec.build(
+        baseline=(baseline, hashes[baseline]), candidate=(candidate, hashes[candidate]),
+        opponents={name: {'hash': hashes[name], 'lineage': families.get(opponent_id(name),
+                                                                       opponent_id(name))}
+                   for name in opponents},
+        seeds=seeds, split=split, registry=registry_before, backend=backend,
+        environment=environment, panel=panel, min_blocks=min_blocks, cut=cut,
+        max_rating_age_days=max_age_days, deadline_seconds=deadline_seconds,
+        attempts=attempts, distribution=distribution, registry_path=registry_path)
     target = Path(output)
     target.mkdir(parents=True, exist_ok=False)
     plan = dict(baseline=baseline, candidate=candidate, opponents=opponents, seeds=seeds,
                 hashes=hashes, backend=backend, environment=environment, split=split,
                 ratings=ratings, ratings_sha256=digest(ratings), families=families,
                 as_of=today.isoformat(), cut=cut, max_rating_age_days=max_age_days,
-                registry_before=registry_before, strong_only=strong_only)
+                registry_before=registry_before, strong_only=strong_only,
+                run_id=spec['run_id'])
     (target / 'plan.json').write_text(json.dumps(plan, indent=2) + '\n')
+    (target / 'spec.json').write_text(json.dumps(spec, indent=2) + '\n')
     results, timings = [], {}
     try:
         for label, agent, other in [('baseline', baseline, candidate), ('candidate', candidate, baseline)]:
@@ -72,7 +88,8 @@ def run_pair(baseline, candidate, opponents, seeds, output, *, workers=4, backen
             leg_started = time.perf_counter()
             rows, _, _ = run_league(agent, opponents, seeds, workers=workers, backend=backend,
                                    output=target / label, split=split, paired_with=(other,),
-                                   registry_path=registry_path, runner=runner)
+                                   registry_path=registry_path, runner=runner,
+                                   attempts=attempts, run_id=spec['run_id'])
             timings[label] = time.perf_counter() - leg_started
             if len(rows) != len(seeds) * len(opponents) * 2:
                 raise ValueError('Incomplete comparison leg')
@@ -89,12 +106,25 @@ def run_pair(baseline, candidate, opponents, seeds, output, *, workers=4, backen
         comparison['execution'] = dict(wall_seconds=time.perf_counter() - started,
                                        leg_wall_seconds=timings, split=split,
                                        strong_only=strong_only, plan_sha256=digest(plan))
+        # Stamped on the result, not only kept beside it: this is what lets the manifest,
+        # and `eval/dossier.py` above it, refuse a comparison from another experiment
+        # instead of reading it as if it belonged.
+        comparison['run_id'] = spec['run_id']
         # The gate refuses to read a comparison as a release decision unless the
         # baseline leg is the declared incumbent, so the declaration is checked here
         # against the hash the batch actually froze rather than after the fact.
         gate = decide(comparison, incumbent)
+        gate['run_id'] = spec['run_id']
         (target / 'comparison.json').write_text(json.dumps(comparison, indent=2) + '\n')
         (target / 'gate.json').write_text(json.dumps(gate, indent=2) + '\n')
+        evidence = {'spec': target / 'spec.json', 'comparison': target / 'comparison.json',
+                    'gate': target / 'gate.json'}
+        for label in ('baseline', 'candidate'):
+            store = Path(str(target / label) + '.jobs.sqlite3')
+            if store.exists():
+                evidence[f'{label}_jobs'] = store
+        (target / 'manifest.json').write_text(
+            json.dumps(runspec.manifest(spec, evidence), indent=2, default=str) + '\n')
         (target / 'report.md').write_text(gate['verdict'] + '\n\n' +
             '\n'.join('- ' + reason for reason in gate['reasons']) + '\n\n' +
             f"Wall time: {comparison['execution']['wall_seconds']:.2f}s.\n")
@@ -127,8 +157,19 @@ def main():
                         help='id of the agent holding our active submission slot; without it '
                              'the run is a measurement and cannot authorize a release')
     parser.add_argument('--displaces', help='which active submission a release would destroy')
+    parser.add_argument('--attempts', type=int, default=3,
+                        help='infrastructure-fault retries; part of the run spec because '
+                             'retry policy changes what a failure means')
+    parser.add_argument('--deadline-seconds', dest='deadline_seconds', type=float,
+                        help='per-match deadline; material, because a deadline changes results')
+    parser.add_argument('--panel', dest='panel_snapshot',
+                        help='a filed eval.panel revision this run is measured against')
     parser.add_argument('--output', required=True)
     args = vars(parser.parse_args())
+    panel_snapshot = args.pop('panel_snapshot')
+    if panel_snapshot:
+        from eval.panel import load as load_panel
+        args['panel'] = load_panel(panel_snapshot)
     args['seeds'] = parse_seeds(args['seeds'])
     args['opponents'] = args['opponents'].split(',')
     args['mirrors'] = [name for name in args['mirrors'].split(',') if name]
@@ -144,6 +185,9 @@ def main():
         atexit.register(mapper.ray.shutdown)
         args['runner'] = batched_runner(size=batch_size, map_batches=mapper,
                                         available_slots=mapper.available_slots)
+    args['distribution'] = {'topology': 'ray' if ray_address else 'local',
+                            'workers': args['workers'], 'cpus_per_worker': cpus_per_worker,
+                            'batch_size': batch_size}
     # The hash is not taken from the operator: it is the baseline this run will freeze,
     # so a declaration naming the wrong agent is caught by check_spec, not by trust.
     args['incumbent'] = (None if not incumbent_id else

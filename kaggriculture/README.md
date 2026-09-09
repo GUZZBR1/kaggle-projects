@@ -127,6 +127,26 @@ Não promova apenas por margem média ou vitória contra variantes próprias. Co
 taxa de vitória pareada, falhas, sobras, descarte e orçamento de execução. O intervalo
 bootstrap descreve os seeds e adversários testados; não estima a posição no ranking.
 
+## RunSpec e manifesto de evidência
+
+```bash
+.venv/bin/python -m arena.runspec experiments/results/<run>/spec.json \
+  --evidence standing=<...>.json --output <run>/manifest.json
+```
+
+Um run é um `RunSpec` validado antes de qualquer consumo e endereçado pelo que ele mediu.
+Entram no `run_id` os agentes e oponentes com hash e lineage, o painel, seeds/split/revisão
+do registro, backend e fingerprint do motor, deadline e política de retry, thresholds e o
+gate que vai ler o resultado. **Não** entra a distribuição (topologia, workers, batch size):
+a #43 mediu lotes bit-exatos entre nós, então um run começado local e retomado no cluster é
+o mesmo run.
+
+`arena.paired` escreve `spec.json` e `manifest.json`, carimba `run_id` na comparação e no
+gate, e o store de jobs passa a pertencer a um run — `--resume` recusa servir jogos a um
+spec diferente, que é o buraco que `job_id` sozinho não enxergava. O manifesto responde
+`BOUND`, `REFUSED` (peça de outro run, nomeada) ou `PARTIALLY BOUND` (peça anterior aos
+specs, nunca assumida como amarrada). Detalhes em [RUN_SPEC.md](docs/RUN_SPEC.md).
+
 ## Painel meta versionado
 
 ```bash

@@ -120,15 +120,26 @@ def binding(finalist):
     if moved:
         reasons.append('Opponents changed artifact between the comparison and the '
                        'standing: ' + ', '.join(moved) + '.')
+    # Issue #46 made the run itself addressable. Where a report declares the run it came
+    # from, the declaration is checked; a report that declares none predates run specs and
+    # is left to the field-by-field checks above, which is what they are for.
+    reasons += _disagree('the run they came from',
+                         {'the comparison': comparison.get('run_id'),
+                          'the standing': report.get('run_id'),
+                          'the preflight': flight.get('run_id')})
     return reasons
 
 
 def run_spec(finalist):
     """Every field that must not change silently between planning, running and deciding.
 
-    A forward-compatible stand-in for issue #46: the fields exist today, scattered across
-    two reports, and hashing them gives one string that two runs can be compared by.
+    Issue #46 built the real thing, and `arena/runspec.py` is now the authority: when the
+    comparison was produced by a run that wrote a spec, the `run_id` it declares *is* the
+    answer and this function reports it rather than recomputing a rival one. The
+    reconstruction below stays for the reports written before specs existed -- it is what
+    keeps them readable -- and it is an adapter now, not a second opinion.
     """
+    declared = (finalist.get('comparison') or {}).get('run_id')
     snapshot = (finalist.get('comparison') or {}).get('snapshot') or {}
     known = (finalist.get('standing') or {}).get('provenance') or {}
     spec = {'environment': snapshot.get('environment'), 'backend': snapshot.get('backend'),
@@ -148,7 +159,10 @@ def run_spec(finalist):
                                ).get('revision'),
             'candidate_hash': snapshot.get('candidate_hash'),
             'baseline_hash': snapshot.get('baseline_hash')}
-    return {**spec, 'sha256': digest(spec)}
+    if isinstance(declared, str) and declared:
+        return {**spec, 'sha256': declared, 'source': 'arena.runspec', 'run_id': declared}
+    return {**spec, 'sha256': digest(spec), 'source': 'reconstructed',
+            'run_id': None}
 
 
 def criteria(finalist, *, now, registry=None):

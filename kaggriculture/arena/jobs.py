@@ -67,6 +67,16 @@ CREATE TABLE IF NOT EXISTS jobs (
     recorded_at TEXT NOT NULL, row TEXT NOT NULL
 );
 CREATE INDEX IF NOT EXISTS jobs_by_run ON jobs (candidate_hash, split);
+-- One store belongs to one run. `job_id` covers the agents, seeds, seats, backend and
+-- split, which is everything that decides whether two games are the same game -- and
+-- nothing about the deadline, the panel or the thresholds the result will be read under.
+-- Two runs that differ only there produce identical job ids, so a resume would silently
+-- serve games from the wrong experiment. The bound run id is what refuses that.
+CREATE TABLE IF NOT EXISTS run (
+    id INTEGER PRIMARY KEY CHECK (id = 1),
+    run_id TEXT NOT NULL,
+    bound_at TEXT NOT NULL
+);
 """
 
 
@@ -134,7 +144,7 @@ class JobStore:
     against a game that costs seven hundred.
     """
 
-    def __init__(self, path, provenance=None):
+    def __init__(self, path, provenance=None, run_id=None):
         if os.environ.get('ARENA_ROLE') == 'ray-worker':
             raise PermissionError('Ray workers cannot open the authoritative job store')
         self.path = path if path == MEMORY else Path(path)
@@ -147,6 +157,35 @@ class JobStore:
             connection.executescript(SCHEMA)
         self.provenance = {'hostname': socket.gethostname(),
                            **(git_provenance() if provenance is None else provenance)}
+        self.run_id = self.bind(run_id) if run_id is not None else self.bound_run()
+
+    def bound_run(self):
+        with self._session() as connection:
+            row = connection.execute('SELECT run_id FROM run WHERE id = 1').fetchone()
+        return row['run_id'] if row else None
+
+    def bind(self, run_id):
+        """Claim this store for one run, or refuse to hand its games to another.
+
+        A store adopts the first run that claims it, which is what keeps a store written
+        before run specs existed resumable. Once claimed it never changes hands: resuming
+        under a different spec would reuse games played under other deadlines, another
+        panel or different thresholds, and the identity `job_id` computes cannot see any
+        of that.
+        """
+        if not isinstance(run_id, str) or not run_id:
+            raise ValueError('A run id is a nonempty string')
+        held = self.bound_run()
+        if held is None:
+            with self._session() as connection:
+                connection.execute('INSERT INTO run (id, run_id, bound_at) VALUES (1, ?, ?)',
+                                   (run_id, datetime.now(timezone.utc).isoformat()))
+            return run_id
+        if held != run_id:
+            raise ValueError(f'{self.path} holds games for run {held[:12]}, and this run is '
+                             f'{run_id[:12]}. Resume reuses only the games of its own run; '
+                             'the two specs differ in something job identity cannot see.')
+        return held
 
     @contextmanager
     def _open(self):
